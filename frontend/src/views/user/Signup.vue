@@ -14,24 +14,24 @@
         <v-text-field label="닉네임을 입력해주세요" style="width:300px" v-model="nickname" @keypress.enter="login"></v-text-field>
         
         <v-text-field 
-         :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-         :type="show1 ? 'text' : 'password'"
+         :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+         :type="show ? 'text' : 'password'"
          label="비밀번호를 입력해주세요" 
          style="width:300px" 
          v-model="password" 
          @keypress.enter="login"
-         @click:append="show1 = !show1"
+         @click:append="show = !show"
          :rules="[ !this.error.password || '영문,숫자 포함 8 자리이상이어야 합니다.' ]"
         ></v-text-field>
         
         <v-text-field
-         :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
-         :type="show2 ? 'text' : 'password'"
+         :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+         :type="show ? 'text' : 'password'"
          label="비밀번호를 다시 입력해주세요" 
          style="width:300px" 
          v-model="passwordConfirm" 
          @keypress.enter="login"
-         @click:append="show2 = !show2"
+         @click:append="show = !show"
          :rules="[ !this.error.passwordConfirm || this.error.passwordConfirm ]"
         ></v-text-field>
       </v-form>
@@ -65,8 +65,7 @@ export default {
         passowrd: false,
         passwordConfirm: false,
       },
-      show1: false,
-      show2: false,
+      show: false,
       isSubmit: false,
       component: this,
       // rule: {
@@ -125,8 +124,8 @@ export default {
       });
       this.isSubmit = isSubmit;
     },
-    login () {
-      alert("로그인이다아아")
+    signup () {
+      alert("회원가입 이다아아")
       axios.post()
       .then ( res => {
         localStorage.setItem('jwt', res.data.token)
