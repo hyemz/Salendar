@@ -1,13 +1,13 @@
-package backend.server.server;
+package backend.server.salendar;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ServerApplication {
+public class SalendarApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ServerApplication.class, args);
+		SpringApplication.run(SalendarApplication.class, args);
 	}
 
 }
