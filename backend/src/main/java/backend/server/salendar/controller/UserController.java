@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +36,7 @@ public class UserController {
         Optional<User> member = userService.findByUsrSeq(mbrNo);
         return new ResponseEntity<User>(member.get(), HttpStatus.OK);
     }
-
+//
     // 회원번호로 회원 삭제
     @DeleteMapping(value = "/{mbrNo}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Void> deleteMember(@PathVariable("mbrNo") Long mbrNo) {
@@ -45,17 +44,23 @@ public class UserController {
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
 
-    // 회원번호로 회원 수정(mbrNo로 회원을 찾아 Member 객체의 id, name로 수정함)
-    @PutMapping(value = "/{mbrNo}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<User> updateMember(@PathVariable("mbrNo") Long mbrNo, User member) {
-        userService.updateByUsrSeq(mbrNo, member);
-        return new ResponseEntity<User>(member, HttpStatus.OK);
-    }
+//
+//    // 회원번호로 회원 수정(mbrNo로 회원을 찾아 Member 객체의 id, Nick을 수정함)
+//    @PutMapping(value = "/{mbrNo}", produces = {MediaType.APPLICATION_JSON_VALUE})
+//    public ResponseEntity<User> updateMember(@PathVariable("mbrNo") Long mbrNo, User member) {
+//        userService.updateByUsrSeq(mbrNo, member);
+//        return new ResponseEntity<User>(member, HttpStatus.OK);
+//    }
 
     // 회원 입력
     @PostMapping
     public ResponseEntity<User> save(User member) {
         return new ResponseEntity<User>(userService.save(member), HttpStatus.OK);
+    }
+
+    @GetMapping("/test")
+    public String test() {
+        return "test";
     }
 
 

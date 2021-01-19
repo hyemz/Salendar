@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Service
+//@Service
 public class UserService {
 
-    @Autowired
+//    @Autowired
     private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
@@ -50,34 +50,34 @@ public class UserService {
 //    }
 
     public List<User> findAll() {
-        List<User> members = new ArrayList<>();
-        UserRepository.findAll().forEach(e -> members.add(e));
-        return members;
+        List<User> users = new ArrayList<>();
+        userRepository.findAll().forEach(e -> users.add(e));
+        return users;
     }
 
     public Optional<User> findByUsrSeq(Long mbrNo) {
-        Optional<User> member = UserRepository.findByUsrSeq(mbrNo);
-        return member;
+        Optional<User> user = userRepository.findByUsrSeq(mbrNo);
+        return user;
     }
 
     public void deleteByUsrSeq(Long mbrNo) {
-        UserRepository.deleteByUsrSeq(mbrNo);
+        userRepository.deleteByUsrSeq(mbrNo);
     }
 
-    public User save(User member) {
-        UserRepository.save(member);
-        return member;
+    public User save(User user) {
+        userRepository.save(user);
+        return user;
     }
 
-    public void updateByUsrSeq(Long mbrNo, User member) {
-        Optional<User> e = UserRepository.findByUsrSeq(mbrNo);
-        if (e.isPresent()) {
-            e.get().setUsrSeq(member.getUsrSeq());
-            e.get().setUsrFollowing(member.getUsrFollowing());
-            e.get().setUsrEmail(member.getUsrEmail());
-            e.get().setUsrNick(member.getUsrNick());
-            e.get().setUsrPwd(member.getUsrPwd());
-            UserRepository.save(member);
-        }
-    }
+//    public void updateByUsrSeq(Long mbrNo, User member) {
+//        Optional<User> e = userRepository.findByUsrSeq(mbrNo);
+//        if (e.isPresent()) {
+//            e.get().setUsrSeq(member.getUsrSeq());
+//            e.get().setUsrFollowing(member.getUsrFollowing());
+//            e.get().setUsrEmail(member.getUsrEmail());
+//            e.get().setUsrNick(member.getUsrNick());
+//            e.get().setUsrPwd(member.getUsrPwd());
+//            userRepository.save(member);
+//        }
+//    }
 }

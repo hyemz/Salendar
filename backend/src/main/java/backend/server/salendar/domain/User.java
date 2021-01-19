@@ -1,10 +1,11 @@
 package backend.server.salendar.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name="user")
 // 사용자
 public class User {
 
@@ -12,80 +13,83 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("usr_seq")
-    private Integer usr_seq;
+    private Long usrSeq;
 
     // 비밀번호
     @JsonProperty("usr_pwd")
-    private String usr_pwd;
+    private String usrPwd;
 
     // 닉네임
     @JsonProperty("usr_nick")
-    private String usr_nick;
+    private String usrNick;
 
-    // 이메일
-    @JsonProperty("usr_email")
-    private String usr_email;
-
-    // 팔로우 매장
-    @JsonProperty("usr_following")
-    private Integer usr_follwing;
-
-    public Integer getUsrSeq() {
-        return usr_seq;
+//    // 이메일
+//    @JsonProperty("usr_email")
+//    private String usrEmail;
+//
+//    // 팔로우 매장
+//    @JsonProperty("usr_following")
+//    private Integer usrFollowing;
+//
+    public Long getUsrSeq() {
+        return usrSeq;
     }
 
-    public void setUsrSeq(Integer usr_seq) {
-        this.usr_seq = usr_seq;
+    public void setUsrSeq(Long usrSeq) {
+        this.usrSeq = usrSeq;
     }
 
     public String getUsrPwd() {
-        return usr_pwd;
+        return usrPwd;
     }
 
-    public void setUsrPwd(String usr_pwd) {
-        this.usr_pwd = usr_pwd;
+    public void setUsrPwd(String usrPwd) {
+        this.usrPwd = usrPwd;
     }
 
     public String getUsrNick() {
-        return usr_nick;
+        return usrNick;
     }
 
-    public void setUsrNick(String usr_nick) {
-        this.usr_nick = usr_nick;
+    public void setUsrNick(String usrNick) {
+        this.usrNick = usrNick;
     }
 
-    public String getUsrEmail() {
-        return usr_email;
-    }
-
-    public void setUsrEmail(String usr_email) {
-        this.usr_email = usr_email;
-    }
-
-    public Integer getUsrFollowing() {
-        return usr_follwing;
-    }
-
-    public void setUsrFollowing(Integer usr_follwing) {
-        this.usr_follwing = usr_follwing;
-    }
-
-    // User 모델 복사
-    public void CopyData(User param) {
-        this.usr_seq = param.getUsrSeq();
-        this.usr_pwd = param.getUsrPwd();
-        this.usr_nick = param.getUsrNick();
-        this.usr_email = param.getUsrEmail();
-        this.usr_follwing = param.getUsrFollowing();
-    }
+//    public String getUsrEmail() {
+//        return usrEmail;
+//    }
+//
+//    public void setUsrEmail(String usrEmail) {
+//        this.usrEmail = usrEmail;
+//    }
+//
+//    public Integer getUsrFollowing() {
+//        return usrFollowing;
+//    }
+//
+//    public void setUsrFollowing(Integer usrFollowing) {
+//        this.usrFollowing = usrFollowing;
+//    }
+//
+//    // User 모델 복사
+//    public void CopyData(User param)
+//    {
+//        this.usrSeq = param.getUsrSeq();
+//        this.usrPwd = param.getUsrPwd();
+//        this.usrNick = param.getUsrNick();
+//        this.usrEmail = param.getUsrEmail();
+//        this.usrFollowing = param.getUsrFollowing();
+//    }
 
     public User() {}
 
-    public User(int usr_seq, int usr_following,String usr_email, String usr_pwd, String usr_nick){
-        this.usr_seq = usr_seq;
-        this.usr_pwd = usr_pwd;
-        this.usr_nick = usr_nick;
-        this.usr_email = usr_email;
-        this.usr_follwing = usr_follwing;
+    @Builder
+    public User(Long usrSeq, String usrPwd, String usrNick){
+        this.usrSeq = usrSeq;
+        this.usrPwd = usrPwd;
+        this.usrNick = usrNick;
+//        this.usrEmail = usrEmail;
+//        this.usrFollowing = usrFollowing;
     }
+
 }

@@ -15,7 +15,7 @@ public class SpringConfig {
     }
 
     @Bean
-    public UserService memberService() {
+    public UserService userService() {
         return new UserService(userRepository);
     }
 }

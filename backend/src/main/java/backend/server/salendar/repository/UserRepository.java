@@ -9,4 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+    public Optional<User> findByUsrSeq(Long usrSeq);
+    public List<User> findByUsrNick(Long usrNick);
+    void deleteByUsrSeq(Long mbrNo);
 }
