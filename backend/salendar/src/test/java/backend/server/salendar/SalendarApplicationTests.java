@@ -1,10 +1,10 @@
-package backend.server.server;
+package backend.server.salendar;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ServerApplicationTests {
+class SalendarApplicationTests {
 
 	@Test
 	void contextLoads() {
