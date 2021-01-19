@@ -4,7 +4,7 @@ plugins {
 	id 'java'
 }
 
-group = 'backend.server'
+group = 'backend.server.salendar'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
@@ -31,4 +31,10 @@ dependencies {
 
 test {
 	useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class':'salendar.SalendarApplication'
+    }
 }
