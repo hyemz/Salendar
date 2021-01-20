@@ -1,6 +1,6 @@
 package backend.server.salendar.controller;
 
-import backend.server.salendar.config.JwtTokenProvider;
+import backend.server.salendar.security.JwtTokenProvider;
 import backend.server.salendar.domain.User;
 import backend.server.salendar.repository.UserRepository;
 import backend.server.salendar.service.UserService;
@@ -14,18 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
-//@RequestMapping("memberTest")
 @CrossOrigin("http://localhost:8081")
 public class UserController {
     // 기본형
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     UserService userService;
@@ -42,24 +37,40 @@ public class UserController {
 
     // 회원 가입
     @PostMapping("/join")
-    public Long join(@RequestBody Map<String, String> user) {
-        return userRepository.save(User.builder()
+    public ResponseEntity<String> join(@RequestBody Map<String, String> user) {
+        try {
+            userService.validateDuplicateUser(user.get("usrNick"), user.get("userEmail"));
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<String>(e.toString(), HttpStatus.BAD_REQUEST);
+        }
+        userRepository.save(User.builder()
                 .usrEmail(user.get("usrEmail"))
                 .usrPwd(passwordEncoder.encode(user.get("usrPwd")))
                 .usrNick(user.get("usrNick"))
                 .roles(Collections.singletonList("ROLE_USER")) // 최초 가입시 USER 로 설정
                 .build()).getUsrNo();
+        return new ResponseEntity<String>(user.get("usrNick"), HttpStatus.OK);
     }
+
 
     // 로그인
     @PostMapping("/login")
-    public String login(@RequestBody Map<String, String> user) {
-        User member = (User) userRepository.findByUsrEmail(user.get("usrEmail"))
-                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 이메일 입니다."));
-        if (!passwordEncoder.matches(user.get("usrPwd"), member.getPassword())) {
-            throw new IllegalArgumentException("잘못된 비밀번호입니다.");
+    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> user) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+        try {
+            User member = (User) userRepository.findByUsrEmail(user.get("usrEmail"))
+                    .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 이메일 입니다."));
+            if (!passwordEncoder.matches(user.get("usrPwd"), member.getPassword())) {
+                throw new IllegalArgumentException("잘못된 비밀번호입니다.");
+            }
+            resultMap.put("token", jwtTokenProvider.createToken(member.getUsername(), member.getRoles()));
+            status = HttpStatus.OK;
+        } catch (Exception e) {
+            resultMap.put("message", e.toString());
+            status = HttpStatus.NOT_ACCEPTABLE;
         }
-        return jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
 
     // 모든 회원 조회
@@ -75,7 +86,8 @@ public class UserController {
         Optional<User> user = userService.findByUsrNo(usrNo);
         return new ResponseEntity<User>(user.get(), HttpStatus.OK);
     }
-//
+
+
     // 회원번호로 회원 삭제
     @DeleteMapping(value = "/{usrNo}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Void> deleteMember(@PathVariable("usrNo") Long usrNo) {
@@ -83,12 +95,21 @@ public class UserController {
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
 
-//
+
     // 회원번호로 회원 수정(usrNo로 회원을 찾아 Member 객체의 id, Nick을 수정함)
     @PutMapping(value = "/{usrNo}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<User> updateMember(@PathVariable("usrNo") Long usrNo, User user) {
-        userService.updateByUsrNo(usrNo, user);
-        return new ResponseEntity<User>(user, HttpStatus.OK);
+    public ResponseEntity<String> updateMember(@PathVariable("usrNo") Long usrNo, @RequestBody Map<String, String> user) {
+        Optional<User> curUser = userService.findByUsrNo(usrNo);
+        try {
+            userService.validateDuplicateUser(user.get("usrNick"), user.get("userEmail"));
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<String>(e.toString(), HttpStatus.BAD_REQUEST);
+        }
+        if (curUser.isPresent()) {
+            curUser.get().setUsrNick(user.get("usrNick"));
+            curUser.get().setUsrPwd(user.get("usrPwd"));
+            userRepository.save(curUser.get());
+        }
+        return new ResponseEntity<String>(user.get("usrNick"), HttpStatus.OK);
     }
-
 }
