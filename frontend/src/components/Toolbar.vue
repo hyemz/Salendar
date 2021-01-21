@@ -34,7 +34,7 @@
           >
           <v-tab
             ><router-link
-              to="/login"
+              to="/board"
               class="white--text text-decoration-none mb-2 font-weight-medium"
               >게시판</router-link
             ></v-tab
