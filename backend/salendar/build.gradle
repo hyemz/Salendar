@@ -1,4 +1,3 @@
-<<<<<<< backend/salendar/build.gradle
 plugins {
 	id 'org.springframework.boot' version '2.4.2'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -53,5 +52,4 @@ jar {
     manifest {
         attributes 'Main-Class':'salendar.SalendarApplication'
     }
->>>>>>> backend/salendar/build.gradle
 }
