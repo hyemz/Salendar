@@ -4,9 +4,10 @@ import backend.server.salendar.security.JwtTokenProvider;
 import backend.server.salendar.domain.User;
 import backend.server.salendar.repository.UserRepository;
 import backend.server.salendar.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,14 +15,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
+
+@Api(tags = {"1. User"})
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin("http://localhost:8081")
+@RequestMapping("/api/user")
 public class UserController {
     // 기본형
-
     @Autowired
     UserService userService;
 
@@ -29,17 +33,14 @@ public class UserController {
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
 
-    @GetMapping("/test")
-    public String test() {
-        return "test";
-    }
-
 
     // 회원 가입
+    @ApiOperation(value = "회원 가입", notes = "회원가입")
     @PostMapping("/join")
-    public ResponseEntity<String> join(@RequestBody Map<String, String> user) {
+    public ResponseEntity<String> join(@ApiParam(value = "usrEmail, usrNick, usrPwd", required = true) @RequestBody Map<String, String> user) {
         try {
-            userService.validateDuplicateUser(user.get("usrNick"), user.get("userEmail"));
+            userService.validateDuplicateUserNick(user.get("usrNick"));
+            userService.validateDuplicateUserEmail(user.get("usrEmail"));
         } catch (IllegalStateException e) {
             return new ResponseEntity<String>(e.toString(), HttpStatus.BAD_REQUEST);
         }
@@ -48,14 +49,15 @@ public class UserController {
                 .usrPwd(passwordEncoder.encode(user.get("usrPwd")))
                 .usrNick(user.get("usrNick"))
                 .roles(Collections.singletonList("ROLE_USER")) // 최초 가입시 USER 로 설정
-                .build()).getUsrNo();
+                .build());
         return new ResponseEntity<String>(user.get("usrNick"), HttpStatus.OK);
     }
 
 
-    // 로그인
+    // 로그인    
+    @ApiOperation(value = "로그인", notes = "로그인")
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> user) {
+    public ResponseEntity<Map<String, Object>> login(@ApiParam(value = "usrEmail, usrPwd", required = true)@RequestBody Map<String, String> user) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
@@ -74,6 +76,7 @@ public class UserController {
     }
 
     // 모든 회원 조회
+    @ApiOperation(value = "회원 가입", notes = "회원가입")
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.findAll();
@@ -97,11 +100,12 @@ public class UserController {
 
 
     // 회원번호로 회원 수정(usrNo로 회원을 찾아 Member 객체의 id, Nick을 수정함)
-    @PutMapping(value = "/{usrNo}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<String> updateMember(@PathVariable("usrNo") Long usrNo, @RequestBody Map<String, String> user) {
-        Optional<User> curUser = userService.findByUsrNo(usrNo);
+    @ApiOperation(value = "회원 정보 변경", notes = "token 필요")
+    @PutMapping(value = "/token/update}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<String> updateMember(@RequestBody Map<String, String> user, HttpServletRequest request) {
+        Optional<User> curUser = Optional.ofNullable(userService.findByToken(JwtTokenProvider.resolveToken(request)));
         try {
-            userService.validateDuplicateUser(user.get("usrNick"), user.get("userEmail"));
+            userService.validateDuplicateUserNick(user.get("usrNick"));
         } catch (IllegalStateException e) {
             return new ResponseEntity<String>(e.toString(), HttpStatus.BAD_REQUEST);
         }
