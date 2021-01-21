@@ -1,194 +1,172 @@
-<template>
-  <div>
-    <v-row class="fill-height">
-      <v-col>
-        <v-sheet height="64">
-          <v-toolbar flat>
-            <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
-              Today
-            </v-btn>
-            <v-btn fab text small color="grey darken-2" @click="prev">
-              <v-icon small>
-                mdi-chevron-left
-              </v-icon>
-            </v-btn>
-            <v-btn fab text small color="grey darken-2" @click="next">
-              <v-icon small>
-                mdi-chevron-right
-              </v-icon>
-            </v-btn>
-            <v-toolbar-title v-if="$refs.calendar">
-              {{ $refs.calendar.title }}
-            </v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-menu bottom right>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
-                  <span>{{ typeToLabel[type] }}</span>
-                  <v-icon right>
-                    mdi-menu-down
-                  </v-icon>
-                </v-btn>
-              </template>
-              <v-list>
-                <v-list-item @click="type = 'day'">
-                  <v-list-item-title>Day</v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="type = 'week'">
-                  <v-list-item-title>Week</v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="type = 'month'">
-                  <v-list-item-title>Month</v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="type = '4day'">
-                  <v-list-item-title>4 days</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </v-toolbar>
-        </v-sheet>
-        <v-sheet height="500">
-          <v-calendar
-            ref="calendar"
-            v-model="focus"
-            color="primary"
-            :events="events"
-            :event-color="getEventColor"
-            :type="type"
-            @click:event="showEvent"
-            @click:more="showMore"
-            @click:date="viewDay"
-            @change="updateRange"
-          ></v-calendar>
-          <v-menu
-            v-model="selectedOpen"
-            :close-on-content-click="false"
-            :activator="selectedElement"
-            offset-x
-          >
-            <v-card color="grey lighten-4" min-width="350px" flat>
-              <v-toolbar :color="selectedEvent.color" dark>
-                <v-btn icon>
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-                <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
-                <v-spacer></v-spacer>
-                <v-btn icon>
-                  <v-icon>mdi-heart</v-icon>
-                </v-btn>
-                <v-btn icon>
-                  <v-icon>mdi-dots-vertical</v-icon>
-                </v-btn>
-              </v-toolbar>
-              <v-card-text>
-                <span v-html="selectedEvent.details"></span>
-              </v-card-text>
-              <v-card-actions>
-                <v-btn text color="secondary" @click="selectedOpen = false">
-                  Cancel
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-menu>
-        </v-sheet>
-      </v-col>
-    </v-row>
-    <more-modal :dialog="dialog" :focus="focus" />
-  </div>
-</template>
-
 <script>
-import MoreModal from './MoreModal.vue';
+import FullCalendar from '@fullcalendar/vue';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import { INITIAL_EVENTS, createEventId } from './event-utils';
+
 export default {
-  components: { MoreModal },
-  data: () => ({
-    focus: '',
-    type: 'month',
-    typeToLabel: {
-      month: 'Month',
-      week: 'Week',
-      day: 'Day',
-      '4day': '4 Days',
-    },
-    dialog: false,
-    selectedEvent: {},
-    selectedElement: null,
-    selectedOpen: false,
-    events: [],
-    colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
-    names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
-  }),
-  mounted() {
-    this.$refs.calendar.checkChange();
+  components: {
+    FullCalendar, // make the <FullCalendar> tag available
   },
+
+  data: function() {
+    return {
+      calendarOptions: {
+        plugins: [
+          dayGridPlugin,
+          timeGridPlugin,
+          interactionPlugin, // needed for dateClick
+        ],
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay',
+        },
+        initialView: 'dayGridMonth',
+        initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
+        editable: true,
+        selectable: true,
+        selectMirror: true,
+        dayMaxEvents: true,
+        weekends: true,
+        select: this.handleDateSelect,
+        eventClick: this.handleEventClick,
+        eventsSet: this.handleEvents,
+        /* you can update a remote database when these fire:
+        eventAdd:
+        eventChange:
+        eventRemove:
+        */
+      },
+      currentEvents: [],
+    };
+  },
+
   methods: {
-    viewDay({ date }) {
-      this.focus = date;
-      this.type = 'day';
+    handleWeekendsToggle() {
+      this.calendarOptions.weekends = !this.calendarOptions.weekends; // update a property
     },
-    showMore({ date }) {
-      this.focus = date;
-      this.dialog = true;
-    },
-    getEventColor(event) {
-      return event.color;
-    },
-    setToday() {
-      this.focus = '';
-    },
-    prev() {
-      this.$refs.calendar.prev();
-    },
-    next() {
-      this.$refs.calendar.next();
-    },
-    showEvent({ nativeEvent, event }) {
-      const open = () => {
-        this.selectedEvent = event;
-        this.selectedElement = nativeEvent.target;
-        setTimeout(() => {
-          this.selectedOpen = true;
-        }, 10);
-      };
 
-      if (this.selectedOpen) {
-        this.selectedOpen = false;
-        setTimeout(open, 10);
-      } else {
-        open();
-      }
+    handleDateSelect(selectInfo) {
+      let title = prompt('Please enter a new title for your event');
+      let calendarApi = selectInfo.view.calendar;
 
-      nativeEvent.stopPropagation();
-    },
-    updateRange({ start, end }) {
-      const events = [];
+      calendarApi.unselect(); // clear date selection
 
-      const min = new Date(`${start.date}T00:00:00`);
-      const max = new Date(`${end.date}T23:59:59`);
-      const days = (max.getTime() - min.getTime()) / 86400000;
-      const eventCount = this.rnd(days, days + 20);
-
-      for (let i = 0; i < eventCount; i++) {
-        const allDay = this.rnd(0, 3) === 0;
-        const firstTimestamp = this.rnd(min.getTime(), max.getTime());
-        const first = new Date(firstTimestamp - (firstTimestamp % 900000));
-        const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000;
-        const second = new Date(first.getTime() + secondTimestamp);
-
-        events.push({
-          name: this.names[this.rnd(0, this.names.length - 1)],
-          start: first,
-          end: second,
-          color: this.colors[this.rnd(0, this.colors.length - 1)],
-          timed: !allDay,
+      if (title) {
+        calendarApi.addEvent({
+          id: createEventId(),
+          title,
+          start: selectInfo.startStr,
+          end: selectInfo.endStr,
+          allDay: selectInfo.allDay,
         });
       }
-
-      this.events = events;
     },
-    rnd(a, b) {
-      return Math.floor((b - a + 1) * Math.random()) + a;
+
+    handleEventClick(clickInfo) {
+      if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
+        clickInfo.event.remove();
+      }
+    },
+
+    handleEvents(events) {
+      this.currentEvents = events;
     },
   },
 };
 </script>
+
+<template>
+  <div class="demo-app">
+    <div class="demo-app-sidebar">
+      <div class="demo-app-sidebar-section">
+        <h2>Instructions</h2>
+        <ul>
+          <li>Select dates and you will be prompted to create a new event</li>
+          <li>Drag, drop, and resize events</li>
+          <li>Click an event to delete it</li>
+        </ul>
+      </div>
+      <div class="demo-app-sidebar-section">
+        <label>
+          <input
+            type="checkbox"
+            :checked="calendarOptions.weekends"
+            @change="handleWeekendsToggle"
+          />
+          toggle weekends
+        </label>
+      </div>
+      <div class="demo-app-sidebar-section">
+        <h2>All Events ({{ currentEvents.length }})</h2>
+        <ul>
+          <li v-for="event in currentEvents" :key="event.id">
+            <b>{{ event.startStr }}</b>
+            <i>{{ event.title }}</i>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="demo-app-main">
+      <FullCalendar class="demo-app-calendar" :options="calendarOptions">
+        <template v-slot:eventContent="arg">
+          <b>{{ arg.timeText }}</b>
+          <i>{{ arg.event.title }}</i>
+        </template>
+      </FullCalendar>
+    </div>
+  </div>
+</template>
+
+<style lang="css">
+h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+ul {
+  margin: 0;
+  padding: 0 0 0 1.5em;
+}
+
+li {
+  margin: 1.5em 0;
+  padding: 0;
+}
+
+b {
+  /* used for event dates/times */
+  margin-right: 3px;
+}
+
+.demo-app {
+  display: flex;
+  min-height: 100%;
+  font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+  font-size: 14px;
+}
+
+.demo-app-sidebar {
+  width: 300px;
+  line-height: 1.5;
+  background: #eaf9ff;
+  border-right: 1px solid #d3e2e8;
+}
+
+.demo-app-sidebar-section {
+  padding: 2em;
+}
+
+.demo-app-main {
+  flex-grow: 1;
+  padding: 3em;
+}
+
+.fc {
+  /* the calendar root */
+  max-width: 1100px;
+  margin: 0 auto;
+}
+</style>
