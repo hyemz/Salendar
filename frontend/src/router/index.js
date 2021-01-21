@@ -2,6 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../views/user/Login.vue'
 import Signup from '../views/user/Signup.vue'
+import Board from '../views/board/Board.vue'
+import Create from '../views/board/Create.vue'
+import Detail from '../views/board/Detail.vue'
 
 Vue.use(VueRouter)
 
@@ -17,7 +20,23 @@ const routes = [
     name: 'Signup',
     component: Signup
   },
-
+  // 경로 수정
+  {
+    path: '/board',
+    name: 'Board',
+    component: Board
+  },
+  {
+    path: '/board/create',
+    name: 'Create',
+    component: Create
+  },
+  {
+    path: '/board/detail',
+    name: 'Detail',
+    component: Detail
+  },
+  
 ]
 
 const router = new VueRouter({
