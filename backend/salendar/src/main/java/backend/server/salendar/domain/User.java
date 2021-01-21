@@ -1,95 +1,96 @@
 package backend.server.salendar.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity(name="user")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 // 사용자
-public class User {
+public class User implements UserDetails {
 
     // 사용자 일련번호
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty("usr_seq")
-    private Long usrSeq;
+    private Long usrNo;
 
     // 비밀번호
-    @JsonProperty("usr_pwd")
+    @JsonProperty("usrPwd")
     private String usrPwd;
 
     // 닉네임
-    @JsonProperty("usr_nick")
+    @JsonProperty("usrNick")
     private String usrNick;
 
-//    // 이메일
-//    @JsonProperty("usr_email")
-//    private String usrEmail;
+    // 이메일
+    @JsonProperty("usrEmail")
+    private String usrEmail;
 //
 //    // 팔로우 매장
-//    @JsonProperty("usr_following")
+//    @JsonProperty("usrFollowing")
 //    private Integer usrFollowing;
-//
-    public Long getUsrSeq() {
-        return usrSeq;
+
+
+    // User 모델 복사
+    public void CopyData(User param)
+    {
+        this.usrNo = param.getUsrNo();
+        this.usrPwd = param.getUsrPwd();
+        this.usrNick = param.getUsrNick();
+        this.usrEmail = param.getUsrEmail();
+//        this.usrFollowing = param.getUsrFollowing();
     }
 
-    public void setUsrSeq(Long usrSeq) {
-        this.usrSeq = usrSeq;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private List<String> roles = new ArrayList<>();
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
-    public String getUsrPwd() {
+    @Override
+    public String getPassword() {
         return usrPwd;
     }
 
-    public void setUsrPwd(String usrPwd) {
-        this.usrPwd = usrPwd;
+    @Override
+    public String getUsername() {
+        return usrEmail;
     }
 
-    public String getUsrNick() {
-        return usrNick;
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
     }
 
-    public void setUsrNick(String usrNick) {
-        this.usrNick = usrNick;
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
     }
 
-//    public String getUsrEmail() {
-//        return usrEmail;
-//    }
-//
-//    public void setUsrEmail(String usrEmail) {
-//        this.usrEmail = usrEmail;
-//    }
-//
-//    public Integer getUsrFollowing() {
-//        return usrFollowing;
-//    }
-//
-//    public void setUsrFollowing(Integer usrFollowing) {
-//        this.usrFollowing = usrFollowing;
-//    }
-//
-//    // User 모델 복사
-//    public void CopyData(User param)
-//    {
-//        this.usrSeq = param.getUsrSeq();
-//        this.usrPwd = param.getUsrPwd();
-//        this.usrNick = param.getUsrNick();
-//        this.usrEmail = param.getUsrEmail();
-//        this.usrFollowing = param.getUsrFollowing();
-//    }
-
-    public User() {}
-
-    @Builder
-    public User(Long usrSeq, String usrPwd, String usrNick){
-        this.usrSeq = usrSeq;
-        this.usrPwd = usrPwd;
-        this.usrNick = usrNick;
-//        this.usrEmail = usrEmail;
-//        this.usrFollowing = usrFollowing;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
     }
 
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
 }
