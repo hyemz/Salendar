@@ -6,7 +6,6 @@ import backend.server.salendar.security.JwtTokenProvider;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,18 +18,20 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public void validateDuplicateUser(String usrNick, String usrEmail) {
+    public void validateDuplicateUserNick(String usrNick) {
         userRepository.findByUsrNick(usrNick)
                 .ifPresent(m -> {
                     throw new IllegalStateException("이미 존재하는 닉네임입니다.");
                 });
-
-        userRepository.findByUsrEmail(usrEmail)
-                .ifPresent(m -> {
-                    throw new IllegalStateException("이미 존재하는 이메일입니다.");
-                });
     }
 
+
+    public void validateDuplicateUserEmail(String usrNick) {
+        userRepository.findByUsrNick(usrNick)
+                .ifPresent(m -> {
+                    throw new IllegalStateException("이미 존재하는 닉네임입니다.");
+                });
+    }
 
 
     /**
@@ -42,6 +43,7 @@ public class UserService implements UserDetailsService {
         return users;
     }
 
+
     /*
      * 단일 회원 조회
      */
@@ -49,6 +51,7 @@ public class UserService implements UserDetailsService {
         Optional<User> user = userRepository.findByUsrNo(usrNo);
         return user;
     }
+
 
     /*
     * 이메일로 회원 조회
@@ -70,7 +73,7 @@ public class UserService implements UserDetailsService {
     /*
     * Token으로 회원찾기
     */
-    public User findByToken(HttpServletRequest request) {
-        return loadUserByUsername(JwtTokenProvider.getUserNo(JwtTokenProvider.resolveToken(request)));
+    public User findByToken(String token) {
+        return loadUserByUsername(JwtTokenProvider.getUserNo(token));
     }
 }

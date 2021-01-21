@@ -1,4 +1,4 @@
-package backend.server.salendar;
+package backend.server.salendar.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
