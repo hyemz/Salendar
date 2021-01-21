@@ -1,19 +1,16 @@
 package backend.server.salendar.service;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import backend.server.salendar.domain.User;
 import backend.server.salendar.repository.UserRepository;
+import backend.server.salendar.security.JwtTokenProvider;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-//@Service
-public class UserService {
-
-//    @Autowired
+public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
@@ -21,63 +18,62 @@ public class UserService {
     }
 
 
-    /**
-     * 회원 가입
-     */
-//    public Long join(User user) {
-//        //중복 이름 체크
-//        validateDuplicateMember(user);
-//        userRepository.save(user);
-//        return user.getUsrSeq();
-//    }
-//
-//    private void validateDuplicateMember(User user) {
-//        userRepository.findByName(user.getName())
-//                .ifPresent(m -> {
-//                    throw new IllegalStateException("이미 존재하는 회원입니다.");
-//                });
-//    }
+    public void validateDuplicateUserNick(String usrNick) {
+        userRepository.findByUsrNick(usrNick)
+                .ifPresent(m -> {
+                    throw new IllegalStateException("이미 존재하는 닉네임입니다.");
+                });
+    }
+
+
+    public void validateDuplicateUserEmail(String usrNick) {
+        userRepository.findByUsrNick(usrNick)
+                .ifPresent(m -> {
+                    throw new IllegalStateException("이미 존재하는 닉네임입니다.");
+                });
+    }
+
 
     /**
      * 전체 회원 조회
      */
-//    public List<User> findMembers() {
-//        return userRepository.findAll();
-//    }
-//
-//    public Optional<User> findOne(Long memberId) {
-//        return userRepository.findById(memberId);
-//    }
-
     public List<User> findAll() {
         List<User> users = new ArrayList<>();
         userRepository.findAll().forEach(e -> users.add(e));
         return users;
     }
 
-    public Optional<User> findByUsrSeq(Long mbrNo) {
-        Optional<User> user = userRepository.findByUsrSeq(mbrNo);
+
+    /*
+     * 단일 회원 조회
+     */
+    public Optional<User> findByUsrNo(Long usrNo) {
+        Optional<User> user = userRepository.findByUsrNo(usrNo);
         return user;
     }
 
-    public void deleteByUsrSeq(Long mbrNo) {
-        userRepository.deleteByUsrSeq(mbrNo);
+
+    /*
+    * 이메일로 회원 조회
+    */
+    public User loadUserByUsername(String usrEmail) throws UsernameNotFoundException {
+        return (User) userRepository.findByUsrEmail(usrEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
     }
 
-    public User save(User user) {
-        userRepository.save(user);
-        return user;
+
+    /*
+    * 회원 탈퇴
+    */
+    public void deleteByUsrNo(Long usrNo) {
+        userRepository.deleteByUsrNo(usrNo);
     }
 
-//    public void updateByUsrSeq(Long mbrNo, User member) {
-//        Optional<User> e = userRepository.findByUsrSeq(mbrNo);
-//        if (e.isPresent()) {
-//            e.get().setUsrSeq(member.getUsrSeq());
-//            e.get().setUsrFollowing(member.getUsrFollowing());
-//            e.get().setUsrEmail(member.getUsrEmail());
-//            e.get().setUsrNick(member.getUsrNick());
-//            e.get().setUsrPwd(member.getUsrPwd());
-//            userRepository.save(member);
-//        }
-//    }
+
+    /*
+    * Token으로 회원찾기
+    */
+    public User findByToken(String token) {
+        return loadUserByUsername(JwtTokenProvider.getUserNo(token));
+    }
 }

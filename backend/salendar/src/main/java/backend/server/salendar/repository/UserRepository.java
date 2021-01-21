@@ -1,15 +1,20 @@
 package backend.server.salendar.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import backend.server.salendar.domain.User;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    public Optional<User> findByUsrSeq(Long usrSeq);
-    public List<User> findByUsrNick(Long usrNick);
-    void deleteByUsrSeq(Long mbrNo);
+
+    Optional<User> findByUsrNo(Long usrNo);
+    Optional<Object> findByUsrEmail(String usrEmail);
+    Optional<User> findByUsrNick(String usrNick);
+
+    @Transactional
+    void deleteByUsrNo(Long usrNo);
+
 }
