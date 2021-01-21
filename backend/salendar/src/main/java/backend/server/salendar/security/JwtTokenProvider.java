@@ -1,4 +1,4 @@
-package backend.server.salendar.config;
+package backend.server.salendar.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

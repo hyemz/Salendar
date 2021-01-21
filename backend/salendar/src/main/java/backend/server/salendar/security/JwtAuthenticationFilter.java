@@ -1,4 +1,4 @@
-package backend.server.salendar.config;
+package backend.server.salendar.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

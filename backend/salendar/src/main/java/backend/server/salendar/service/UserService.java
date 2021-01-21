@@ -17,34 +17,16 @@ public class UserService implements UserDetailsService {
     }
 
 
-    /**
-     * 회원 가입
-     */
-    public User join(User user) {
-        //중복 이름 체크
-        validateDuplicateUser(user);
-        userRepository.save(user);
-        return user;
-    }
-
-    private void validateDuplicateUser(User user) {
-        userRepository.findByUsrNick(user.getUsrNick())
+    public void validateDuplicateUser(String usrNick, String usrEmail) {
+        userRepository.findByUsrNick(usrNick)
                 .ifPresent(m -> {
                     throw new IllegalStateException("이미 존재하는 닉네임입니다.");
                 });
 
-        userRepository.findByUsrEmail(user.getUsrEmail())
+        userRepository.findByUsrEmail(usrEmail)
                 .ifPresent(m -> {
                     throw new IllegalStateException("이미 존재하는 이메일입니다.");
                 });
-    }
-
-
-    /*
-    * 로그인
-    */
-    public void Login() {
-
     }
 
 
@@ -82,18 +64,4 @@ public class UserService implements UserDetailsService {
         userRepository.deleteByUsrNo(usrNo);
     }
 
-    /*
-    * 회원정보 수정
-    */
-    public void updateByUsrNo(Long usrNo, User user) {
-        Optional<User> e = userRepository.findByUsrNo(usrNo);
-        if (e.isPresent()) {
-            e.get().setUsrNo(user.getUsrNo());
-//          e.get().setUsrFollowing(user.getUsrFollowing());
-            e.get().setUsrEmail(user.getUsrEmail());
-            e.get().setUsrNick(user.getUsrNick());
-            e.get().setUsrPwd(user.getUsrPwd());
-            userRepository.save(user);
-        }
-    }
 }
