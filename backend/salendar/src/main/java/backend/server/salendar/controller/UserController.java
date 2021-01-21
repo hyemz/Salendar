@@ -5,8 +5,6 @@ import backend.server.salendar.domain.User;
 import backend.server.salendar.repository.UserRepository;
 import backend.server.salendar.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @RestController
@@ -21,18 +20,12 @@ import java.util.*;
 @CrossOrigin("http://localhost:8081")
 public class UserController {
     // 기본형
-
     @Autowired
     UserService userService;
 
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
-
-    @GetMapping("/test")
-    public String test() {
-        return "test";
-    }
 
 
     // 회원 가입

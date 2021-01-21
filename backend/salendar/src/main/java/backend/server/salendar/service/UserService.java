@@ -2,9 +2,11 @@ package backend.server.salendar.service;
 
 import backend.server.salendar.domain.User;
 import backend.server.salendar.repository.UserRepository;
+import backend.server.salendar.security.JwtTokenProvider;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -64,4 +66,11 @@ public class UserService implements UserDetailsService {
         userRepository.deleteByUsrNo(usrNo);
     }
 
+
+    /*
+    * Token으로 회원찾기
+    */
+    public User findByToken(HttpServletRequest request) {
+        return loadUserByUsername(JwtTokenProvider.getUserNo(JwtTokenProvider.resolveToken(request)));
+    }
 }
