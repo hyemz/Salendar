@@ -26,10 +26,10 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public void validateDuplicateUserEmail(String usrNick) {
-        userRepository.findByUsrNick(usrNick)
+    public void validateDuplicateUserEmail(String usrEmail) {
+        userRepository.findByUsrEmail(usrEmail)
                 .ifPresent(m -> {
-                    throw new IllegalStateException("이미 존재하는 닉네임입니다.");
+                    throw new IllegalStateException("이미 존재하는 이메일입니다.");
                 });
     }
 
