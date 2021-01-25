@@ -33,19 +33,18 @@ public class SaleService {
         Stream<Store> stores = storeRepository.findAll().stream();
 
         stores.forEach(store -> {
-            if (store.getStoreName().equals("Oliveyoung"))
-                try {
-                    Method method = cls.getDeclaredMethod("crawl" + store.getStoreName(), noParam);
-                    List<Sale> sales = (List<Sale>) method.invoke(obj, null);
-                    sales.stream()
-                            .filter(sale -> saleFilter(sale))
-                            .forEach(sale -> {
-                                sale.setStore(store);
-                                saleRepository.save(sale);
-                            });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            try {
+                Method method = cls.getDeclaredMethod("crawl" + store.getStoreName(), noParam);
+                List<Sale> sales = (List<Sale>) method.invoke(obj, null);
+                sales.stream()
+                        .filter(sale -> saleFilter(sale))
+                        .forEach(sale -> {
+                            sale.setStore(store);
+                            saleRepository.save(sale);
+                        });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
     }
 
