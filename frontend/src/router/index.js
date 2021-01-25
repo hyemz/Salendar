@@ -5,6 +5,7 @@ import Signup from '../views/user/Signup.vue'
 import Board from '../views/board/Board.vue'
 import Create from '../views/board/Create.vue'
 import Detail from '../views/board/Detail.vue'
+import MyPost from '../views/mypage/MyPost.vue'
 
 Vue.use(VueRouter)
 
@@ -35,6 +36,11 @@ const routes = [
     path: '/board/detail',
     name: 'Detail',
     component: Detail
+  },
+  {
+    path: '/mypage/mypost',
+    name: 'MyPost',
+    component: MyPost
   },
   
 ]
