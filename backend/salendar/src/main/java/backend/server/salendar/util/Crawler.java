@@ -3,6 +3,7 @@ package backend.server.salendar.util;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import javax.imageio.ImageIO;
@@ -17,21 +18,21 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Crawler {
 
     private final static String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15";
 
-    public static void main(String[] args) throws KeyManagementException, NoSuchAlgorithmException {
+    public static void crawlOliveYoung() throws IOException, NoSuchAlgorithmException, KeyManagementException {
+        String eventUrl = "https://www.oliveyoung.co.kr/store/main/getEventList.do"; //올리브영 이벤트리스트 페이지
+        Document doc = Jsoup.connect(eventUrl).get();
+        crawl(eventUrl, "올리브영");
+    }
 
-        // Jsoup를 이용해서 https://wonlog11.cafe24.com/board/gallery/read.html?no=295747&board_no=8 크롤링
-        // String eventUrl = "크롤링 할 url 지정";
-        String eventUrl = "https://www.oliveyoung.co.kr/store/planshop/getPlanShopDetail.do?dispCatNo=500000101480031&trackingCd=Main_Planshop_PROD"; //올리브영
-        // String eventUrl = "http://lalavla.gsretail.com/lalavla/ko/customer-engagement/event/detail/publishing?pageNum=1&eventCode=8825846418976"; // 랄라블라
-        // String eventUrl = "https://tonystreet.com/event/event_event_view.do?i_sEventcd=EVT20201222000181949"; // 토니모리 이미지 받아오기는 실패. body에 url은 받아와짐.
-        // String eventUrl = "https://www.innisfree.com/kr/ko/ProductView.do?prdSeq=29077"; // 이니스프리 이미지 받아오기는 실패. body에 url은 받아와짐.
-        // String eventUrl = "https://www.naturecollection.com/mall/event/event-view.jsp?seq=4018"; // 더페이스샵
-
+    private static void crawl(String eventUrl, String store) throws KeyManagementException, NoSuchAlgorithmException {
         // SSL check
         if(eventUrl.indexOf("https://") >= 0){
             //System.out.println("****** SSL CHECK ******");
@@ -46,33 +47,88 @@ public class Crawler {
                     .method(Connection.Method.GET)
                     .ignoreContentType(true)
                     .get();
-            System.out.println(doc);    //  Document에는 페이지의 전체 소스가 저장라
+            //System.out.println(doc);    //  Document에는 페이지의 전체 소스가 저장되어있음
 
             //select를 이용하여 원하는 태그를 선택
-            Elements element = doc.select("#contents > div.tabWrap.pdtTabWrap.fixed > div.tabContents > section.tabCont.active > div > div > div > div.prdType.sec01.w780 > img");
-            for(int i=0; i<element.size(); i++){
-                System.out.println("html src:  " + element.get(i).attr("src"));
-                String src = element.get(i).attr("src");
+            Element eventList = doc.select("#Container > div > div.event_tab_cont > ul.event_thumb_list").get(0);
+            Elements eventsDate = eventList.select("li > a > p.evt_date");
+            Elements eventsDesc = eventList.select("li > a > p.evt_desc");
 
-                StringBuffer str = new StringBuffer(src);
-                //str.insert(0, "http://");   //  src에 따라 붙여도 되고 안붙여도 됨
-                String realSrc = str.toString();
-                System.out.println("realSrc: " + realSrc);
+            int size = eventsDate.size();
 
-                URL url = new URL(realSrc);
-                HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            int eventIdx = 0;
+            boolean[] chkPeriod = new boolean[size];
+            for(Element e : eventsDate){
+                //System.out.println((eventIdx) +". " + e.text());   // 1. 21.01.01- 21.06.30 <-- 이런식으로 세일 기간 들어가있음
 
-                conn.setRequestProperty("Referer", realSrc);
-                BufferedImage img = ImageIO.read(conn.getInputStream());
+                /* 받아온 세일 기간을 잘라서 세일이 몇일동안 진행되는지 확인하기 */
+                int index = e.text().indexOf("-");
+                String eventStart = e.text().substring(0, index);
+                String eventEnd = e.text().substring(index+2);
 
-                FileOutputStream out = new FileOutputStream(
-                        "/Users/jeeyoungkim/Desktop/Ssafy/2학기 프로젝트 1/crawling/토니모리 second trial" + (i + 1) + ".jpg");
-                ImageIO.write(img, "jpg", out);
+                SimpleDateFormat inputFormat = new SimpleDateFormat("yy.MM.dd");
+                SimpleDateFormat sixFormat = new SimpleDateFormat("yyMMdd");
+
+                Date eventStartDate = inputFormat.parse(eventStart);
+                Date eventEndDate = inputFormat.parse(eventEnd);
+
+                long eventPeriod = eventEndDate.getTime() - eventStartDate.getTime();
+                long eventPeriodInDays = eventPeriod / (24*60*60*1000);
+
+//                System.out.println(eventIdx + ". eventPeriodIndays: " + eventPeriodInDays);
+                /* 주요 변수: eventPeriodInDays: 이벤트 기간 */
+
+                if(eventPeriodInDays <= 10){    //  이벤트 기간이 10일 이하인 것만 이미지 불러오기
+                    chkPeriod[eventIdx] = true;
+                }
+                eventIdx++;
             }
 
-        } catch (IOException e) {
+            int descIdx = 0;
+            boolean[] chkPercentage = new boolean[size];
+            for(Element e : eventsDesc){
+//                System.out.println(e.text());
+                int index = e.text().indexOf("%");
+                if(index != -1) {
+                    String percentage = e.text().substring(index-2, index);
+                    int per = Integer.parseInt(percentage);
+                    if(per <= 70 || per > 0){
+                        chkPercentage[descIdx] = true;
+                    }
+                }
+                descIdx++;
+            }
+
+            for(int i=0; i<size; i++){
+                if(chkPeriod[i] && chkPercentage[i]){
+                    Elements tmp = eventList.select("li > a > img");
+                    String src = tmp.get(i).attr("data-original");
+                    StringBuffer str = new StringBuffer(src);
+                    //                    str.insert(0, "http://");   //  src에 따라 붙여도 되고 안붙여도 됨
+                    String realSrc = str.toString();
+                    //                    System.out.println("realSrc: " + realSrc);
+
+                    URL url = new URL(realSrc);
+                    HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+
+                    conn.setRequestProperty("Referer", realSrc);
+                    BufferedImage img = ImageIO.read(conn.getInputStream());
+
+                    FileOutputStream out = new FileOutputStream(
+                            "/Users/jeeyoungkim/Desktop/Ssafy/2학기 프로젝트 1/crawling/" + store + "이벤트 리스트 " + (i) + ".jpg");
+                    ImageIO.write(img, "jpg", out);
+
+                }
+            }
+
+
+        } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) throws KeyManagementException, NoSuchAlgorithmException, IOException {
+        crawlOliveYoung();
     }
 
     // SSL 우회 등록
