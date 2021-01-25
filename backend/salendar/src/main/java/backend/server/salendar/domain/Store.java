@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // 매장 정보
-@Entity(name="store")
+@Entity(name = "store")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -35,9 +35,12 @@ public class Store {
     @JsonProperty("store_logo")
     private String storeLogo;
 
+    //    팔로워
+    @ManyToMany(mappedBy = "usrFollowing")
+    private List<User> users = new ArrayList<User>();
+
     // Store 모델 복사
-    public void CopyData(Store param)
-    {
+    public void CopyData(Store param) {
         this.storeNo = param.getStoreNo();
         this.storeName = param.getStoreName();
         this.storeSales = param.getStoreSales();

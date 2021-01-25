@@ -7,8 +7,10 @@ import backend.server.salendar.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 
@@ -135,12 +140,43 @@ public class UserController {
     @ApiOperation(value = "프로필 이미지 설정", notes = "Img file Url, token")
     @PutMapping(value = "/token/profileImg")
     public ResponseEntity<String> setUserProfileImgUrl(@ApiParam(value = "image file Url") @RequestParam("imgUrl") String Url,
-                                                    HttpServletRequest request) {
+                                                       HttpServletRequest request) {
         try {
             userService.saveUserImageUrl(JwtTokenProvider.resolveToken(request), Url);
             return new ResponseEntity<>("OK", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    //    팔로우
+    @ApiOperation(value = "매장 팔로우", notes = "token, storeName")
+    @PostMapping(value = "/token/follow/{storeName}")
+    public ResponseEntity<String> Follow(@PathVariable("storeName") String storeName, HttpServletRequest request) throws URISyntaxException {
+        try {
+            userService.Follow(JwtTokenProvider.resolveToken(request), storeName);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("OK", HttpStatus.OK);
+    }
+
+    //    언팔로우
+    @ApiOperation(value = "매장 언팔로우", notes = "token, storeName")
+    @PostMapping(value = "/token/unfollow/{storeName}")
+    public ResponseEntity<String> unFollow(@PathVariable("storeName") String storeName, HttpServletRequest request) throws URISyntaxException {
+        try {
+            userService.unFollow(JwtTokenProvider.resolveToken(request), storeName);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("OK", HttpStatus.OK);
+    }
+
+    //    팔로우 조회
+    @ApiOperation(value = "팔로우 중 매장 조회")
+    @GetMapping(value = "/token/followings")
+    public ResponseEntity<Map<String, Boolean>> userFollowings(HttpServletRequest request){
+        return new ResponseEntity<>(userService.usrFollowings(JwtTokenProvider.resolveToken(request)), HttpStatus.OK);
     }
 }
