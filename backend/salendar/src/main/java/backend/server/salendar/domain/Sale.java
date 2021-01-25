@@ -1,18 +1,34 @@
 package backend.server.salendar.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-
 import javax.persistence.*;
-import java.security.Timestamp;
+import java.util.Date;
 
-// 세일 정보
-@Entity(name="Sale")
+
+/*
+세일정보
+Json
+{
+    "saleNo": 1,
+    "saleTitle": String,
+    "saleStore": Integer,
+    "saleLink": String,
+    "saleDsc": String,
+    "saleBigImg": String,
+    "saleThumbnail": String,
+    "saleStartDate": Date,
+    "saleEndDate": Date
+}
+*/
+@Entity(name = "Sale")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class Sale {
 
     // 세일 일련번호
@@ -33,33 +49,39 @@ public class Sale {
     @JsonProperty("sale_thumbnail")
     private String saleThumbnail;
 
-    // 세일 이름
-    @JsonProperty("sale_name")
-    private String saleName;
+    // 세일 제목
+    @JsonProperty("sale_title")
+    private String saleTitle;
+
+    // 세일 설명
+    @JsonProperty("sale_dsc")
+    private String saleDsc;
 
     // 시작 시간
     @JsonProperty("sale_start_date")
-    private Timestamp saleStartDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date saleStartDate;
 
     // 종료 시간
     @JsonProperty("sale_end_date")
-    private Timestamp saleEndDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date saleEndDate;
 
     // 매장
     @JsonProperty("sale_store")
     @ManyToOne
-    @JoinColumn(name="store_no")
+    @JoinColumn(name = "store_no")
     private Store store;
 
     // Sale 모델 복사
-    public void CopyData(Sale param)
-    {
+    public void CopyData(Sale param) {
         this.saleNo = param.getSaleNo();
         this.saleLink = param.getSaleLink();
         this.saleBigImg = param.getSaleBigImg();
         this.saleThumbnail = param.getSaleThumbnail();
-        this.saleName = param.getSaleName();
+        this.saleTitle = param.getSaleTitle();
         this.saleStartDate = param.getSaleStartDate();
         this.saleEndDate = param.getSaleEndDate();
+        this.saleDsc = param.getSaleDsc();
     }
 }
