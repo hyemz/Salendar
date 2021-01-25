@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -41,24 +42,24 @@ public class UserController {
         try {
             userService.validateDuplicateUserNick(user.get("usrNick"));
             userService.validateDuplicateUserEmail(user.get("usrEmail"));
+            userRepository.save(User.builder()
+                    .usrEmail(user.get("usrEmail"))
+                    .usrPwd(passwordEncoder.encode(user.get("usrPwd")))
+                    .usrNick(user.get("usrNick"))
+                    .roles(Collections.singletonList("ROLE_USER")) // 최초 가입시 USER 로 설정
+                    .build());
+            return new ResponseEntity<String>(user.get("usrNick"), HttpStatus.OK);
         } catch (IllegalStateException e) {
             return new ResponseEntity<String>(e.toString(), HttpStatus.BAD_REQUEST);
         }
-        userRepository.save(User.builder()
-                .usrEmail(user.get("usrEmail"))
-                .usrPwd(passwordEncoder.encode(user.get("usrPwd")))
-                .usrNick(user.get("usrNick"))
-                .roles(Collections.singletonList("ROLE_USER")) // 최초 가입시 USER 로 설정
-                .build());
-        return new ResponseEntity<String>(user.get("usrNick"), HttpStatus.OK);
     }
 
 
     // 로그인    
     @ApiOperation(value = "로그인", notes = "로그인")
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@ApiParam(value = "usrEmail, usrPwd", required = true)@RequestBody Map<String, String> user) {
-        Map<String, Object> resultMap = new HashMap<>();
+    public ResponseEntity<Map<String, Object>> login(@ApiParam(value = "usrEmail, usrPwd", required = true) @RequestBody Map<String, String> user) {
+        Map<String, Object> response = new HashMap<>();
         HttpStatus status = null;
         try {
             User member = (User) userRepository.findByUsrEmail(user.get("usrEmail"))
@@ -66,13 +67,13 @@ public class UserController {
             if (!passwordEncoder.matches(user.get("usrPwd"), member.getPassword())) {
                 throw new IllegalArgumentException("잘못된 비밀번호입니다.");
             }
-            resultMap.put("token", jwtTokenProvider.createToken(member.getUsername(), member.getRoles()));
+            response.put("token", jwtTokenProvider.createToken(member.getUsername(), member.getRoles()));
             status = HttpStatus.OK;
         } catch (Exception e) {
-            resultMap.put("message", e.toString());
+            response.put("message", e.toString());
             status = HttpStatus.NOT_ACCEPTABLE;
         }
-        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+        return new ResponseEntity<Map<String, Object>>(response, status);
     }
 
     // 모든 회원 조회
@@ -101,7 +102,7 @@ public class UserController {
 
     // 회원번호로 회원 수정(usrNo로 회원을 찾아 Member 객체의 id, Nick을 수정함)
     @ApiOperation(value = "회원 정보 변경", notes = "token 필요")
-    @PutMapping(value = "/token/update}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PutMapping(value = "/token/update", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> updateMember(@RequestBody Map<String, String> user, HttpServletRequest request) {
         Optional<User> curUser = Optional.ofNullable(userService.findByToken(JwtTokenProvider.resolveToken(request)));
         try {
@@ -115,5 +116,31 @@ public class UserController {
             userRepository.save(curUser.get());
         }
         return new ResponseEntity<String>(user.get("usrNick"), HttpStatus.OK);
+    }
+
+    // 프로필 이미지 설정 -> 이건 DB에 들어가는 용
+//    @ApiOperation(value = "프로필 이미지 설정", notes = "Img file, token")
+//    @PutMapping(value = "/token/profileImg")
+//    public ResponseEntity<String> setUserProfileImg(@ApiParam(value = "image file") @RequestParam("img") MultipartFile file,
+//                                                    HttpServletRequest request) {
+//        try {
+//            userService.saveUserImage(JwtTokenProvider.resolveToken(request), file);
+//            return new ResponseEntity<>("OK", HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
+
+    // 이게 우리가 정한 방법
+    @ApiOperation(value = "프로필 이미지 설정", notes = "Img file Url, token")
+    @PutMapping(value = "/token/profileImg")
+    public ResponseEntity<String> setUserProfileImgUrl(@ApiParam(value = "image file Url") @RequestParam("imgUrl") String Url,
+                                                    HttpServletRequest request) {
+        try {
+            userService.saveUserImageUrl(JwtTokenProvider.resolveToken(request), Url);
+            return new ResponseEntity<>("OK", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
+        }
     }
 }
