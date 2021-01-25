@@ -28,11 +28,7 @@ public class Crawler {
 
     public static void crawlOliveYoung() throws IOException, NoSuchAlgorithmException, KeyManagementException {
         String eventUrl = "https://www.oliveyoung.co.kr/store/main/getEventList.do"; //올리브영 이벤트리스트 페이지
-        Document doc = Jsoup.connect(eventUrl).get();
-        crawl(eventUrl, "올리브영");
-    }
 
-    private static void crawl(String eventUrl, String store) throws KeyManagementException, NoSuchAlgorithmException {
         // SSL check
         if(eventUrl.indexOf("https://") >= 0){
             //System.out.println("****** SSL CHECK ******");
@@ -115,7 +111,7 @@ public class Crawler {
                     BufferedImage img = ImageIO.read(conn.getInputStream());
 
                     FileOutputStream out = new FileOutputStream(
-                            "/Users/jeeyoungkim/Desktop/Ssafy/2학기 프로젝트 1/crawling/" + store + "이벤트 리스트 " + (i) + ".jpg");
+                            "/Users/jeeyoungkim/Desktop/Ssafy/2학기 프로젝트 1/crawling/올리브영 이벤트 리스트 " + (i) + ".jpg");
                     ImageIO.write(img, "jpg", out);
 
                 }
