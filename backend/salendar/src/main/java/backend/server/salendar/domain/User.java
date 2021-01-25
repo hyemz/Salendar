@@ -42,6 +42,12 @@ public class User implements UserDetails {
 //    @JsonProperty("usrFollowing")
 //    private Integer usrFollowing;
 
+    // 프로필 이미지
+    @JsonProperty("usrImg")
+//    @Lob DB에 저장하는 용도
+//    private Byte[] usrImg;
+    private String usrImgUrl;
+
 
     // User 모델 복사
     public void CopyData(User param)
@@ -50,6 +56,7 @@ public class User implements UserDetails {
         this.usrPwd = param.getUsrPwd();
         this.usrNick = param.getUsrNick();
         this.usrEmail = param.getUsrEmail();
+        this.usrImgUrl = param.getUsrImgUrl();
 //        this.usrFollowing = param.getUsrFollowing();
     }
 
