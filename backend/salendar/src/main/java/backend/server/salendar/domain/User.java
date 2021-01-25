@@ -2,6 +2,7 @@ package backend.server.salendar.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +13,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Entity(name="user")
+@Entity(name = "user")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -37,21 +38,25 @@ public class User implements UserDetails {
     // 이메일
     @JsonProperty("usrEmail")
     private String usrEmail;
-//
-//    // 팔로우 매장
-//    @JsonProperty("usrFollowing")
-//    private Integer usrFollowing;
+
+    // 팔로우 매장
+    @JsonProperty("usrFollowing")
+    @ManyToMany
+    @JoinTable(name = "user_following",
+            joinColumns = @JoinColumn(name = "usr_no"),
+            inverseJoinColumns = @JoinColumn(name = "store_no"))
+    private List<Store> usrFollowing = new ArrayList<Store>();
+
 
     // 프로필 이미지
-    @JsonProperty("usrImg")
+    @JsonProperty("usrImgUrl")
 //    @Lob DB에 저장하는 용도
 //    private Byte[] usrImg;
     private String usrImgUrl;
 
 
     // User 모델 복사
-    public void CopyData(User param)
-    {
+    public void CopyData(User param) {
         this.usrNo = param.getUsrNo();
         this.usrPwd = param.getUsrPwd();
         this.usrNick = param.getUsrNick();
@@ -60,6 +65,7 @@ public class User implements UserDetails {
 //        this.usrFollowing = param.getUsrFollowing();
     }
 
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
