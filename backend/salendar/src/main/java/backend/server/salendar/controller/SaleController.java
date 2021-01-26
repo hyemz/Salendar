@@ -55,6 +55,7 @@ public class SaleController {
 
 
 //    찜한 매장 리스트
+    @Transactional
     @ApiOperation(value = "팔로우 중인 매장의 세일 리스트")
     @GetMapping(value = "/token/list/follow")
     public ResponseEntity<Map<String, List<Sale>>> saleFollowingList(HttpServletRequest request){
