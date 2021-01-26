@@ -49,9 +49,7 @@ public class Crawler {
 
         for (Element e : eventLists) {
 //            {
-//                "saleNo":1,
 //                    "saleTitle":String,
-//                    "saleStore":Integer,
 //                    "saleLink":String,
 //                    "saleDsc":String,
 //                    "saleBigImg":String,
