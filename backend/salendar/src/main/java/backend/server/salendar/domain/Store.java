@@ -17,14 +17,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Proxy(lazy = false)
-public class Store implements Serializable {
+public class Store {
 
     // 매장 일련번호
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("store_no")
-    private Integer storeNo;
+    private Long storeNo;
 
     // 매장 이름
     @JsonProperty("store_name")
@@ -32,8 +31,8 @@ public class Store implements Serializable {
 
     // 세일
     @JsonProperty("store_sales")
+    @OneToMany(mappedBy = "store")
     @JsonManagedReference
-    @OneToMany(mappedBy = "store", fetch = FetchType.EAGER)
     private List<Sale> storeSales = new ArrayList<Sale>();
 
     // 로고
@@ -41,8 +40,8 @@ public class Store implements Serializable {
     private String storeLogo;
 
     //    팔로워
+    @ManyToMany(mappedBy = "usrFollowing")
     @JsonManagedReference
-    @ManyToMany(mappedBy = "usrFollowing", fetch = FetchType.LAZY)
     private List<User> users = new ArrayList<User>();
 
     // Store 모델 복사

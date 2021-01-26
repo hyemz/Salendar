@@ -33,14 +33,13 @@ Json
 @AllArgsConstructor
 @Builder
 @ToString
-@Proxy(lazy = false)
-public class Sale implements Serializable {
+public class Sale {
 
     // 세일 일련번호
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("sale_no")
-    private Integer saleNo;
+    private Long saleNo;
 
     // 링크
     @JsonProperty("sale_link")

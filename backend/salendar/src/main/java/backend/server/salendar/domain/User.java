@@ -22,9 +22,8 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Proxy(lazy = false)
 // 사용자
-public class User implements UserDetails, Serializable {
+public class User implements UserDetails {
 
     // 사용자 일련번호
     @Id

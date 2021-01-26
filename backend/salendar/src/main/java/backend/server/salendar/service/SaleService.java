@@ -8,6 +8,7 @@ import backend.server.salendar.repository.StoreRepository;
 import backend.server.salendar.repository.UserRepository;
 import lombok.SneakyThrows;
 
+import javax.transaction.Transactional;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -94,11 +95,13 @@ public class SaleService {
         return forPeriod && forContent;
     }
 
+    @Transactional
     public Map<String, List<Sale>> findSalesByFollowingStores(User user) {
         Map<String, List<Sale>> result = new HashMap<>();
-        userRepository.findUsrFollowingsByUsrNo(user.getUsrNo())
+        user.getUsrFollowing()
                 .stream()
                 .forEach(store -> {
+                    System.out.println(store);
                     result.put(store.getStoreName(), new ArrayList<>());
                     saleRepository.findSalesByStore(store)
                             .forEach(res -> result.get(store.getStoreName()).add(res));
