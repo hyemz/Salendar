@@ -24,7 +24,7 @@
         <v-tabs align-with-title>
           <v-tab
             ><router-link
-              to="/login"
+              to="/salelist"
               class="white--text text-decoration-none mb-2 font-weight-medium"
               >메인페이지</router-link
             ></v-tab
