@@ -1,9 +1,13 @@
 package backend.server.salendar.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 
@@ -29,7 +33,8 @@ Json
 @AllArgsConstructor
 @Builder
 @ToString
-public class Sale {
+@Proxy(lazy = false)
+public class Sale implements Serializable {
 
     // 세일 일련번호
     @Id
@@ -68,8 +73,8 @@ public class Sale {
     private Date saleEndDate;
 
     // 매장
-    @JsonProperty("sale_store")
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "store_no")
     private Store store;
 

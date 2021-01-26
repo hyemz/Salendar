@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public class SaleController {
 
     //    세일 DB 업데이트
     @ApiOperation(value = "세일 DB 업데이트", notes = "관리자")
-    @PostMapping(value = "/updateDB")
+    @PostMapping(value = "/admin/updateDB")
     public ResponseEntity<String> updateSaleDB() {
         try {
             saleService.crawlAll();
@@ -44,6 +45,7 @@ public class SaleController {
 
 
 //    세일 전체 리스트
+    @Transactional
     @ApiOperation(value = "세일 전체 리스트", notes = "카드 형태 페이지, 전체 반환")
     @GetMapping(value = "/list")
     public ResponseEntity<List<Sale>> saleList(){

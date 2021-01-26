@@ -1,13 +1,16 @@
 package backend.server.salendar.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.Proxy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -19,8 +22,9 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Proxy(lazy = false)
 // 사용자
-public class User implements UserDetails {
+public class User implements UserDetails, Serializable {
 
     // 사용자 일련번호
     @Id
@@ -40,8 +44,8 @@ public class User implements UserDetails {
     private String usrEmail;
 
     // 팔로우 매장
-    @JsonProperty("usrFollowing")
     @ManyToMany
+    @JsonBackReference
     @JoinTable(name = "user_following",
             joinColumns = @JoinColumn(name = "usr_no"),
             inverseJoinColumns = @JoinColumn(name = "store_no"))

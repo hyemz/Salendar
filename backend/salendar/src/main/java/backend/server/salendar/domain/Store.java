@@ -1,9 +1,12 @@
 package backend.server.salendar.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +17,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Store {
+@Proxy(lazy = false)
+public class Store implements Serializable {
 
     // 매장 일련번호
     @Id
@@ -28,7 +32,8 @@ public class Store {
 
     // 세일
     @JsonProperty("store_sales")
-    @OneToMany(mappedBy = "store")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "store", fetch = FetchType.EAGER)
     private List<Sale> storeSales = new ArrayList<Sale>();
 
     // 로고
@@ -36,7 +41,8 @@ public class Store {
     private String storeLogo;
 
     //    팔로워
-    @ManyToMany(mappedBy = "usrFollowing")
+    @JsonManagedReference
+    @ManyToMany(mappedBy = "usrFollowing", fetch = FetchType.LAZY)
     private List<User> users = new ArrayList<User>();
 
     // Store 모델 복사
