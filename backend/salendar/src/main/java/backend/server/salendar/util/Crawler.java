@@ -510,8 +510,16 @@ public class Crawler {
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
 
             int index = eventDate.text().indexOf("~");
-            String eventStart = eventDate.text().substring(5, index-1);
-            String eventEnd = eventDate.text().substring(index+2, index+12);
+            String eventStart = eventDate.text().substring(0, index-1);
+            String eventEnd;
+//            System.out.println(eventDate.text().substring(index+2, index+3));
+//            System.out.println((int)eventDate.text().substring(index+2, index+3).charAt(0));
+            if((int)eventDate.text().substring(index+2, index+3).charAt(0) > 50000){
+                eventEnd = "2022-01-03";
+            }
+            else {
+                eventEnd = eventDate.text().substring(index+2, index+12);
+            }
 
 //            System.out.println(eventStart + " ~ " + eventEnd);
 
@@ -521,12 +529,12 @@ public class Crawler {
             curSale.setSaleStartDate(eventStartDate);
             curSale.setSaleEndDate(eventEndDate);
 
-            curSale.setSaleBigImg(Jsoup.connect(curSale.getSaleLink())
-                    .header("Content-Type", "application/json;charset=UTF-8")
-                    .userAgent(USER_AGENT)
-                    .ignoreContentType(true)
-                    .get()
-                    .select("#contents > div.pdtViewTop > div.pdtSlider_area > div.swiper-container.pdtViewSlider.swiper-container-initialized.swiper-container-horizontal > ul > li.swiper-slide.swiper-slide-visible.swiper-slide-active > img").attr("src"));
+//            curSale.setSaleBigImg(Jsoup.connect(curSale.getSaleLink())
+//                    .header("Content-Type", "application/json;charset=UTF-8")
+//                    .userAgent(USER_AGENT)
+//                    .ignoreContentType(true)
+//                    .get()
+//                    .select("#contents > div.pdtViewTop > div.pdtSlider_area > div.swiper-container.pdtViewSlider.swiper-container-initialized.swiper-container-horizontal > ul > li.swiper-slide.swiper-slide-visible.swiper-slide-active > img").attr("src"));
 
             result.add(curSale);
         }
