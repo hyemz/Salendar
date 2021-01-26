@@ -9,7 +9,11 @@
       </template>
       <v-col>
         <v-toolbar-title class="white--text text-decoration-none mb-2 font-weight-medium"
-          >Salendar</v-toolbar-title
+          ><router-link
+            to="/calendar"
+            class="white--text text-decoration-none mb-2 font-weight-medium"
+            >Salendar</router-link
+          ></v-toolbar-title
         >
       </v-col>
       <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
@@ -27,7 +31,7 @@
           >
           <v-tab
             ><router-link
-              :to="{ name: 'Signup' }"
+              to="/calendar"
               class="white--text text-decoration-none mb-2 font-weight-medium"
               >세일캘린더</router-link
             ></v-tab
@@ -41,7 +45,7 @@
           >
           <v-tab
             ><router-link
-              to="/signup"
+              to="/mypage/wishlist"
               class="white--text text-decoration-none mb-2 font-weight-medium"
               >찜목록</router-link
             ></v-tab
