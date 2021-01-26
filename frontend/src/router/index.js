@@ -9,6 +9,7 @@ import Detail from '../views/board/Detail.vue'
 import MyPage from '../views/mypage/MyPage.vue'
 import MyPost from '../views/mypage/MyPost.vue'
 import WishList from '../views/mypage/WishList.vue'
+import SaleList from '../views/SaleList.vue'
 
 
 Vue.use(VueRouter)
@@ -60,6 +61,11 @@ const routes = [
     path: 'mypage/wishlist',
     name: 'WishList',
     component: WishList
+  },
+  {
+    path: '/salelist',
+    name: 'SaleList',
+    component: SaleList
   },
 
 ]
