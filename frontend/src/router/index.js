@@ -57,7 +57,7 @@ const routes = [
     component: MyPost
   },
   {
-    path: 'mypage/wishlist',
+    path: '/mypage/wishlist',
     name: 'WishList',
     component: WishList
   },
