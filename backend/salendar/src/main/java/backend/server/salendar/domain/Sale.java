@@ -1,9 +1,13 @@
 package backend.server.salendar.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 
@@ -35,7 +39,7 @@ public class Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("sale_no")
-    private Integer saleNo;
+    private Long saleNo;
 
     // 링크
     @JsonProperty("sale_link")
@@ -68,8 +72,8 @@ public class Sale {
     private Date saleEndDate;
 
     // 매장
-    @JsonProperty("sale_store")
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "store_no")
     private Store store;
 

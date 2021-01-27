@@ -51,7 +51,7 @@ public class UserController {
                     .usrEmail(user.get("usrEmail"))
                     .usrPwd(passwordEncoder.encode(user.get("usrPwd")))
                     .usrNick(user.get("usrNick"))
-                    .roles(Collections.singletonList("ROLE_USER")) // 최초 가입시 USER 로 설정
+                    .roles(Collections.singletonList(user.get("usrEmail").endsWith("@admin.com") ? "ROLE_ADMIN" : "ROLE_USER"))
                     .build());
             return new ResponseEntity<String>(user.get("usrNick"), HttpStatus.OK);
         } catch (IllegalStateException e) {
@@ -60,10 +60,11 @@ public class UserController {
     }
 
 
-    // 로그인    
+    // 로그인
     @ApiOperation(value = "로그인", notes = "로그인")
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@ApiParam(value = "usrEmail, usrPwd", required = true) @RequestBody Map<String, String> user) {
+    public ResponseEntity<Map<String, Object>> login
+    (@ApiParam(value = "usrEmail, usrPwd", required = true) @RequestBody Map<String, String> user) {
         Map<String, Object> response = new HashMap<>();
         HttpStatus status = null;
         try {
@@ -139,8 +140,9 @@ public class UserController {
     // 이게 우리가 정한 방법
     @ApiOperation(value = "프로필 이미지 설정", notes = "Img file Url, token")
     @PutMapping(value = "/token/profileImg")
-    public ResponseEntity<String> setUserProfileImgUrl(@ApiParam(value = "image file Url") @RequestParam("imgUrl") String Url,
-                                                       HttpServletRequest request) {
+    public ResponseEntity<String> setUserProfileImgUrl
+    (@ApiParam(value = "image file Url") @RequestParam("imgUrl") String Url,
+     HttpServletRequest request) {
         try {
             userService.saveUserImageUrl(JwtTokenProvider.resolveToken(request), Url);
             return new ResponseEntity<>("OK", HttpStatus.OK);
@@ -152,7 +154,8 @@ public class UserController {
     //    팔로우
     @ApiOperation(value = "매장 팔로우", notes = "token, storeName")
     @PostMapping(value = "/token/follow/{storeName}")
-    public ResponseEntity<String> Follow(@PathVariable("storeName") String storeName, HttpServletRequest request) throws URISyntaxException {
+    public ResponseEntity<String> Follow(@PathVariable("storeName") String storeName, HttpServletRequest request) throws
+            URISyntaxException {
         try {
             userService.Follow(JwtTokenProvider.resolveToken(request), storeName);
         } catch (Exception e) {
@@ -164,7 +167,8 @@ public class UserController {
     //    언팔로우
     @ApiOperation(value = "매장 언팔로우", notes = "token, storeName")
     @PostMapping(value = "/token/unfollow/{storeName}")
-    public ResponseEntity<String> unFollow(@PathVariable("storeName") String storeName, HttpServletRequest request) throws URISyntaxException {
+    public ResponseEntity<String> unFollow(@PathVariable("storeName") String storeName, HttpServletRequest request) throws
+            URISyntaxException {
         try {
             userService.unFollow(JwtTokenProvider.resolveToken(request), storeName);
         } catch (Exception e) {
@@ -176,7 +180,7 @@ public class UserController {
     //    팔로우 조회
     @ApiOperation(value = "팔로우 중 매장 조회")
     @GetMapping(value = "/token/followings")
-    public ResponseEntity<Map<String, Boolean>> userFollowings(HttpServletRequest request){
+    public ResponseEntity<Map<String, Boolean>> userFollowings(HttpServletRequest request) {
         return new ResponseEntity<>(userService.usrFollowings(JwtTokenProvider.resolveToken(request)), HttpStatus.OK);
     }
 }

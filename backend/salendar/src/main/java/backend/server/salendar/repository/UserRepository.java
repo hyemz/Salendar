@@ -19,6 +19,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional
     void deleteByUsrNo(Long usrNo);
 
-    List<Store> findUsrFollowingsByUsrNo(Long usrNo);
-
 }

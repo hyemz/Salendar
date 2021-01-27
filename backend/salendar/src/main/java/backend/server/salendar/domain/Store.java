@@ -1,9 +1,12 @@
 package backend.server.salendar.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +23,7 @@ public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("store_no")
-    private Integer storeNo;
+    private Long storeNo;
 
     // 매장 이름
     @JsonProperty("store_name")
@@ -29,6 +32,7 @@ public class Store {
     // 세일
     @JsonProperty("store_sales")
     @OneToMany(mappedBy = "store")
+    @JsonManagedReference
     private List<Sale> storeSales = new ArrayList<Sale>();
 
     // 로고
@@ -37,6 +41,7 @@ public class Store {
 
     //    팔로워
     @ManyToMany(mappedBy = "usrFollowing")
+    @JsonManagedReference
     private List<User> users = new ArrayList<User>();
 
     // Store 모델 복사
