@@ -5,7 +5,7 @@
         <h1>찜 목록</h1>
       </v-col>
 
-      <v-card class="mx-auto" max-width="1000">
+      <v-card class="mx-auto" max-width="1000" flat>
         <v-row dense rows="12">
           <v-col v-for="(card, i) in cards" :key="card.title" :cols="card.flex">
             <v-card v-if="card.show">
@@ -43,44 +43,69 @@
   </v-container>
 </template>
 <script>
+import axios from 'axios';
 export default {
   data: () => ({
+    baseURI: '',
+    datas: [],
     cards: [
       {
         title: '올리브영',
-        src: 'https://na001.leafletcdns.com/kr/data/21/logo.png',
+        src: require('@/assets/storeLogo/oliveyoung.png'),
         flex: 6,
         badge: false,
         show: true,
       },
       {
         title: '랄라블라',
-        src: 'https://blog.kakaocdn.net/dn/b5q55v/btqwOBWQnuK/vIHQXK4M218BbvAuAGnEtk/img.jpg',
+        src: require('@/assets/storeLogo/lalavla.png'),
         flex: 6,
         badge: true,
         show: true,
       },
       {
-        title: '롭스',
-        src:
-          'https://s3-ap-northeast-2.amazonaws.com/blog.lotte.co.kr/wp-content/uploads/2013/05/%EB%A1%AD%EC%8A%A4-BI1.jpg',
+        title: '미샤',
+        src: require('@/assets/storeLogo/missha.png'),
         flex: 6,
         badge: true,
         show: true,
       },
       {
         title: '이니스프리',
-        src: 'https://blog.kakaocdn.net/dn/zoFUG/btqxhyrRYKy/UXmpubpxrivvbykDyOzHN1/img.jpg',
+        src: require('@/assets/storeLogo/innisfree.png'),
         flex: 6,
         badge: false,
         show: true,
       },
     ],
   }),
+  created: function() {
+    axios
+      .get(`${this.baseURI}/나머지주소`)
+      .then((res) => {
+        console.log(res);
+        this.datas = res.data;
+      })
+      .catch((err) => {
+        console.log('찜 목록을 불러오지 못했습니다.', err);
+      });
+  },
   methods: {
     removeCard(i) {
       alert(this.cards[i].title + '를 찜 목록에서 삭제합니다.');
-      this.cards.splice(this.cards[i].title, 1);
+      this.cards.splice(this.cards[i], 1);
+      // 삭제?
+      axios.delete(`${this.baseURI}/나머지주소` + i);
+
+      // true, false로 바꾸기?
+      axios
+        .patch(`${this.baseURI}/나머지주소`, this.cards[i].show)
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console('찜 목록에서 삭제를 못했어요', err);
+        });
     },
   },
 };
