@@ -102,7 +102,7 @@
                           v-if="active"
                           color="white"
                           size="48"
-                          v-text="'mdi-close-circle-outline'"
+                          v-text="''"
                         ></v-icon>
                       </v-scale-transition>
                     </v-row>
@@ -127,7 +127,7 @@
               max-width=""
             >
               <v-slide-group
-                v-model="model"
+                v-model="model2"
                 class="pa-4"
                 center-active
                 show-arrows
@@ -155,7 +155,7 @@
                           v-if="active"
                           color="white"
                           size="48"
-                          v-text="'mdi-close-circle-outline'"
+                          v-text="''"
                         ></v-icon>
                       </v-scale-transition>
                     </v-row>
@@ -238,8 +238,9 @@ export default {
             src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
           },
         ],
-        cycle: false,
+        cycle: true,
         model: null,
+        model2: null,
       }
     },
   }
