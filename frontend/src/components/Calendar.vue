@@ -289,6 +289,7 @@ b {
 
 .demo-app {
   display: flex;
+  min-width: 50%;
   min-height: 100%;
   font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
   font-size: 14px;
