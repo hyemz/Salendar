@@ -6,13 +6,6 @@
         cols="12"
         sm="1"
       >
-        <v-card
-          class="pa-2"
-          outlined
-          tile
-        >
-          1st cloumn
-        </v-card>
       </v-col>
 
       <v-col
