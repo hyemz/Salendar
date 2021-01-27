@@ -63,7 +63,7 @@ public class Crawler {
             curSale.setSaleThumbnail(e.select("a > img").attr("data-original"));
             curSale.setSaleLink("https://www.oliveyoung.co.kr/store/" + e.select("input").get(2).attr("value"));
 
-            System.out.println(curSale.getSaleTitle());
+//            System.out.println(curSale.getSaleTitle());
 
             Elements eventDate = e.select("a > p.evt_date");
             SimpleDateFormat inputFormat = new SimpleDateFormat("yy.MM.dd");
@@ -91,7 +91,7 @@ public class Crawler {
     }
 
     @SneakyThrows
-    public static List<Sale> crawlArituam(){
+    public static List<Sale> crawlAritaum(){
         List<Sale> result = new ArrayList<>();
         String eventUrl = "https://www.aritaum.com/event/ev/event_ev_event_list.do";
 
@@ -152,7 +152,7 @@ public class Crawler {
     }
 
     @SneakyThrows
-    private static List<Sale> crawlMissha() {
+    public static List<Sale> crawlMissha() {
         List<Sale> result = new ArrayList<>();
         String eventUrl = "https://www.mynunc.com/marketing/event/main";
 
@@ -214,7 +214,7 @@ public class Crawler {
     }
 
     @SneakyThrows
-    private static List<Sale> crawlEtude() {
+    public static List<Sale> crawlEtude() {
         List<Sale> result = new ArrayList<>();
         String eventUrl = "https://www.etude.com/kr/ko/display/event?displayMenuId=event";
 
@@ -250,10 +250,10 @@ public class Crawler {
             curSale.setSaleThumbnail(e.select("a > div.evt_img_area.lazy_load_wrap.loaded > img").attr("src"));
             curSale.setSaleLink(e.select("head > link:nth-child(7)").attr("href"));
 
-            System.out.println(curSale.getSaleTitle());
+//            System.out.println(curSale.getSaleTitle());
 
             Elements eventDate = e.select("a > div.evt_txt_area > span");
-            System.out.println(e.select("a > div.evt_txt_area > span"));
+//            System.out.println(e.select("a > div.evt_txt_area > span"));
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy.MM.dd");
 
             int index = eventDate.text().indexOf("~");
@@ -293,7 +293,7 @@ public class Crawler {
                 .get();
 
         Elements eventLists = doc.select("#contents > div.cnt > div > div > div > table > tbody > tr");
-        System.out.println(doc);
+//        System.out.println(doc);
 
         for (Element e : eventLists) {
 //            {
@@ -376,7 +376,7 @@ public class Crawler {
             curSale.setSaleThumbnail(e.select("a > div.img > img").attr("src"));
             curSale.setSaleLink("https://www.naturecollection.com/mall/event/" + e.select("a").attr("href"));
 
-            System.out.println(curSale.getSaleLink());
+//            System.out.println(curSale.getSaleLink());
 
             Elements eventDate = e.select("a > div.con > p");
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy.MM.dd");
@@ -547,7 +547,7 @@ public class Crawler {
 //        crawlLalavla();
 //        crawlThefaceshop();
 //        crawlTonymoly();
-        crawlInnisfree();
+//        crawlInnisfree();
     }
 
 
