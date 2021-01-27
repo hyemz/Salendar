@@ -1,42 +1,8 @@
 <template>
   <div class="demo-app">
-    <!-- <div class="demo-app-sidebar">
-      <div class="demo-app-sidebar-section">
-        <h2>Instructions</h2>
-        <ul>
-          <li>Select dates and you will be prompted to create a new event</li>
-          <li>Drag, drop, and resize events</li>
-          <li>Click an event to delete it</li>
-        </ul>
-      </div>
-      <div class="demo-app-sidebar-section">
-        <label>
-          <input
-            type="checkbox"
-            :checked="calendarOptions.weekends"
-            @change="handleWeekendsToggle"
-          />
-          toggle weekends
-        </label>
-      </div>
-      <div class="demo-app-sidebar-section">
-        <h2>All Events ({{ currentEvents.length }})</h2>
-        <ul>
-          <li v-for="event in currentEvents" :key="event.id">
-            <b>{{ event.startStr }}</b>
-            <i>{{ event.title }}</i>
-          </li>
-        </ul>
-      </div>
-    </div> -->
     <div class="demo-app-main">
-      <FullCalendar class="demo-app-calendar" :options="calendarOptions">
-        <!-- <template v-slot:eventContent="arg">
-          <b>{{ arg.timeText }}</b>
-          <i>{{ arg.event.title }}</i>
-        </template> -->
-      </FullCalendar>
-      <MoreModal :dialog="dialog" :focus="focus" @close="close"/>
+      <FullCalendar class="demo-app-calendar" :options="calendarOptions" />
+      <MoreModal :dialog="dialog" :focus="focus" @close="close" />
     </div>
   </div>
 </template>
@@ -46,9 +12,10 @@ import FullCalendar from '@fullcalendar/vue';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import {createEventId} from './event-utils';
-import MoreModal from './MoreModal'
-import axios from 'axios'
+import { createEventId } from './event-utils';
+
+import MoreModal from './MoreModal';
+import axios from 'axios';
 
 export default {
   components: {
@@ -58,7 +25,7 @@ export default {
 
   data: function() {
     return {
-      dialog:false,
+      dialog: false,
       focus: null,
       calendarOptions: {
         events: [
@@ -122,64 +89,71 @@ export default {
           //   textColor:'black',
           // },
           {
-            title: "올리브영 🥑",
-            start: new Date("2021-01-01"),
-            end: new Date("2021-01-10"),
-            allDay:true,
-            color: "#A2D42F",
-            forceEventDuration:true
+            title: '올리브영 🥑',
+            start: new Date('2021-01-01'),
+            end: new Date('2021-01-10'),
+            allDay: true,
+            color: '#BDEDD1',
+            forceEventDuration: true,
+            textColor: '#50555C',
           },
           {
             title: '랄라블라 💗',
-            start: "2021-01-03",
-            end: new Date("2021-01-12"),
-            allDay:true,
-            color: "#012E40",
-            // borderColor: 'black',
+            start: '2021-01-05',
+            end: new Date('2021-01-15'),
+            allDay: true,
+            color: '#FFCFDC',
+            textColor: '#50555C',
           },
           {
-            title: "에뛰드 하우스 👑",
-            start: "2021-01-05",
-            end: new Date("2021-01-15"),
-            allDay:true,
-            color:"#F27EA9",
+            title: '에뛰드 하우스 👑',
+            start: '2021-01-07',
+            end: new Date('2021-01-17'),
+            allDay: true,
+            color: '#CFE4FF',
+            textColor: '#50555C',
           },
           {
-            title: "미샤 💋",
-            start: "2021-01-07",
-            end: new Date("2021-01-17"),
-            allDay:true,
-            color:"#D9043D",
+            title: '미샤 💋',
+            start: '2021-01-10',
+            end: new Date('2021-01-25'),
+            allDay: true,
+            color: '#FBEC8F',
+            textColor: '#50555C',
           },
           {
-            title: "아리따움 🎀",
-            start: "2021-01-15",
-            end: new Date("2021-01-21"),
-            allDay:true,
-            color:"#F2ACAC",
+            title: '아리따움 🎀',
+            start: '2021-01-13',
+            end: new Date('2021-01-23'),
+            allDay: true,
+            color: '#FFDABD',
+            textColor: '#50555C',
           },
           {
-            title: "더 페이스샵 👩",
-            start: "2021-01-16",
-            end: new Date("2021-01-25"),
-            allDay:true,
-            color:"#9CBF4E",
+            title: '더 페이스샵 👩',
+            start: '2021-01-20',
+            end: new Date('2021-01-30'),
+            allDay: true,
+            color: '#DFC6FF',
+            textColor: '#50555C',
           },
           {
-            title: "토니모리 🐼",
-            start: "2021-01-19",
-            end: new Date("2021-01-30, 15:00:00 GMT"),
-            allDay:true,
-            color:"#121212",
+            title: '토니모리 🐼',
+            start: '2021-01-25',
+            end: new Date('2021-01-30, 15:00:00 GMT'),
+            allDay: true,
+            color: '#CCD1D1',
+            textColor: '#50555C',
           },
           {
-            title: "이니스프리 🌿",
-            start: "2021-01-21",
-            end: new Date("2021-01-26"),
-            allDay:true,
-            color:"#C0D99C",
-            textColor:'black',
-            id:"111"
+            title: '이니스프리 🌿',
+            start: '2021-01-11',
+            end: new Date('2021-01-30'),
+            allDay: true,
+            color: '#f7f8fb',
+            textColor: '#50555C',
+            id: '111',
+            borderColor:'#CCD1D1',
           },
         ],
         plugins: [
@@ -200,7 +174,7 @@ export default {
         dayMaxEvents: true,
         weekends: true,
         select: this.handleDateSelect,
-        locale:"ko",
+        locale: 'ko',
         eventClick: this.showMore,
         eventsSet: this.handleEvents,
         /* you can update a remote database when these fire:
@@ -212,20 +186,21 @@ export default {
       currentEvents: [],
     };
   },
-  created () {
-    axios.get()
-    .then (res => {
-      this.events = res.data
-    }) 
-    .catch (err => {
-      console.log(err)
-    })
+  created() {
+    axios
+      .get()
+      .then((res) => {
+        this.events = res.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
   methods: {
-    showMore (clickInfo) {
-      this.dialog = true
-      this.focus = clickInfo.event 
-      console.log(clickInfo.event)
+    showMore(clickInfo) {
+      this.dialog = true;
+      this.focus = clickInfo.event;
+      console.log(clickInfo.event);
     },
     handleWeekendsToggle() {
       this.calendarOptions.weekends = !this.calendarOptions.weekends; // update a property
@@ -247,7 +222,6 @@ export default {
       }
     },
 
-
     handleEventClick(clickInfo) {
       if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
         clickInfo.event.remove();
@@ -257,14 +231,12 @@ export default {
     handleEvents(events) {
       this.currentEvents = events;
     },
-    close (dialog) {
-      this.dialog = dialog
-    }
+    close(dialog) {
+      this.dialog = dialog;
+    },
   },
-
 };
 </script>
-
 
 <style lang="css">
 h2 {
@@ -290,6 +262,7 @@ b {
 .demo-app {
   display: flex;
   min-height: 100%;
+  min-width: 50%;
   font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
   font-size: 14px;
 }
@@ -315,5 +288,10 @@ b {
   max-width: 1100px;
   margin: 0 auto;
 }
-
+.fc .fc-col-header-cell-cushion {
+  color: black;
+}
+.fc .fc-daygrid-day-number {
+  color: black;
+}
 </style>

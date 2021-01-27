@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card max-width="500" class="mx-auto" flat>
+    <v-card max-width="350" class="mx-auto" flat>
       <v-toolbar flat>
         <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
 
@@ -85,6 +85,10 @@ export default {
 </script>
 <style scoped>
 div {
-  flex: 0.65;
+  flex: 0.55;
+}
+
+.v-toolbar__title {
+  font-size: 1rem;
 }
 </style>

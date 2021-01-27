@@ -87,50 +87,12 @@
             :rules="[ !this.error.passwordConfirm || this.error.passwordConfirm ]"
           ></v-text-field>
         </v-form>
-
-        <!-- <v-card
-          class="ma-3 pa-2 d-flex align-center justify-space-between"
-          outlined
-          height="50"
-        > 닉네임 
-          <v-text-field
-            style="width:200px"
-            placeholder="Placeholder"
-            value="현재닉네임"
-          ></v-text-field>
-        </v-card>
-        <v-card
-          class="ma-3 pa-2 d-flex align-center"
-          outlined
-          height="50"
-          
-        > 이메일 </v-card>
-        <v-card
-          class="ma-3 pa-2 d-flex align-center"
-          outlined
-          height="50"
-          v-if="!pass"
-          
-        > 비밀번호 
-          
-        </v-card>
-        <div v-if="pass">
-          <v-card
-            class="ma-3 pa-2 d-flex align-center"
-            outlined
-            height="50"
-            
-          > 새 비밀번호 </v-card>
-          <v-card
-            class="ma-3 pa-2 d-flex align-center"
-            outlined
-            height="50"
-            
-          > 새 비밀번호 확인 </v-card>
-        </div> -->
       </div>
       <div class="d-flex flex-row-reverse mt-4">
-        <v-btn :disabled="!isSubmit" color="primary">
+        <v-btn
+         :disabled="!isSubmit" 
+         @click="changeProfile"
+         color="primary">
           수정하기
         </v-btn>
         
@@ -180,6 +142,17 @@ export default {
       .digits()
       .has()
       .letters();
+
+    // 현재 유져 데이터 받아오기
+    axios.get ()
+    .then ( res => {
+      this.myEmail = res.data.usrEmail
+      this.nickname = res.data.usrNick
+      this.myPwd = res.data.usrPwd
+    })
+    .catch ( err => {
+      console.log(err)
+    })
   },
   watch: {
     password: function() {
@@ -198,7 +171,6 @@ export default {
       this.checkForm();
     }
   },
-  // 미완성
   methods: {
     checkForm() {
       if (this.password.length >= 0 && (this.myPwd == this.password))
@@ -226,14 +198,26 @@ export default {
       this.isSubmit = isSubmit;
       }
     },
-    signup () {
-      alert("회원가입 이다아아")
-      axios.post()
+    // 유저 프로필 수정시 동작
+    changeProfile () {
+      alert("회원정보수정 이다아아")
+      if (this.changePwd) {
+        var changeForm = {
+          "usrNick":this.nickname,
+          "usrPwd":this.newPwd
+        }
+      } else {
+        changeForm = {
+          "usrNick":this.nickname,
+        }
+      }
+
+      axios.post("", changeForm)
       .then ( res => {
-        localStorage.setItem('jwt', res.data.token)
+        console.log(res)
+      })
       .catch ( err => {
         console.log(err)
-      })
       })
     }
   }
