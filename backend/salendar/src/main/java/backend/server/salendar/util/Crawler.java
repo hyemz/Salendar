@@ -91,7 +91,7 @@ public class Crawler {
     }
 
     @SneakyThrows
-    public static List<Sale> crawlArituam(){
+    public static List<Sale> crawlAritaum(){
         List<Sale> result = new ArrayList<>();
         String eventUrl = "https://www.aritaum.com/event/ev/event_ev_event_list.do";
 
@@ -549,7 +549,7 @@ public class Crawler {
 
     public static void main(String[] args) throws KeyManagementException, NoSuchAlgorithmException, IOException {
 //        crawlOliveyoung();
-//        crawlArituam();
+//        crawlAritaum();
 //        crawlMissha();
 //        crawlEtude();
 //        crawlLalavla();
