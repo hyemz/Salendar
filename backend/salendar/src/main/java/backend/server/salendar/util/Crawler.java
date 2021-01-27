@@ -91,7 +91,7 @@ public class Crawler {
     }
 
     @SneakyThrows
-    public static List<Sale> crawlArituam(){
+    public static List<Sale> crawlAritaum(){
         List<Sale> result = new ArrayList<>();
         String eventUrl = "https://www.aritaum.com/event/ev/event_ev_event_list.do";
 
@@ -500,7 +500,7 @@ public class Crawler {
             curSale.setSaleTitle(e.select("a > span.descWrap > strong").text());
             curSale.setSaleDsc(e.select("a > span.descWrap > strong").text());
             curSale.setSaleThumbnail(e.select("a > span.img > img").attr("src"));
-//            curSale.setSaleLink("https://tonystreet.com/event/event_event_view.do?i_sEventcd=" + e.attr("id"));
+            curSale.setSaleLink(e.select("a").attr("href"));
 
 //            System.out.println(curSale.getSaleLink());
 
@@ -510,22 +510,30 @@ public class Crawler {
             int index = eventDate.text().indexOf("~");
             String eventStart = eventDate.text().substring(0, index-1);
             String eventEnd;
-//            System.out.println(eventDate.text().substring(index+2, index+3));
-//            System.out.println((int)eventDate.text().substring(index+2, index+3).charAt(0));
-            if((int)eventDate.text().substring(index+2, index+3).charAt(0) > 50000){
-                eventEnd = "2022-01-03";
+
+            if((int)eventDate.text().substring(index+2, index+3).charAt(0) == 54620){   //  한정수량 소진시 종료
+                Date eventStartDate = inputFormat.parse(eventStart);
+                curSale.setSaleStartDate(eventStartDate);
+                curSale.setSaleEndDate(null);
+            }
+            else if((int)eventDate.text().substring(index+2, index+3).charAt(0) == 51652){
+                eventEnd = "2022-01-31";
+
+                Date eventStartDate = inputFormat.parse(eventStart);
+                Date eventEndDate = inputFormat.parse(eventEnd);
+
+                curSale.setSaleStartDate(eventStartDate);
+                curSale.setSaleEndDate(eventEndDate);
             }
             else {
                 eventEnd = eventDate.text().substring(index+2, index+12);
+
+                Date eventStartDate = inputFormat.parse(eventStart);
+                Date eventEndDate = inputFormat.parse(eventEnd);
+
+                curSale.setSaleStartDate(eventStartDate);
+                curSale.setSaleEndDate(eventEndDate);
             }
-
-//            System.out.println(eventStart + " ~ " + eventEnd);
-
-            Date eventStartDate = inputFormat.parse(eventStart);
-            Date eventEndDate = inputFormat.parse(eventEnd);
-
-            curSale.setSaleStartDate(eventStartDate);
-            curSale.setSaleEndDate(eventEndDate);
 
 //            curSale.setSaleBigImg(Jsoup.connect(curSale.getSaleLink())
 //                    .header("Content-Type", "application/json;charset=UTF-8")
@@ -541,7 +549,7 @@ public class Crawler {
 
     public static void main(String[] args) throws KeyManagementException, NoSuchAlgorithmException, IOException {
 //        crawlOliveyoung();
-//        crawlArituam();
+//        crawlAritaum();
 //        crawlMissha();
 //        crawlEtude();
 //        crawlLalavla();
