@@ -261,6 +261,7 @@ b {
 
 .demo-app {
   display: flex;
+  min-width: 50%;
   min-height: 100%;
   min-width: 50%;
   font-family: Arial, Helvetica Neue, Helvetica, sans-serif;

@@ -15,14 +15,10 @@
           hide-delimiters
         >
           <v-carousel-item
-            v-for="(color, i) in colors"
+            v-for="(item, i) in items"
             :key="i"
+            :src="item.src"
           >
-            <v-sheet
-              :color="colors[i]"
-              height="110%"
-              tile
-            >
 
               <v-row
                 class="fill-height"
@@ -31,15 +27,14 @@
               >
                 <div class="display-2">
                   <div>
-                    {{ color }} Slide
+                    {{ i+1 }} Slide
                   </div>
                   <div class="d-flex align-end justify-end">
-                    {{ i+1 }} / {{ colors.length }}
+                    {{ i+1 }} / {{ items.length }}
                   </div>
                 </div>
-              <p class="text-left text-xl-left">{{ i+1 }} / {{ colors.length }}</p>
+              <p class="text-left text-xl-left">{{ i+1 }} / {{ items.length }}</p>
               </v-row>
-            </v-sheet>
 
           </v-carousel-item>
         </v-carousel>
@@ -90,7 +85,8 @@
                   v-slot="{ active, toggle }"
                 >
                   <v-card
-                    :color="active ? 'primary' : 'grey lighten-1'"
+                    :img="`https://picsum.photos/500/300?image=${n * 5 + 10}`"
+                    :color="active ? 'primary' : 'grey lighten-3'"
                     class="ma-4"
                     height="200"
                     width="200"
@@ -106,7 +102,7 @@
                           v-if="active"
                           color="white"
                           size="48"
-                          v-text="'mdi-close-circle-outline'"
+                          v-text="''"
                         ></v-icon>
                       </v-scale-transition>
                     </v-row>
@@ -131,7 +127,7 @@
               max-width=""
             >
               <v-slide-group
-                v-model="model"
+                v-model="model2"
                 class="pa-4"
                 center-active
                 show-arrows
@@ -142,6 +138,7 @@
                   v-slot="{ active, toggle }"
                 >
                   <v-card
+                    :img="`https://picsum.photos/500/300?image=${n * 5 + 9}`"
                     :color="active ? 'primary' : 'grey lighten-1'"
                     class="ma-4"
                     height="200"
@@ -158,7 +155,7 @@
                           v-if="active"
                           color="white"
                           size="48"
-                          v-text="'mdi-close-circle-outline'"
+                          v-text="''"
                         ></v-icon>
                       </v-scale-transition>
                     </v-row>
@@ -227,20 +224,23 @@
 export default {
     data () {
       return {
-        colors: [
-          'green',
-          'secondary',
-          'yellow darken-4',
-          'red lighten-2',
-          'orange darken-1',
-          'green',
-          'secondary',
-          'yellow darken-4',
-          'red lighten-2',
-          'orange darken-1',
+        items: [
+          {
+            src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
+          },
+          {
+            src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
+          },
+          {
+            src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
+          },
+          {
+            src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
+          },
         ],
-        cycle: false,
+        cycle: true,
         model: null,
+        model2: null,
       }
     },
   }
