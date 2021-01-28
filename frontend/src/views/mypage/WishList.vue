@@ -60,7 +60,7 @@ export default {
         title: '랄라블라',
         src: require('@/assets/storeLogo/lalavla.png'),
         flex: 6,
-        badge: true,
+        badge: false,
         show: true,
       },
       {
