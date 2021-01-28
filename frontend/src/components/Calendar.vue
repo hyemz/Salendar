@@ -22,13 +22,14 @@ export default {
     FullCalendar, // make the <FullCalendar> tag available
     MoreModal,
   },
-
+  props: {
+    selected: Array,
+  },
   data: function() {
     return {
       dialog: false,
       focus: null,
-      calendarOptions: {
-        events: [
+      allEvents: [
           // {
           //   title: "올리브영 🥑",
           //   start: new Date("2021-01-01"),
@@ -94,8 +95,9 @@ export default {
             end: new Date('2021-01-10'),
             allDay: true,
             color: '#BDEDD1',
-            forceEventDuration: true,
             textColor: '#50555C',
+            content:"21년 올리브영 대박세일!",
+            fav:true,
           },
           {
             title: '랄라블라 💗',
@@ -103,6 +105,24 @@ export default {
             end: new Date('2021-01-15'),
             allDay: true,
             color: '#FFCFDC',
+            textColor: '#50555C',
+          },
+          {
+            title: '이니스프리 🌿',
+            start: '2021-01-11',
+            end: new Date('2021-01-30'),
+            allDay: true,
+            color: '#f7f8fb',
+            textColor: '#50555C',
+            id: '111',
+            borderColor:'#CCD1D1',
+          },
+          {
+            title: '더 페이스샵 👩',
+            start: '2021-01-20',
+            end: new Date('2021-01-30'),
+            allDay: true,
+            color: '#DFC6FF',
             textColor: '#50555C',
           },
           {
@@ -130,14 +150,6 @@ export default {
             textColor: '#50555C',
           },
           {
-            title: '더 페이스샵 👩',
-            start: '2021-01-20',
-            end: new Date('2021-01-30'),
-            allDay: true,
-            color: '#DFC6FF',
-            textColor: '#50555C',
-          },
-          {
             title: '토니모리 🐼',
             start: '2021-01-25',
             end: new Date('2021-01-30, 15:00:00 GMT'),
@@ -145,17 +157,9 @@ export default {
             color: '#CCD1D1',
             textColor: '#50555C',
           },
-          {
-            title: '이니스프리 🌿',
-            start: '2021-01-11',
-            end: new Date('2021-01-30'),
-            allDay: true,
-            color: '#f7f8fb',
-            textColor: '#50555C',
-            id: '111',
-            borderColor:'#CCD1D1',
-          },
-        ],
+      ],
+      calendarOptions: {
+        events: [],
         plugins: [
           dayGridPlugin,
           timeGridPlugin,
@@ -195,12 +199,15 @@ export default {
       .catch((err) => {
         console.log(err);
       });
+    for (const idx in this.selected){
+      this.calendarOptions.events.push(this.allEvents[this.selected[idx]])
+    }
+    console.log(this.calendarOptions.events)
   },
   methods: {
     showMore(clickInfo) {
       this.dialog = true;
       this.focus = clickInfo.event;
-      console.log(clickInfo.event);
     },
     handleWeekendsToggle() {
       this.calendarOptions.weekends = !this.calendarOptions.weekends; // update a property
@@ -235,6 +242,15 @@ export default {
       this.dialog = dialog;
     },
   },
+  watch: {
+    selected: function () {
+      this.calendarOptions.events = []
+      for (const idx in this.selected){
+      this.calendarOptions.events.push(this.allEvents[this.selected[idx]])
+    }
+    console.log(this.calendarOptions.events)
+    }
+  }
 };
 </script>
 
@@ -289,9 +305,16 @@ b {
   max-width: 1100px;
   margin: 0 auto;
 }
+
+.fc .fc-toolbar-title {
+    font-size: 1.75em;
+    margin-right: 9rem;
+}
+
 .fc .fc-col-header-cell-cushion {
   color: black;
 }
+
 .fc .fc-daygrid-day-number {
   color: black;
 }
