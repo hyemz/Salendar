@@ -1,7 +1,7 @@
 <template>
   <div class="wrap">
-    <store-list />
-    <calendar />
+    <StoreList @select="select"/>
+    <calendar :selected="selected" />
   </div>
 </template>
 
@@ -9,10 +9,22 @@
 import Calendar from '../components/Calendar';
 import StoreList from '@/components/StoreList';
 export default {
+  name:'CalendarPage',
   components: {
     Calendar,
     StoreList,
   },
+  data () {
+    return {
+      selected: []
+    }
+  },
+  methods: {
+    select (selected) {
+      console.log(222)
+      this.selected = selected
+    }
+  }
 };
 </script>
 <style scoped>
