@@ -1,3 +1,4 @@
+	
 <template>
   <div class="d-flex flex-column justify-center align-center">
     <h1>회원가입</h1>
@@ -45,6 +46,7 @@
   </div>
 </template>
 
+
 <script>
 import axios from 'axios';
 import PV from 'password-validator';
@@ -76,26 +78,26 @@ export default {
     this.component = this;
 
     this.passwordSchema
-      .is()
-      .min(8)
-      .is()
-      .max(100)
-      .has()
-      .digits()
-      .has()
-      .letters();
+        .is()
+        .min(8)
+        .is()
+        .max(100)
+        .has()
+        .digits()
+        .has()
+        .letters();
   },
   watch: {
-    password: function() {
+    password: function () {
       this.checkForm();
     },
-    passwordConfirm: function() {
+    passwordConfirm: function () {
       this.checkForm();
     },
-    email: function() {
+    email: function () {
       this.checkForm();
     },
-    nickname: function() {
+    nickname: function () {
       this.checkForm();
     },
   },
