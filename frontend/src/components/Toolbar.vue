@@ -1,88 +1,124 @@
 <template>
-  <v-card class="overflow-hidden">
-    <v-app-bar color="#6A76AB">
-      <template v-slot:img="{ props }">
+
+  <v-card class="overflow-hidden" flat>
+    <v-app-bar color="white">
+      <!-- <template v-slot:img="{ props }">
         <v-img
           v-bind="props"
           gradient="to top right, rgba(100,115,201,.7), rgba(25,32,72,.7)"
         ></v-img>
-      </template>
+      </template> -->
       <v-col>
-        <v-toolbar-title class="white--text text-decoration-none mb-2 font-weight-medium"
-          >Salendar</v-toolbar-title
+        <v-toolbar-title 
+          color="#6A76AB"
+          class="white--text text-decoration-none mb-2 font-weight-medium" 
+          ><router-link to="/calendar" class="text-decoration-none mb-2 font-weight-medium"
+            ><v-img contain src="@/assets/logo.png" width=150></v-img></router-link
+          ></v-toolbar-title
         >
       </v-col>
       <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
 
       <v-spacer></v-spacer>
-
+      <!-- <span id="title">야야야</span> -->
       <template>
         <v-tabs align-with-title>
-          <v-tab
-            ><router-link
-              to="/login"
-              class="white--text text-decoration-none mb-2 font-weight-medium"
+          <v-tab class="ml-1"
+            ><router-link to="/salelist" class="text-decoration-none mb-2 font-weight-medium"
               >메인페이지</router-link
             ></v-tab
           >
           <v-tab
-            ><router-link
-              :to="{ name: 'Signup' }"
-              class="white--text text-decoration-none mb-2 font-weight-medium"
+            ><router-link to="/calendar" class="text-decoration-none mb-2 font-weight-medium"
               >세일캘린더</router-link
             ></v-tab
           >
           <v-tab
-            ><router-link
-              to="/board"
-              class="white--text text-decoration-none mb-2 font-weight-medium"
+            ><router-link to="/board" class="text-decoration-none mb-2 font-weight-medium"
               >게시판</router-link
             ></v-tab
           >
-          <v-tab
+          <v-tab id="test"
             ><router-link
-              to="/signup"
-              class="white--text text-decoration-none mb-2 font-weight-medium"
+              to="/mypage/wishlist"
+              class=" text-decoration-none mb-2 font-weight-medium"
               >찜목록</router-link
             ></v-tab
           >
         </v-tabs>
       </template>
 
-      <v-btn text color="white">
-        <router-link :to="{ name: 'Login' }" class="white--text text-decoration-none"
-          >로그인</router-link
-        >
-      </v-btn>
-      <v-btn text>
-        <router-link to="/signup" class="white--text text-decoration-none">가입하기</router-link>
-      </v-btn>
+      <template v-if="!isLogin">
+        <v-btn text color="white" v-if="!isLogin">
+          <router-link :to="{ name: 'Login' }" class="text-decoration-none">로그인</router-link>
+        </v-btn>
+        <v-btn text v-if="!isLogin">
+          <router-link :to="{ name: 'Signup' }" class="text-decoration-none">가입하기</router-link>
+        </v-btn>
+      </template>
+      <template v-if="isLogin">
+        <v-btn text color="white" disabled class="w" v-if="isLogin">설렌다님 환영합니다.</v-btn>
+        <!-- <v-btn text color="white" @click.native="logout" v-if="isLogin">
+          <router-link :to="{ name: 'Login' }" color="red" class="text-decoration-none"
+            >로그아웃</router-link
+          >
+        </v-btn> -->
+      </template>
+      <template v-if="isLogin">
+        <v-btn icon>
+          <v-icon>mdi-bell</v-icon>
+        </v-btn>
 
-      <v-btn icon>
-        <v-icon>mdi-bell</v-icon>
-      </v-btn>
+        <v-menu bottom left>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon v-bind="attrs" v-on="on">
+              <v-icon>mdi-chevron-down</v-icon>
+            </v-btn>
+          </template>
 
-      <v-menu bottom left>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn icon v-bind="attrs" v-on="on">
-            <v-icon>mdi-chevron-down</v-icon>
-          </v-btn>
-        </template>
-
-        <v-list>
-          <v-list-item v-for="(item, i) in items" :key="i">
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
+          <v-list>
+            <v-list-item>
+              <v-list-item-title><router-link to =/mypage class="text-decoration-none">마이페이지</router-link></v-list-item-title>
+              </v-list-item>
+             <v-list-item>
+           <template v-if="isLogin">
+           <v-list-item-title><router-link to =/login @click.native="logout" class="text-decoration-none">로그아웃</router-link></v-list-item-title>
+           </template>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </template>
     </v-app-bar>
   </v-card>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
+  created() {
+    this.token = localStorage.getItem('jwt');
+    if(this.token) {
+      this.$store.dispatch('login', true);
+    }
+    console.log(this.token);
+  },
+  computed: {
+    ...mapState(['isLogin']),
+  },
+  watch: {
+    isLogin: function() {
+      this.token = localStorage.getItem('jwt');
+    }
+  },
   data: () => ({
-    items: [{ title: '마이페이지' }, { title: '로그아웃' }],
+    token: localStorage.getItem('jwt'),
+    items: [{ title: '마이페이지' }],
   }),
+  methods: {
+    logout() {
+      localStorage.removeItem('jwt');
+      this.$store.dispatch('login', false);
+    },
+  },
 };
 </script>
