@@ -81,19 +81,22 @@ export default {
   }),
   created: function() {
     // var headerForm = {
-    //   "header":
-    //       {
-    //       "X-AUTH-Token": localStorage.getItem("jwt")
-    //     }
+    //   headers: {
+    //     'x-auth-token': 'Bearer ' + localStorage.getItem('jwt')
+    //   }
     // }
     axios
+      .create({
+        headers: {
+          'x-auth-token':localStorage.getItem('jwt')
+        }
+      })
       .get("http://localhost:8080/api/user/token/followings")
       .then((res) => {
         console.log(res);
         // this.datas = res.data;
       })
       .catch((err) => {
-        console.log(localStorage.getItem("jwt"))
         console.log('찜 목록을 불러오지 못했습니다.', err);
       });
   },

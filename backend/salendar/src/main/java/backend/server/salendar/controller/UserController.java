@@ -7,6 +7,7 @@ import backend.server.salendar.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ResponseHeader;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -181,6 +182,11 @@ public class UserController {
     @ApiOperation(value = "팔로우 중 매장 조회")
     @GetMapping(value = "/token/followings")
     public ResponseEntity<Map<String, Boolean>> userFollowings(HttpServletRequest request) {
-        return new ResponseEntity<>(userService.usrFollowings(JwtTokenProvider.resolveToken(request)), HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(userService.usrFollowings(JwtTokenProvider.resolveToken(request)), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
     }
 }
