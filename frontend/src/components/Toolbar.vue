@@ -1,4 +1,5 @@
 <template>
+
   <v-card class="overflow-hidden" flat>
     <v-app-bar color="white">
       <!-- <template v-slot:img="{ props }">
@@ -8,11 +9,11 @@
         ></v-img>
       </template> -->
       <v-col>
-        <v-toolbar-title
+        <v-toolbar-title 
           color="#6A76AB"
-          class="white--text text-decoration-none mb-2 font-weight-medium"
+          class="white--text text-decoration-none mb-2 font-weight-medium" 
           ><router-link to="/calendar" class="text-decoration-none mb-2 font-weight-medium"
-            >Salendar</router-link
+            ><v-img contain src="@/assets/logo.png" width=150></v-img></router-link
           ></v-toolbar-title
         >
       </v-col>
@@ -22,7 +23,7 @@
       <!-- <span id="title">야야야</span> -->
       <template>
         <v-tabs align-with-title>
-          <v-tab
+          <v-tab class="ml-1"
             ><router-link to="/salelist" class="text-decoration-none mb-2 font-weight-medium"
               >메인페이지</router-link
             ></v-tab
@@ -37,7 +38,7 @@
               >게시판</router-link
             ></v-tab
           >
-          <v-tab
+          <v-tab id="test"
             ><router-link
               to="/mypage/wishlist"
               class=" text-decoration-none mb-2 font-weight-medium"
@@ -63,7 +64,6 @@
           >
         </v-btn> -->
       </template>
-
       <template v-if="isLogin">
         <v-btn icon>
           <v-icon>mdi-bell</v-icon>
@@ -122,8 +122,3 @@ export default {
   },
 };
 </script>
-<style scoped>
-w.disabled {
-  color: white;
-}
-</style>
