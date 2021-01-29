@@ -4,7 +4,13 @@ import Login from '../views/user/Login.vue'
 import Signup from '../views/user/Signup.vue'
 import Board from '../views/board/Board.vue'
 import Create from '../views/board/Create.vue'
+import Calendar from '../views/CalendarPage.vue'
 import Detail from '../views/board/Detail.vue'
+import MyPage from '../views/mypage/MyPage.vue'
+import MyPost from '../views/mypage/MyPost.vue'
+import WishList from '../views/mypage/WishList.vue'
+import SaleList from '../views/SaleList.vue'
+
 
 Vue.use(VueRouter)
 
@@ -27,6 +33,11 @@ const routes = [
     component: Board
   },
   {
+    path: '/calendar',
+    name: 'Calendar',
+    component: Calendar
+  },
+  {
     path: '/board/create',
     name: 'Create',
     component: Create
@@ -36,7 +47,27 @@ const routes = [
     name: 'Detail',
     component: Detail
   },
-  
+  {
+    path: '/mypage',
+    name: 'MyPage',
+    component: MyPage
+  },
+  {
+    path: '/mypage/mypost',
+    name: 'MyPost',
+    component: MyPost
+  },
+  {
+    path: '/mypage/wishlist',
+    name: 'WishList',
+    component: WishList
+  },
+  {
+    path: '/salelist',
+    name: 'SaleList',
+    component: SaleList
+  },
+
 ]
 
 const router = new VueRouter({

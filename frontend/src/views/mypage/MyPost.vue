@@ -22,36 +22,33 @@
 
             <v-card>
               <v-card-title>
-                <h1>자유게시판</h1>
+                <h1 class="mt-2 mb-2">내 게시글</h1>
                 <v-spacer></v-spacer>
                 <v-spacer></v-spacer>
                 <v-spacer></v-spacer>
                 <v-spacer></v-spacer>
                 <v-spacer></v-spacer>
-                <v-text-field
-                  
-                  class="pr-2 pl-14"
-                  v-model="search"
-                  append-icon="mdi-magnify"
-                  label="Search"
-                  single-line
-                  hide-details
-                ></v-text-field>
 
                 <v-btn
-                  tile
-                  color=""
-                  @click="create"
+                  color="grey lighten-4"
+                  @click="mypage"
                 >
-                  <v-icon left>
-                    mdi-pencil
+                  <v-icon>mdi-account-circle</v-icon>
+                </v-btn>
+
+
+                <v-btn
+                  class="mx-2"
+                  color="grey lighten-4"
+                  @click="board"
+                >
+                  <v-icon dark>
+                    mdi-format-list-bulleted-square
                   </v-icon>
-                  New
                 </v-btn>
 
               </v-card-title>
               <v-data-table
-                calculate-widths
                 :headers="headers"
                 :items="contents"
                 :search="search"
@@ -60,8 +57,9 @@
                 :items-per-page="itemsPerPage"
                 hide-default-footer
                 @page-count="pageCount = $event"
-                sort-by="id"
-                sort-desc="true"
+                multi-sort=true
+                sort-by="['pk', 'id']"
+                sort-desc="[true, false]"
               ></v-data-table>
 
               <div class="text-center pt-2">
@@ -89,7 +87,7 @@
   export default {
     data () {
       return {
-        search: '',
+        search: '1',
         page: 1,
         pageCount: 0,
         itemsPerPage: 10,
@@ -100,6 +98,9 @@
             align: 'center',
             sortable: false,
             value: 'id',
+            multisort: true,
+            sortby:"['pk', 'id']",
+            sortdesc:"[true, false]",
           },
           { text: '제목', value: 'title', align: 'start',},
           { width: '100', text: '작성자', value: 'username', align: 'start',},
@@ -327,9 +328,14 @@
       }
     },
     methods: {
-      create: function () {
+      board: function () {
         this.$router.push({
-          path: '/board/create'
+          path: '/board'
+        })
+      },
+      mypage: function () {
+        this.$router.push({
+          path: '/mypage'
         })
       },
     }
