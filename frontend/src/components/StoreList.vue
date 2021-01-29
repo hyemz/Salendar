@@ -47,7 +47,7 @@ export default {
   data() {
     return {
       selected: [2],
-      show: false,
+      show: true,
       items: [
         {
           title: '올리브영',
@@ -69,7 +69,10 @@ export default {
           title: '에뛰드하우스',
           avatar: require('@/assets/storeLogo/etudehouse.png'),
         },
-        { title: '미샤', avatar: require('@/assets/storeLogo/missha.png') },
+        {
+          title: '미샤', 
+          avatar: require('@/assets/storeLogo/missha.png') 
+        },
         {
           title: '아리따움',
           avatar: require('@/assets/storeLogo/aritaum.png'),
@@ -81,6 +84,15 @@ export default {
       ],
     };
   },
+  watch: {
+    selected: function () {
+      this.$emit('select', this.selected)
+    }
+  },
+  created () {
+    this.$emit('select', this.selected)
+    
+  }
 };
 </script>
 <style scoped>
