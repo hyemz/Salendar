@@ -2,8 +2,8 @@
   <div>
     <div>
       <v-card 
-      color="primary darken-2"
-      height="350"
+      color="grey lighten-5"
+      height=""
       >
 
         <v-carousel
@@ -11,29 +11,27 @@
           :cycle="cycle"
           hide-delimiter-background
           show-arrows-on-hover
-          height="300"
+          height=""
+          max-width=""
           hide-delimiters
+          justify=""
+          class="d-flex justify-center"
         >
           <v-carousel-item
             v-for="(item, i) in items"
             :key="i"
             :src="item.src"
+            max-height=""
+            max-width=""
+            
           >
 
               <v-row
                 class="fill-height"
-                align="center"
-                justify="center"
+                align="end"
+                justify="end"
               >
-                <div class="display-2">
-                  <div>
-                    {{ i+1 }} Slide
-                  </div>
-                  <div class="d-flex align-end justify-end">
-                    {{ i+1 }} / {{ items.length }}
-                  </div>
-                </div>
-              <p class="text-left text-xl-left">{{ i+1 }} / {{ items.length }}</p>
+              <v-card-text class="text-right mr-10 pr-1 pl-1">{{ i+1 }} / {{ items.length }}</v-card-text>
               </v-row>
 
           </v-carousel-item>
@@ -80,12 +78,12 @@
                 show-arrows
               >
                 <v-slide-item
-                  v-for="n in 15"
-                  :key="n"
+                  v-for="(small2image, i) in small2images"
+                  :key="i"
                   v-slot="{ active, toggle }"
                 >
                   <v-card
-                    :img="`https://picsum.photos/500/300?image=${n * 5 + 10}`"
+                    :img="small2image.src"
                     :color="active ? 'primary' : 'grey lighten-3'"
                     class="ma-4"
                     height="200"
@@ -133,12 +131,12 @@
                 show-arrows
               >
                 <v-slide-item
-                  v-for="n in 15"
-                  :key="n"
+                  v-for="(small1image, i) in small1images"
+                  :key="i"
                   v-slot="{ active, toggle }"
                 >
                   <v-card
-                    :img="`https://picsum.photos/500/300?image=${n * 5 + 9}`"
+                    :img="small1image.src"
                     :color="active ? 'primary' : 'grey lighten-1'"
                     class="ma-4"
                     height="200"
@@ -165,7 +163,7 @@
             </v-sheet>
           </div>
         <v-row>
-          <v-col cols="12" sm="6">
+          <!-- <v-col cols="12" sm="6">
             <v-card outlined class="mb-6 mt-6">
               <h3 class="ml-2 mt-1 mb-1">공지사항</h3>
             </v-card>
@@ -206,7 +204,7 @@
               <h3 class="ml-2 mt-1 mb-1">인기 게시글 5</h3>
             </v-card>
 
-          </v-col>
+          </v-col> -->
 
         </v-row>
 
@@ -226,16 +224,95 @@ export default {
       return {
         items: [
           {
-            src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
+            src: require('@/assets/SaleList/oliveyoung_sale_1.png'),
           },
           {
-            src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
+            src: require('@/assets/SaleList/oliveyoung_sale_2.png'),
           },
           {
-            src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
+            src: require('@/assets/SaleList/oliveyoung_sale_3.png'),
           },
           {
-            src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
+            src: require('@/assets/SaleList/oliveyoung_sale_4.png'),
+          },
+          {
+            src: require('@/assets/SaleList/oliveyoung_sale_5.png'),
+          },
+          {
+            src: require('@/assets/SaleList/oliveyoung_sale_6.png'),
+          },
+          {
+            src: require('@/assets/SaleList/oliveyoung_sale_7.png'),
+          },
+        ],
+        small1images: [
+          {
+            src: require('@/assets/SaleListSmall/sale1_1.png'),
+          },
+          {
+            src: require('@/assets/SaleListSmall/sale1_2.png'),
+          },
+          {
+            src: require('@/assets/SaleListSmall/sale1_3.png'),
+          },
+          {
+            src: require('@/assets/SaleListSmall/sale1_4.png'),
+          },
+          {
+            src: require('@/assets/SaleListSmall/sale1_5.png'),
+          },
+          {
+            src: require('@/assets/SaleListSmall/sale1_6.png'),
+          },
+          {
+            src: require('@/assets/SaleListSmall/sale1_7.png'),
+          },
+          {
+            src: require('@/assets/SaleListSmall/sale1_8.png'),
+          },
+          {
+            src: require('@/assets/SaleListSmall/sale1_9.png'),
+          },
+          {
+            src: require('@/assets/SaleListSmall/sale1_10.png'),
+          },
+          {
+            src: require('@/assets/SaleListSmall/sale1_11.png'),
+          },
+          {
+            src: require('@/assets/SaleListSmall/sale1_12.png'),
+          },
+          {
+            src: require('@/assets/SaleListSmall/sale1_13.png'),
+          },
+        ],
+        small2images: [
+          {
+            src: require('@/assets/SaleListSmall/sale2_1.png'),
+          },
+          {
+            src: require('@/assets/SaleListSmall/sale2_2.png'),
+          },
+          {
+            src: require('@/assets/SaleListSmall/sale2_3.png'),
+          },
+          {
+            src: require('@/assets/SaleListSmall/sale2_4.png'),
+          },
+          {
+            src: require('@/assets/SaleListSmall/sale2_5.png'),
+          },
+          {
+            src: require('@/assets/SaleListSmall/sale2_6.png'),
+          },
+          {
+            src: require('@/assets/SaleListSmall/sale2_7.png'),
+          },
+          {
+            src: require('@/assets/SaleListSmall/sale2_8.png'),
+          },
+          {
+            src: require('@/assets/SaleListSmall/sale2_9.png'),
           },
         ],
         cycle: true,
@@ -243,9 +320,24 @@ export default {
         model2: null,
       }
     },
+    methods: {
+      slideGroup: 0,
+      nextSlide() {
+        this.slideGroup++;
+        this.slideGroup == 4 ? (this.slideGroup = 0) : "";
+      },
+      previousSlide() {
+        this.slideGroup--;
+      }
+    }
   }
 </script>
 
 <style>
-
+.theme--dark.v-image {
+    color: black;
+}
+.v-application--is-ltr .v-responsive__sizer ~ .v-responsive__content {
+    margin-left: 0%;
+}
 </style>
