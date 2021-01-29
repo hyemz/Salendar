@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app id="test">
     <!-- 헤더 -->
     <Toolbar />
 
@@ -11,7 +11,6 @@
 
 <script>
 import Toolbar from '@/components/Toolbar';
-
 export default {
   name: 'App',
 
@@ -24,9 +23,9 @@ export default {
   }),
 };
 </script>
-<style scoped>
-#title {
-  font-family: '777Balsamtint';
+<style>
+#test {
+  font-family: 'NanumBarunGothic';
 }
 @font-face {
   font-family: '777Balsamtint';
@@ -34,5 +33,15 @@ export default {
     format('woff');
   font-weight: normal;
   font-style: normal;
+}
+@font-face {
+  font-family: 'NanumBarunGothic';
+  font-style: normal;
+  font-weight: 400;
+  src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.eot');
+  src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.eot?#iefix')
+      format('embedded-opentype'),
+    url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.woff') format('woff'),
+    url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.ttf') format('truetype');
 }
 </style>
