@@ -104,7 +104,7 @@
 <script>
 import axios from 'axios'
 import PV from "password-validator";
-import "../../lib/axiosClient"
+import axiosClient from '../../lib/axiosClient';
 
 export default {
   name: 'mypage',
@@ -145,15 +145,16 @@ export default {
       .letters();
 
     // 현재 유져 데이터 받아오기
-    axios.get ()
-    .then ( res => {
-      this.myEmail = res.data.usrEmail
-      this.nickname = res.data.usrNick
-      this.myPwd = res.data.usrPwd
-    })
-    .catch ( err => {
-      console.log(err)
-    })
+    // axios.get ()
+    // .then ( res => {
+    //   this.myEmail = res.data.usrEmail
+    //   this.nickname = res.data.usrNick
+    //   this.myPwd = res.data.usrPwd
+    // })
+    // .catch ( err => {
+    //   console.log(err)
+    // })
+    this.getProfile;
   },
   watch: {
     password: function() {
@@ -175,8 +176,20 @@ export default {
   methods: {
     // 프로필 가져오기
     getProfile() {
-      axiosDefault
       axiosClient
+        .get("/token/mypage")
+        .then()
+        .catch()
+    },
+    updateProfile() {
+      var userForm = {
+        "usrNick": this.nickname,
+        "usrPwd": this.newPwd
+      }
+      axiosClient
+        .post("/token/update", userForm)
+        .then()
+        .catch()
     },
     checkForm() {
       if (this.password.length >= 0 && (this.myPwd == this.password))

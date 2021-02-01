@@ -45,9 +45,9 @@
 <script>
 import axios from 'axios';
 import getFollowing from '../../lib/getFollowing.js'
+
 export default {
   data: () => ({
-    baseURI: 'http://localhost:8080/',
     datas: [],
     cards: [
       {
