@@ -53,7 +53,6 @@ public class CommentController {
             Optional<Board> boardItem = boardRepository.findById(no);
             comment.setBoard((boardItem.get()));
             Comment newComment = commentRepository.findById(commentNo).get();
-            newComment.setCommentTitle(comment.getCommentTitle());
             newComment.setCommentContents(comment.getCommentContents());
             newComment.setUsrEmail(comment.getUsrEmail());
 

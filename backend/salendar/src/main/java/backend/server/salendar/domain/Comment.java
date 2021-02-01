@@ -19,7 +19,6 @@ public class Comment {
     @Column(name = "comment_no")
     private Long commentNo;
 
-    private String commentTitle;
     private String commentContents;
 
     private String usrEmail;
@@ -36,15 +35,7 @@ public class Comment {
         this.commentNo = commentNo;
     }
 
-    public String getCommentTitle() {
-        return commentTitle;
-    }
-
-    public void setCommentTitle(String commentTitle) {
-        this.commentTitle = commentTitle;
-    }
-
-    public String getCommentContents() {
+   public String getCommentContents() {
         return commentContents;
     }
 
@@ -75,13 +66,12 @@ public class Comment {
         Comment comment = (Comment)  o;
         return Objects.equals(commentNo, comment.commentNo) &&
                 Objects.equals(usrEmail, comment.usrEmail) &&
-                Objects.equals(commentTitle, comment.commentTitle) &&
                 Objects.equals(commentContents, comment.commentContents);
     }
 
     @Override
     public int hashCode(){
-        return Objects.hash(commentNo, usrEmail, commentTitle, commentContents);
+        return Objects.hash(commentNo, usrEmail, commentContents);
     }
 
 
