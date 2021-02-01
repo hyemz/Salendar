@@ -91,6 +91,14 @@ public class UserController {
         return new ResponseEntity<List<User>>(users, HttpStatus.OK);
     }
 
+    // 토큰으로 회원조회
+    @ApiOperation(value = "token으로 회원 정보 조회")
+    @GetMapping(value = "/token/mypage")
+    public ResponseEntity<User> getUser(HttpServletRequest request) {
+        userService.findByToken(jwtTokenProvider.resolveToken(request));
+    }
+
+
     // 회원번호로 한명의 회원 조회
     @GetMapping(value = "/{usrNo}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<User> getMember(@PathVariable("usrNo") Long usrNo) {

@@ -104,6 +104,7 @@
 <script>
 import axios from 'axios'
 import PV from "password-validator";
+import "../../lib/axiosClient"
 
 export default {
   name: 'mypage',
@@ -172,6 +173,11 @@ export default {
     }
   },
   methods: {
+    // 프로필 가져오기
+    getProfile() {
+      axiosDefault
+      axiosClient
+    },
     checkForm() {
       if (this.password.length >= 0 && (this.myPwd == this.password))
         this.canChangePwd = true;

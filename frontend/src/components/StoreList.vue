@@ -43,6 +43,8 @@
   </div>
 </template>
 <script>
+import getFollowing from '../lib/getFollowing'
+
 export default {
   data() {
     return {
@@ -90,6 +92,7 @@ export default {
     }
   },
   created () {
+    getFollowing;
     this.$emit('select', this.selected)
     
   }
