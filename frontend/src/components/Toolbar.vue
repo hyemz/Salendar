@@ -11,9 +11,9 @@
       <v-col>
         <v-toolbar-title 
           color="#6A76AB"
-          class="white--text text-decoration-none mb-2 font-weight-medium" 
-          ><router-link to="/calendar" class="text-decoration-none mb-2 font-weight-medium"
-            ><v-img contain src="@/assets/logo.png" width=150></v-img></router-link
+          class="white--text text-decoration-none font-weight-medium" 
+          ><router-link to="/calendar" class="text-decoration-none font-weight-medium"
+            ><v-img contain src="@/assets/logo.png" width=160></v-img></router-link
           ></v-toolbar-title
         >
       </v-col>
@@ -23,27 +23,17 @@
       <!-- <span id="title">야야야</span> -->
       <template>
         <v-tabs align-with-title>
-          <v-tab class="ml-1"
-            ><router-link to="/salelist" class="text-decoration-none mb-2 font-weight-medium"
-              >메인페이지</router-link
-            ></v-tab
+          <v-tab to="/salelist" class="ml-1 text-decoration-none font-weight-medium"
+            >메인페이지</v-tab
           >
-          <v-tab
-            ><router-link to="/calendar" class="text-decoration-none mb-2 font-weight-medium"
-              >세일캘린더</router-link
-            ></v-tab
+          <v-tab to="/calendar" class="text-decoration-none font-weight-medium"
+            >세일캘린더</v-tab
           >
-          <v-tab
-            ><router-link to="/board" class="text-decoration-none mb-2 font-weight-medium"
-              >게시판</router-link
-            ></v-tab
+          <v-tab to="/board" class="text-decoration-none font-weight-medium"
+            >게시판</v-tab
           >
-          <v-tab id="test"
-            ><router-link
-              to="/mypage/wishlist"
-              class=" text-decoration-none mb-2 font-weight-medium"
-              >찜목록</router-link
-            ></v-tab
+          <v-tab id="test" class="text-decoration-none font-weight-medium" to="/mypage/wishlist"
+            >찜목록</v-tab
           >
         </v-tabs>
       </template>
