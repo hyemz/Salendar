@@ -4,10 +4,7 @@ import lombok.*;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity(name = "board")
@@ -21,6 +18,7 @@ public class Board {
     // 사용자 일련번호
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "board_no")
     private Long boardNo;
 
     private String usrEmail;
@@ -63,15 +61,18 @@ public class Board {
         if(this == o)   return true;
         if(o == null || getClass() != o.getClass()) return false;
         Board board = (Board)  o;
-        return Objects.equals(usrEmail, board.usrEmail) &&
+        return Objects.equals(boardNo, board.boardNo) &&
+                Objects.equals(usrEmail, board.usrEmail) &&
                 Objects.equals(boardTitle, board.boardTitle) &&
                 Objects.equals(boardContents, board.boardContents);
     }
 
     @Override
     public int hashCode(){
-        return Objects.hash(usrEmail, boardTitle, boardContents);
+        return Objects.hash(boardNo, usrEmail, boardTitle, boardContents);
     }
 
 
 }
+
+

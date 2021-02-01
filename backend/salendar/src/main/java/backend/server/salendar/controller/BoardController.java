@@ -13,37 +13,51 @@ import java.util.Optional;
 @Api(tags = {"3. Board"})
 @RestController
 @CrossOrigin("http://localhost:8081")
-@RequestMapping("/api/board")
+@RequestMapping("/api/boardList")
 @Controller
 public class BoardController {
 
     @Autowired
     private BoardRepository boardRepository;
 
-    @GetMapping("/boardList")
+    @GetMapping("/")
     public List<Board> getBoardList() {
         return boardRepository.findAll();
     }
 
-    @GetMapping("/boardList/{boardNo}")
+    @GetMapping("/{boardNo}")
     public Board getBoard(@PathVariable("boardNo") String no){
-        Long boardNo = Long.parseLong(no);
-        Optional<Board> board = boardRepository.findById((boardNo));
-        return board.get();
+
+        try {
+            Long boardNo = Long.parseLong(no);
+            Optional<Board> board = boardRepository.findById((boardNo));
+
+            return board.get();
+
+        }catch (Exception e){
+            return null;
+        }
+
     }
 
-    @PostMapping("/boardList/{boardNo}")
+    @PostMapping("/{boardNo}")
     public Board updateBoard(@PathVariable("boardNo") String no, @RequestBody Board newBoard){
-        Long boardNo = Long.parseLong(no);
 
-        Optional<Board> board = boardRepository.findById(boardNo);
+        try {
+            Long boardNo = Long.parseLong(no);
 
-        board.get().setBoardTitle(newBoard.getBoardTitle());
-        board.get().setBoardContents(newBoard.getBoardContents());
+            Optional<Board> board = boardRepository.findById(boardNo);
 
-        boardRepository.save(board.get());
+            board.get().setBoardTitle(newBoard.getBoardTitle());
+            board.get().setBoardContents(newBoard.getBoardContents());
 
-        return board.get();
+            boardRepository.save(board.get());
+
+            return board.get();
+
+        }catch (Exception e){
+            return null;
+        }
     }
 
     @PutMapping("/createboard")
@@ -55,9 +69,15 @@ public class BoardController {
 
     @DeleteMapping("/{boardNo}")
     public String deleteBoard(@PathVariable("boardNo") String no){
-        Long boardNo = Long.parseLong(no);
-        boardRepository.deleteById(boardNo);
 
-        return "Delete Success";
+        try {
+            Long boardNo = Long.parseLong(no);
+            boardRepository.deleteById(boardNo);
+
+            return "Delete Success";
+
+        }catch (Exception e){
+            return "Delete Fail";
+        }
     }
 }
