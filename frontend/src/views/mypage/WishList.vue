@@ -44,6 +44,7 @@
 </template>
 <script>
 import axios from 'axios';
+import getFollowing from '../../lib/getFollowing.js'
 export default {
   data: () => ({
     baseURI: 'http://localhost:8080/',
@@ -80,25 +81,7 @@ export default {
     ],
   }),
   created: function() {
-    // var headerForm = {
-    //   headers: {
-    //     'x-auth-token': 'Bearer ' + localStorage.getItem('jwt')
-    //   }
-    // }
-    axios
-      .create({
-        headers: {
-          'x-auth-token':localStorage.getItem('jwt')
-        }
-      })
-      .get("http://localhost:8080/api/user/token/followings")
-      .then((res) => {
-        console.log(res);
-        // this.datas = res.data;
-      })
-      .catch((err) => {
-        console.log('찜 목록을 불러오지 못했습니다.', err);
-      });
+    getFollowing;
   },
   methods: {
     removeCard(i) {

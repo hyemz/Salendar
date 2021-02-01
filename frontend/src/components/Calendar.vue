@@ -14,6 +14,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { createEventId } from './event-utils';
 
+import getFollowing from "../lib/getFollowing"
 import MoreModal from './MoreModal';
 import axios from 'axios';
 
@@ -191,10 +192,18 @@ export default {
     };
   },
   created() {
+    console.log("this");
+    getFollowing;
     axios
-      .get()
+      .create({
+        headers: {
+          'x-auth-token':localStorage.getItem('jwt')
+        }
+      })
+      .get("http://localhost:8080/api/sale/token/list/follow")
       .then((res) => {
-        this.events = res.data;
+        // this.events = res.data;
+        console.log(res)
       })
       .catch((err) => {
         console.log(err);
