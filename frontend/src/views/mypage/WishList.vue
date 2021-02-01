@@ -46,7 +46,7 @@
 import axios from 'axios';
 export default {
   data: () => ({
-    baseURI: '',
+    baseURI: 'http://localhost:8080/',
     datas: [],
     cards: [
       {
@@ -80,11 +80,21 @@ export default {
     ],
   }),
   created: function() {
+    // var headerForm = {
+    //   headers: {
+    //     'x-auth-token': 'Bearer ' + localStorage.getItem('jwt')
+    //   }
+    // }
     axios
-      .get(`${this.baseURI}/나머지주소`)
+      .create({
+        headers: {
+          'x-auth-token':localStorage.getItem('jwt')
+        }
+      })
+      .get("http://localhost:8080/api/user/token/followings")
       .then((res) => {
         console.log(res);
-        this.datas = res.data;
+        // this.datas = res.data;
       })
       .catch((err) => {
         console.log('찜 목록을 불러오지 못했습니다.', err);

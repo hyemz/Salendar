@@ -57,7 +57,6 @@ public class User implements UserDetails {
 //    private Byte[] usrImg;
     private String usrImgUrl;
 
-
     // User 모델 복사
     public void CopyData(User param) {
         this.usrNo = param.getUsrNo();
