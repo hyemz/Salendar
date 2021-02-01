@@ -25,15 +25,15 @@ public class BoardController {
         return boardRepository.findAll();
     }
 
-    @GetMapping("/{boardNo}")
-    public Board getBoard(@PathVariable String no){
+    @GetMapping("/boardList/{boardNo}")
+    public Board getBoard(@PathVariable("boardNo") String no){
         Long boardNo = Long.parseLong(no);
         Optional<Board> board = boardRepository.findById((boardNo));
         return board.get();
     }
 
-    @PostMapping("/{boardNo}")
-    public Board updateBoard(@PathVariable String no, @RequestBody Board newBoard){
+    @PostMapping("/boardList/{boardNo}")
+    public Board updateBoard(@PathVariable("boardNo") String no, @RequestBody Board newBoard){
         Long boardNo = Long.parseLong(no);
 
         Optional<Board> board = boardRepository.findById(boardNo);
@@ -46,15 +46,15 @@ public class BoardController {
         return board.get();
     }
 
-    @PutMapping("/board")
+    @PutMapping("/createboard")
     public Board createBoard(@RequestBody Board board){
         Board newBoard = boardRepository.save(board);
 
         return newBoard;
     }
 
-    @DeleteMapping("/board/{boardNo}")
-    public String deleteBoard(@PathVariable String no){
+    @DeleteMapping("/{boardNo}")
+    public String deleteBoard(@PathVariable("boardNo") String no){
         Long boardNo = Long.parseLong(no);
         boardRepository.deleteById(boardNo);
 
