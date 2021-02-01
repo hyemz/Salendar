@@ -62,9 +62,9 @@ public class UserService implements UserDetailsService {
     /*
      * 이메일로 회원 조회
      */
-    public User loadUserByUsername(String usrEmail) throws UsernameNotFoundException {
+    public User loadUserByUsername(String usrEmail) {
         return (User) userRepository.findByUsrEmail(usrEmail)
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+                .orElse(null);
     }
 
 

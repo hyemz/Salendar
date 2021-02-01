@@ -95,7 +95,12 @@ public class UserController {
     @ApiOperation(value = "token으로 회원 정보 조회")
     @GetMapping(value = "/token/mypage")
     public ResponseEntity<User> getUser(HttpServletRequest request) {
-        userService.findByToken(jwtTokenProvider.resolveToken(request));
+        Optional<User> user = Optional.ofNullable(userService.findByToken(jwtTokenProvider.resolveToken(request)));
+        if (user.isPresent()){
+            return new ResponseEntity<>(user.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(user.get(), HttpStatus.NOT_FOUND);
+        }
     }
 
 
