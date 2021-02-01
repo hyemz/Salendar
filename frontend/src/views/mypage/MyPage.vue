@@ -104,7 +104,7 @@
 <script>
 import axios from 'axios'
 import PV from "password-validator";
-import {axiosClient, axiosDefault} from '../../lib/axiosClient';
+import axiosClient from '../../lib/axiosClient';
 
 export default {
   name: 'mypage',

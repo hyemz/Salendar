@@ -44,6 +44,7 @@
 </template>
 <script>
 import axios from 'axios';
+import getFollowing from '../../lib/getFollowing.js'
 
 export default {
   data: () => ({
