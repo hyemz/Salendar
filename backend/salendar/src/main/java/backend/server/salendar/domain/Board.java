@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity(name = "board")
 @Getter
@@ -55,6 +56,21 @@ public class Board {
 
     public void setBoardContents(String boardContents) {
         this.boardContents = boardContents;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(this == o)   return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        Board board = (Board)  o;
+        return Objects.equals(usrEmail, board.usrEmail) &&
+                Objects.equals(boardTitle, board.boardTitle) &&
+                Objects.equals(boardContents, board.boardContents);
+    }
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(usrEmail, boardTitle, boardContents);
     }
 
 
