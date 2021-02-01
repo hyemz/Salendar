@@ -26,7 +26,7 @@ public class BoardController {
 
     @GetMapping("/boardList")
     public ResponseEntity<Board> list() {
-        Optional<Board> board = boardService.;
+        Optional<Board> board = boardService.getBoardList();
         return new ResponseEntity<Board>(board.get(), HttpStatus.OK);
     }
 
