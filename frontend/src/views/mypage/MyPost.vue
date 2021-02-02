@@ -47,6 +47,7 @@
                 @page-count="pageCount = $event"
                 sort-by="id"
                 sort-desc="true"
+                @click:row="detail"
               ></v-data-table>
 
               <div class="text-center pt-2">
@@ -80,10 +81,9 @@
             sortable: false,
             value: 'id',
           },
-          { text: '제목', value: 'title', align: 'start',},
-          { width: '100', text: '작성자', value: 'username', align: 'start',},
-          { width: '150', text: '작성 시간', value: 'created_at', align: 'center',},
-          { width: '150', text: '수정 시간', value: 'updated_at', align: 'center', },
+          { text: '제목', value: 'title', align: 'start', sortable: false,},
+          { width: '150', text: '작성자', value: 'username', align: 'start', sortable: false,},
+          { width: '150', text: '등록일', value: 'created_at', align: 'center', sortable: false,},
         ],
         contents: [
           {
@@ -314,6 +314,11 @@
       mypage: function () {
         this.$router.push({
           path: '/mypage'
+        })
+      },
+      detail () {
+        this.$router.push({
+          path: '/board/detail'
         })
       },
     }
