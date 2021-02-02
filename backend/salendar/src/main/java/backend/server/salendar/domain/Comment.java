@@ -20,6 +20,8 @@ public class Comment {
     private Long commentNo;
 
     private String commentContents;
+    private String createdDate;
+    private String modifiedDate;
 
     private String usrEmail;
 
@@ -41,6 +43,22 @@ public class Comment {
 
     public void setCommentContents(String commentContents) {
         this.commentContents = commentContents;
+    }
+
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(String modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 
     public String getUsrEmail() {
@@ -66,12 +84,9 @@ public class Comment {
         Comment comment = (Comment)  o;
         return Objects.equals(commentNo, comment.commentNo) &&
                 Objects.equals(usrEmail, comment.usrEmail) &&
-                Objects.equals(commentContents, comment.commentContents);
-    }
-
-    @Override
-    public int hashCode(){
-        return Objects.hash(commentNo, usrEmail, commentContents);
+                Objects.equals(commentContents, comment.commentContents) &&
+                Objects.equals(createdDate, comment.createdDate) &&
+                Objects.equals(modifiedDate, comment.modifiedDate);
     }
 
 }

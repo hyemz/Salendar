@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.HandlerMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -34,6 +36,7 @@ public class CommentController {
     @Autowired
     UserService userService;
 
+    //  댓글 가져오기
     @GetMapping("/{boardNo}/comment")
     public List<Comment> getBoardComments(@PathVariable("boardNo") Long no){
         Board board = boardRepository.findById(no).get();
@@ -41,6 +44,7 @@ public class CommentController {
         return commentRepository.findCommentsByBoard(board);
     }
 
+    //  댓글 작성하기
     @PutMapping("/{boardNo}/comment")
     public Comment createComment(@PathVariable("boardNo") Long no,
                                  @RequestBody Comment comment,
@@ -52,11 +56,19 @@ public class CommentController {
         comment.setBoard((boardItem.get()));
         comment.setUsrEmail(user.getUsrEmail());
 
+        //  현재시각 가져오기
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateString = format.format(date);
+        comment.setCreatedDate(dateString);
+        comment.setModifiedDate(dateString);
+
         commentRepository.save(comment);
 
         return comment;
     }
 
+    // 댓글 수정하기
     @GetMapping("/token/{boardNo}/comment/{commentNo}")
     public Comment updateComment(@PathVariable("boardNo") Long no,
                                  @PathVariable("commentNo") Long commentNo,
@@ -65,27 +77,35 @@ public class CommentController {
 
         try {
             User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
-
             Comment com = commentRepository.findById(commentNo).get();
             String commentWriter = com.getUsrEmail();
 
-            if(!commentWriter.equals(user.getUsrEmail())){
+            //  댓글 수정 권한 확인
+            if(!commentWriter.equals(user.getUsrEmail())){  //  댓글 수정 권한 없ㅇ음
                 return null;
             }
 
+            //  댓글 수정 권한 ㅇ
             Optional<Board> boardItem = boardRepository.findById(no);
             comment.setBoard((boardItem.get()));
             Comment newComment = commentRepository.findById(commentNo).get();
             newComment.setCommentContents(comment.getCommentContents());
             newComment.setUsrEmail(comment.getUsrEmail());
 
-            return comment;
+            // 댓글 작성시각 업데이트 하기
+            Date date = new Date();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateString = format.format(date);
+            newComment.setModifiedDate(dateString);
+
+            return newComment;
 
         }catch (Exception e){
             return null;
         }
     }
 
+    //  댓글 삭제하기
     @DeleteMapping("/token/{boardNo}/comment/{commentNo}")
     public String deleteComment(@PathVariable("boardNo") Long no,
                                 @PathVariable("commentNo") Long commentNo,
