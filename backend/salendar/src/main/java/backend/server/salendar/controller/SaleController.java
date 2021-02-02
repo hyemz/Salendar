@@ -1,8 +1,10 @@
 package backend.server.salendar.controller;
 
 import backend.server.salendar.domain.Sale;
+import backend.server.salendar.domain.Store;
 import backend.server.salendar.domain.User;
 import backend.server.salendar.repository.SaleRepository;
+import backend.server.salendar.repository.StoreRepository;
 import backend.server.salendar.security.JwtTokenProvider;
 import backend.server.salendar.service.SaleService;
 import backend.server.salendar.service.UserService;
@@ -30,6 +32,7 @@ public class SaleController {
     @Autowired
     UserService userService;
     private final SaleRepository saleRepository;
+    private final StoreRepository storeRepository;
 
     //    세일 DB 업데이트
     @ApiOperation(value = "세일 DB 업데이트", notes = "관리자")
@@ -73,5 +76,12 @@ public class SaleController {
     @GetMapping(value = "/{saleNo}")
     public ResponseEntity<Sale> saleDetail(@PathVariable("saleNo") Long saleNo) {
         return new ResponseEntity<>(saleRepository.findBySaleNo(saleNo), HttpStatus.OK);
+    }
+
+//    전체 매장 리스트
+    @ApiOperation(value = "전체 매장 리스트")
+    @GetMapping(value = "/storelist")
+    public ResponseEntity<List<Store>> storeList() {
+        return new ResponseEntity<>(storeRepository.findAll(), HttpStatus.OK);
     }
 }

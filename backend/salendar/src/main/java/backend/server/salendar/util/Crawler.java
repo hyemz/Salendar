@@ -10,6 +10,7 @@ import org.jsoup.select.Elements;
 
 import javax.imageio.ImageIO;
 import javax.net.ssl.*;
+import javax.print.Doc;
 import java.awt.image.BufferedImage;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,9 +27,33 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+
 public class Crawler {
 
     private final static String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15";
+
+    //WebDriver 설정
+    private static WebDriver driver;
+    private WebElement element;
+    private String url;
+
+    //Properties 설정
+    public static String WEB_DRIVER_ID = "webdriver.chrome.driver";
+    public static String WEB_DRIVER_PATH = "salendar/chromedriver.exe";
+
+    public static String crawl(String url) {
+        System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
+        ChromeOptions options = new ChromeOptions();
+        options.setCapability("ignoreProtectedModeSettings", true);
+        driver = new ChromeDriver(options);
+        driver.get(url);
+        return driver.getPageSource();
+    }
 
     @SneakyThrows
     public static List<Sale> crawlOliveyoung() {
@@ -39,31 +64,16 @@ public class Crawler {
             Crawler.setSSL();
         }
 
-        Document doc = Jsoup.connect(eventUrl)
-                .header("Content-Type", "application/json;charset=UTF-8")
-                .userAgent(USER_AGENT)
-                .ignoreContentType(true)
-                .get();
+        Document doc = Jsoup.parse(crawl(eventUrl));
 
         Elements eventLists = doc.select("#Container > div > div.event_tab_cont > ul.event_thumb_list > li");
 
         for (Element e : eventLists) {
-//            {
-//                    "saleTitle":String,
-//                    "saleLink":String,
-//                    "saleDsc":String,
-//                    "saleBigImg":String,
-//                    "saleThumbnail":String,
-//                    "saleStartDate":Date,
-//                    "saleEndDate":Date
-//            }
             Sale curSale = new Sale();
             curSale.setSaleTitle(e.select("a > p.evt_tit").text());
             curSale.setSaleDsc(e.select("a > p.evt_desc").text());
             curSale.setSaleThumbnail(e.select("a > img").attr("data-original"));
             curSale.setSaleLink("https://www.oliveyoung.co.kr/store/" + e.select("input").get(2).attr("value"));
-
-//            System.out.println(curSale.getSaleTitle());
 
             Elements eventDate = e.select("a > p.evt_date");
             SimpleDateFormat inputFormat = new SimpleDateFormat("yy.MM.dd");
@@ -91,48 +101,30 @@ public class Crawler {
     }
 
     @SneakyThrows
-    public static List<Sale> crawlAritaum(){
+    public static List<Sale> crawlAritaum() {
         List<Sale> result = new ArrayList<>();
         String eventUrl = "https://www.aritaum.com/event/ev/event_ev_event_list.do";
 
         if (eventUrl.indexOf("https://") >= 0) {
             Crawler.setSSL();
         }
-
-        Document doc = Jsoup.connect(eventUrl)
-                .header("Content-Type", "application/json;charset=UTF-8")
-                .userAgent(USER_AGENT)
-                .ignoreContentType(true)
-                .get();
+        Document doc = Jsoup.parse(crawl(eventUrl));
 
         Elements eventLists = doc.select("#container > div > div.side_content > div > div > ul > li");
 
         for (Element e : eventLists) {
-//            {
-//                    "saleNo":1,
-//                    "saleTitle":String,
-//                    "saleStore":Integer,
-//                    "saleLink":String,
-//                    "saleDsc":String,
-//                    "saleBigImg":String,
-//                    "saleThumbnail":String,
-//                    "saleStartDate":Date,
-//                    "saleEndDate":Date
-//            }
             Sale curSale = new Sale();
             curSale.setSaleTitle(e.select("div > a > div.event-unit__info > dl > dd").text());
             curSale.setSaleDsc(e.select("div > a > div.event-unit__info > dl > dd").text());
             curSale.setSaleThumbnail(e.select("div > a > div.event-unit__thumb > img").attr("src"));
             curSale.setSaleLink("https://www.aritaum.com" + e.select("div > a").attr("href"));
 
-//            System.out.println(curSale.getSaleLink());
-
             Elements eventDate = e.select("div > a > div.event-unit__info > div > dl.period__item.period__date > dd");
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy. MM. dd");
 
             int index = eventDate.text().indexOf("~");
-            String eventStart = eventDate.text().substring(0, index-1);
-            String eventEnd = eventDate.text().substring(index+2, index + 14);
+            String eventStart = eventDate.text().substring(0, index - 1);
+            String eventEnd = eventDate.text().substring(index + 2, index + 14);
             Date eventStartDate = inputFormat.parse(eventStart);
             Date eventEndDate = inputFormat.parse(eventEnd);
 
@@ -169,32 +161,18 @@ public class Crawler {
         Elements eventLists = doc.select("#event-list > li");
 
         for (Element e : eventLists) {
-//            {
-//                    "saleNo":1,
-//                    "saleTitle":String,
-//                    "saleStore":Integer,
-//                    "saleLink":String,
-//                    "saleDsc":String,
-//                    "saleBigImg":String,
-//                    "saleThumbnail":String,
-//                    "saleStartDate":Date,
-//                    "saleEndDate":Date
-//            }
             Sale curSale = new Sale();
             curSale.setSaleTitle(e.select("div.event-info > a > h4").text());
             curSale.setSaleDsc(e.select("div.event-info > a > h4").text());
             curSale.setSaleThumbnail(e.select("div.thumb-img > a > div.img-area > img").attr("src"));
             curSale.setSaleLink("https://www.mynunc.com/marketing/event/detail/" + e.select("div.thumb-img > a").attr("data-evtid"));
 
-//            System.out.println(e.select("div.event-info > a > h4").text());
-//            System.out.println("https://www.mynunc.com/marketing/event/detail/" + e.select("div.thumb-img > a").attr("data-evtid"));
-
             Elements eventDate = e.select("div.event-info > a > p");
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
 
             int index = eventDate.text().indexOf("~");
-            String eventStart = eventDate.text().substring(0, index-1);
-            String eventEnd = eventDate.text().substring(index+2, index + 14);
+            String eventStart = eventDate.text().substring(0, index - 1);
+            String eventEnd = eventDate.text().substring(index + 2, index + 14);
             Date eventStartDate = inputFormat.parse(eventStart);
             Date eventEndDate = inputFormat.parse(eventEnd);
 
@@ -258,7 +236,7 @@ public class Crawler {
 
             int index = eventDate.text().indexOf("~");
             String eventStart = eventDate.text().substring(0, index);
-            String eventEnd = eventDate.text().substring(index+1, index + 13);
+            String eventEnd = eventDate.text().substring(index + 1, index + 13);
             Date eventStartDate = inputFormat.parse(eventStart);
             Date eventEndDate = inputFormat.parse(eventEnd);
 
@@ -382,8 +360,8 @@ public class Crawler {
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy.MM.dd");
 
             int index = eventDate.text().indexOf("~");
-            String eventStart = eventDate.text().substring(0, index-1);
-            String eventEnd = eventDate.text().substring(index+2, index+12);
+            String eventStart = eventDate.text().substring(0, index - 1);
+            String eventEnd = eventDate.text().substring(index + 2, index + 12);
 
             Date eventStartDate = inputFormat.parse(eventStart);
             Date eventEndDate = inputFormat.parse(eventEnd);
@@ -444,8 +422,8 @@ public class Crawler {
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy.MM.dd");
 
             int index = eventDate.text().indexOf("~");
-            String eventStart = eventDate.text().substring(5, index-1);
-            String eventEnd = eventDate.text().substring(index+2, index+12);
+            String eventStart = eventDate.text().substring(5, index - 1);
+            String eventEnd = eventDate.text().substring(index + 2, index + 12);
 
 //            System.out.println(eventStart + " ~ " + eventEnd);
 
@@ -508,15 +486,14 @@ public class Crawler {
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
 
             int index = eventDate.text().indexOf("~");
-            String eventStart = eventDate.text().substring(0, index-1);
+            String eventStart = eventDate.text().substring(0, index - 1);
             String eventEnd;
 
-            if((int)eventDate.text().substring(index+2, index+3).charAt(0) == 54620){   //  한정수량 소진시 종료
+            if ((int) eventDate.text().substring(index + 2, index + 3).charAt(0) == 54620) {   //  한정수량 소진시 종료
                 Date eventStartDate = inputFormat.parse(eventStart);
                 curSale.setSaleStartDate(eventStartDate);
                 curSale.setSaleEndDate(null);
-            }
-            else if((int)eventDate.text().substring(index+2, index+3).charAt(0) == 51652){
+            } else if ((int) eventDate.text().substring(index + 2, index + 3).charAt(0) == 51652) {
                 eventEnd = "2022-01-31";
 
                 Date eventStartDate = inputFormat.parse(eventStart);
@@ -524,9 +501,8 @@ public class Crawler {
 
                 curSale.setSaleStartDate(eventStartDate);
                 curSale.setSaleEndDate(eventEndDate);
-            }
-            else {
-                eventEnd = eventDate.text().substring(index+2, index+12);
+            } else {
+                eventEnd = eventDate.text().substring(index + 2, index + 12);
 
                 Date eventStartDate = inputFormat.parse(eventStart);
                 Date eventEndDate = inputFormat.parse(eventEnd);
@@ -548,7 +524,7 @@ public class Crawler {
     }
 
     public static void main(String[] args) throws KeyManagementException, NoSuchAlgorithmException, IOException {
-//        crawlOliveyoung();
+        System.out.println(crawlOliveyoung());
 //        crawlAritaum();
 //        crawlMissha();
 //        crawlEtude();
