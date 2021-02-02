@@ -11,3 +11,7 @@ CREATE TABLE User
     `usrImgUrl`		VARCHAR(30)	  NULL		   COMMENT '사용자 프로필',
     PRIMARY KEY (usrNo)
 );
+
+select * from comment;
+select * from user;
+select * from board;
