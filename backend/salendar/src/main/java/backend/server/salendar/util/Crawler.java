@@ -185,7 +185,6 @@ public class Crawler {
     public static List<Sale> crawlEtude() {
         List<Sale> result = new ArrayList<>();
         String eventUrl = "https://www.etude.com/kr/ko/display/event?displayMenuId=event";
-https://www.etude.com/kr/ko/display/event_detail?planDisplaySn=4855
         if (eventUrl.indexOf("https://") >= 0) {
             Crawler.setSSL();
         }
