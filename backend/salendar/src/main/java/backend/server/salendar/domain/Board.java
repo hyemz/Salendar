@@ -27,14 +27,16 @@ public class Board {
     private String boardContents;
     private String createdDate;
     private String modifiedDate;
+    private String boardType;
 
     @Builder
-    public Board(String usrEmail, String boardTitle, String boardContents, String createdDate, String modifiedDate) {
+    public Board(String usrEmail, String boardTitle, String boardContents, String createdDate, String modifiedDate, String boardType) {
         this.usrEmail = usrEmail;
         this.boardTitle = boardTitle;
         this.boardContents = boardContents;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
+        this.boardType = boardType;
     }
 
     public String getUsrEmail() {
@@ -77,6 +79,14 @@ public class Board {
         this.modifiedDate = modifiedDate;
     }
 
+    public String getBoardType() {
+        return boardType;
+    }
+
+    public void setBoardType(String boardType) {
+        this.boardType = boardType;
+    }
+
     @Override
     public boolean equals(Object o){
         if(this == o)   return true;
@@ -87,7 +97,8 @@ public class Board {
                 Objects.equals(boardTitle, board.boardTitle) &&
                 Objects.equals(boardContents, board.boardContents) &&
                 Objects.equals(createdDate, board.createdDate) &&
-                Objects.equals(modifiedDate, board.modifiedDate);
+                Objects.equals(modifiedDate, board.modifiedDate) &&
+                Objects.equals(boardType, board.boardType);
     }
 
 }
