@@ -5,12 +5,14 @@
       color="grey lighten-5"
       height=""
       >
+        
 
         <v-carousel
+          v-model="model"
           :continuous="true"
           :cycle="cycle"
+          :show-arrows="false"
           hide-delimiter-background
-          show-arrows-on-hover
           height="450"
           max-width=""
           hide-delimiters
@@ -23,7 +25,6 @@
             :src="item.src"
             max-height=""
             max-width=""
-            
           >
               <v-row
                 class="fill-height mr-4"
@@ -41,6 +42,7 @@
                   color="grey lighten-2"
                   fab
                   x-small
+                  @click="model--"
                 >
                   <v-icon
                     color="white"
@@ -60,7 +62,7 @@
                   color="grey lighten-2"
                   fab
                   x-small
-                  @click="i++"
+                  @click="model++"
                 >
                   <v-icon
                     color="white"
@@ -95,16 +97,66 @@
 
           </v-carousel-item>
         </v-carousel>
+
+        <v-row justify="center" align="right">
+          <v-btn 
+            @click="model--"
+            elevation="2"
+            color="grey lighten-2"
+            fab
+            x-small
+          >
+            <v-icon>
+              mdi-chevron-left
+            </v-icon>
+          </v-btn>
+
+          <v-btn
+            color="transparent"
+            elevation="0"
+            aria-disabled="10"
+          >
+            {{ model + 1 }} / {{ items.length }}
+          </v-btn>
+
+          <v-btn
+            class="mr-2"
+            @click="model++"
+            elevation="2"
+            color="grey lighten-2"
+            fab
+            x-small
+          >
+            <v-icon>
+              mdi-chevron-right
+            </v-icon>
+          </v-btn>
+
+          <v-btn
+                  elevation="2"
+                  color="grey lighten-2"
+                  fab
+                  x-small
+                  @click="cycle=!cycle"
+                >
+                  <v-icon
+                    color="blue"
+                    v-if="!cycle"
+                  >
+                    mdi-play
+                  </v-icon>
+                  <v-icon
+                    color="red"
+                    v-else
+                  >
+                    mdi-pause
+                  </v-icon>
+                </v-btn>
+        </v-row>
+
         <v-list-item-action class="d-flex align-end justify-end">
           <div>
             
-
-            <v-switch
-              v-model="cycle"
-              inset
-              color="red"
-            >
-            </v-switch>
 
           </div>
 
@@ -134,7 +186,7 @@
               max-width=""
             >
               <v-slide-group
-                v-model="model"
+                v-model="model1"
                 class="pa-4"
                 center-active
                 show-arrows
@@ -379,6 +431,7 @@ export default {
         ],
         cycle: true,
         model: null,
+        model1: null,
         model2: null,
       }
     },
