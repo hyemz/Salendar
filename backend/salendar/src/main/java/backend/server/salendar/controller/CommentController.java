@@ -2,14 +2,20 @@ package backend.server.salendar.controller;
 
 import backend.server.salendar.domain.Board;
 import backend.server.salendar.domain.Comment;
+import backend.server.salendar.domain.User;
 import backend.server.salendar.repository.BoardRepository;
 import backend.server.salendar.repository.CommentRepository;
+import backend.server.salendar.security.JwtTokenProvider;
+import backend.server.salendar.service.UserService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.HandlerMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Api(tags = {"4. Comment"})
@@ -20,12 +26,14 @@ import java.util.Optional;
 public class CommentController {
 
     @Autowired
-    private BoardRepository boardRepository;
+    BoardRepository boardRepository;
 
     @Autowired
-    private CommentRepository commentRepository;
+    CommentRepository commentRepository;
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @Autowired
+    UserService userService;
+
     @GetMapping("/{boardNo}/comment")
     public List<Comment> getBoardComments(@PathVariable("boardNo") Long no){
         Board board = boardRepository.findById(no).get();
@@ -33,23 +41,38 @@ public class CommentController {
         return commentRepository.findCommentsByBoard(board);
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PutMapping("/{boardNo}/comment")
-    public Comment createComment(@PathVariable("boardNo") Long no, @RequestBody Comment comment){
+    public Comment createComment(@PathVariable("boardNo") Long no,
+                                 @RequestBody Comment comment,
+                                 HttpServletRequest request){
+
+        User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
+
         Optional<Board> boardItem = boardRepository.findById(no);
         comment.setBoard((boardItem.get()));
+        comment.setUsrEmail(user.getUsrEmail());
+
         commentRepository.save(comment);
 
         return comment;
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @GetMapping("/{boardNo}/comment/{commentNo}")
+    @GetMapping("/token/{boardNo}/comment/{commentNo}")
     public Comment updateComment(@PathVariable("boardNo") Long no,
                                  @PathVariable("commentNo") Long commentNo,
-                                 @RequestBody Comment comment){
+                                 @RequestBody Comment comment,
+                                 HttpServletRequest request){
 
         try {
+            User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
+
+            Comment com = commentRepository.findById(commentNo).get();
+            String commentWriter = com.getUsrEmail();
+
+            if(!commentWriter.equals(user.getUsrEmail())){
+                return null;
+            }
+
             Optional<Board> boardItem = boardRepository.findById(no);
             comment.setBoard((boardItem.get()));
             Comment newComment = commentRepository.findById(commentNo).get();
@@ -63,12 +86,21 @@ public class CommentController {
         }
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @DeleteMapping("/{boardNo}/comment/{commentNo}")
+    @DeleteMapping("/token/{boardNo}/comment/{commentNo}")
     public String deleteComment(@PathVariable("boardNo") Long no,
-                                @PathVariable("commentNo") Long commentNo){
+                                @PathVariable("commentNo") Long commentNo,
+                                HttpServletRequest request){
 
         try {
+            User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
+
+            Comment com = commentRepository.findById(commentNo).get();
+            String commentWriter = com.getUsrEmail();
+
+            if(!commentWriter.equals(user.getUsrEmail())){
+                return "Comment Delete Fail";
+            }
+
             commentRepository.deleteById(commentNo);
             return "Comment Delete Success";
 

@@ -74,5 +74,4 @@ public class Comment {
         return Objects.hash(commentNo, usrEmail, commentContents);
     }
 
-
 }
