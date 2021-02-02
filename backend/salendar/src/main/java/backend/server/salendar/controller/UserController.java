@@ -97,7 +97,7 @@ public class UserController {
     @GetMapping(value = "/token/mypage")
     public ResponseEntity<User> getUser(HttpServletRequest request) {
         Optional<User> user = Optional.ofNullable(userService.findByToken(jwtTokenProvider.resolveToken(request)));
-        if (user.isPresent()){
+        if (user.isPresent()) {
             return new ResponseEntity<>(user.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(user.get(), HttpStatus.NOT_FOUND);
@@ -208,7 +208,7 @@ public class UserController {
     @PostMapping(value = "/token/pwdConfirm")
     public HttpStatus pwdConfirm(HttpServletRequest request, @RequestBody String pwd) {
         User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
-        if (!passwordEncoder.matches(pwd, user.getPassword())) {
+        if (!passwordEncoder.matches(pwd.substring(0, pwd.length() - 1), user.getPassword())) {
             return HttpStatus.NOT_ACCEPTABLE;
         }
         return HttpStatus.OK;
