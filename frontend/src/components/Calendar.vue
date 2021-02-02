@@ -187,8 +187,8 @@ export default {
     //   this.currentEvents = events;
     // },
 
-    close(dialog) {
-      this.dialog = dialog;
+    close(isDialog) {
+      this.dialog = isDialog;
     },
   },
   watch: {

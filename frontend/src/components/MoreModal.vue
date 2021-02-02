@@ -1,13 +1,13 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="dialog" scrollable persistent max-width="700px">
+    <v-dialog v-model="isDialog" scrollable persistent max-width="700px">
       <v-card>
         <v-toolbar flat>
           <v-card-title>
           </v-card-title>
           <v-spacer></v-spacer
           ><v-card-actions>
-            <v-btn color="grey" text @click="dialog = false" elevation="0">
+            <v-btn color="grey" text @click="isDialog = false" elevation="0">
               x
               <!-- <font-awesome-layers full-width class="fa-2x">
                 <font-awesome-icon :icon="['fas', 'times']" :style="{ color: 'lightgray' }" />
@@ -18,7 +18,7 @@
         <v-card-text>
           <v-container>
             <v-row>
-              <v-col cols="12">
+              <v-col v-if="this.focus" cols="12">
                 <h2>매장명 : {{ this.focus.title }}</h2>
                 <h2>세일시작 : {{ this.focus.start }}</h2>
                 <h2>세일끝 : {{ this.focus.end }}</h2>
@@ -37,7 +37,9 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      isDialog:false,
+    };
   },
   props: {
     dialog: Boolean,
@@ -45,9 +47,12 @@ export default {
   },
   watch: {
     dialog: function () {
-      this.$emit('close', this.dialog)
+      this.isDialog = this.dialog
+      this.$emit('close', this.isDialog)
+    },
+    isDialog: function () {
+      this.$emit('close', this.isDialog)
     }
-
   }
 };
 </script>
