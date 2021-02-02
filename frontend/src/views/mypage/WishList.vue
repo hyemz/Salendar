@@ -54,7 +54,7 @@ export default {
       {
         title: '아리따움',
         storeName: 'Aritaum',
-        src: require('@/assets/storeLogo/aritaum.png'),
+        src: require('@/assets/Logo/Aritaum.png'),
         flex: 6,
         badge: false,
         show: false,
@@ -62,7 +62,7 @@ export default {
       {
         title: '에뛰드하우스',
         storeName: 'Etude',
-        src: require('@/assets/storeLogo/etudehouse.png'),
+        src: require('@/assets/Logo/Etude.png'),
         flex: 6,
         badge: false,
         show: false,
@@ -70,7 +70,7 @@ export default {
       {
         title: '이니스프리',
         storeName: 'Innisfree',
-        src: require('@/assets/storeLogo/innisfree.png'),
+        src: require('@/assets/Logo/Innisfree.png'),
         flex: 6,
         badge: false,
         show: false,
@@ -78,7 +78,7 @@ export default {
       {
         title: '랄라블라',
         storeName: 'Lalavla',
-        src: require('@/assets/storeLogo/lalavla.png'),
+        src: require('@/assets/Logo/Lalavla.png'),
         flex: 6,
         badge: true,
         show: false,
@@ -86,7 +86,7 @@ export default {
       {
         title: '미샤',
         storeName: 'Missha',
-        src: require('@/assets/storeLogo/missha.png'),
+        src: require('@/assets/Logo/Missha.png'),
         flex: 6,
         badge: true,
         show: false,
@@ -94,7 +94,7 @@ export default {
       {
         title: '올리브영',
         storeName: 'Oliveyoung',
-        src: require('@/assets/storeLogo/oliveyoung.png'),
+        src: require('@/assets/Logo/Oliveyoung.png'),
         flex: 6,
         badge: true,
         show: false,
@@ -102,7 +102,7 @@ export default {
       {
         title: '더페이스샵',
         storeName: 'Thefaceshop',
-        src: require('@/assets/storeLogo/thefaceshop.png'),
+        src: require('@/assets/Logo/Thefaceshop.png'),
         flex: 6,
         badge: true,
         show: false,
@@ -110,7 +110,7 @@ export default {
       {
         title: '토니모리',
         storeName: 'Tonymoly',
-        src: require('@/assets/storeLogo/tonymoly.png'),
+        src: require('@/assets/Logo/Tonymoly.png'),
         flex: 6,
         badge: true,
         show: false,
