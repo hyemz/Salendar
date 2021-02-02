@@ -6,6 +6,7 @@ import backend.server.salendar.repository.BoardRepository;
 import backend.server.salendar.security.JwtTokenProvider;
 import backend.server.salendar.service.UserService;
 import io.swagger.annotations.Api;
+import org.springframework.beans.NullValueInNestedPathException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,6 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.HandlerMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -60,6 +65,14 @@ public class BoardController {
 
         User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
         board.setUsrEmail(user.getUsrEmail());
+
+        //  현재시각 가져오기
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateString = format.format(date);
+        board.setCreatedDate(dateString);
+        board.setModifiedDate(dateString);
+
         Board newBoard = boardRepository.save(board);
 
         return newBoard;
@@ -72,15 +85,28 @@ public class BoardController {
                              HttpServletRequest request){
 
         try {
+            //  수정하려는 사람이 글 작성자와 일치하는지 확인
+            User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
             Long boardNo = Long.parseLong(no);
-
             Optional<Board> board = boardRepository.findById(boardNo);
+            String boardWriter = board.get().getUsrEmail();
 
+            //  일치하지 않을경우 예외처리
+            if(!boardWriter.equals(user.getUsrEmail())){
+                throw new Exception();
+            }
+
+            //  일치하면 게시글 수정
             board.get().setBoardTitle(newBoard.getBoardTitle());
             board.get().setBoardContents(newBoard.getBoardContents());
 
-            boardRepository.save(board.get());
+            //  수정 시각 업데이트
+            Date date = new Date();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateString = format.format(date);
+            board.get().setModifiedDate(dateString);
 
+            boardRepository.save(board.get());
             return board.get();
 
         }catch (Exception e){
@@ -100,8 +126,7 @@ public class BoardController {
             String boardWriter = board.getUsrEmail();
 
             if(!boardWriter.equals(user.getUsrEmail())){
-                System.out.println("당신은 게시물 작성자가 아님! 지울수 없 다 !!!!!!!!!");
-                return "Delete Fail";
+                 throw new Exception();
             }
 
             Long boardNo = no;

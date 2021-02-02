@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity(name = "board")
@@ -24,12 +25,16 @@ public class Board {
     private String usrEmail;
     private String boardTitle;
     private String boardContents;
+    private String createdDate;
+    private String modifiedDate;
 
     @Builder
-    public Board(String usrEmail, String boardTitle, String boardContents) {
+    public Board(String usrEmail, String boardTitle, String boardContents, String createdDate, String modifiedDate) {
         this.usrEmail = usrEmail;
         this.boardTitle = boardTitle;
         this.boardContents = boardContents;
+        this.createdDate = createdDate;
+        this.modifiedDate = modifiedDate;
     }
 
     public String getUsrEmail() {
@@ -56,6 +61,22 @@ public class Board {
         this.boardContents = boardContents;
     }
 
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(String modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
     @Override
     public boolean equals(Object o){
         if(this == o)   return true;
@@ -64,14 +85,10 @@ public class Board {
         return Objects.equals(boardNo, board.boardNo) &&
                 Objects.equals(usrEmail, board.usrEmail) &&
                 Objects.equals(boardTitle, board.boardTitle) &&
-                Objects.equals(boardContents, board.boardContents);
+                Objects.equals(boardContents, board.boardContents) &&
+                Objects.equals(createdDate, board.createdDate) &&
+                Objects.equals(modifiedDate, board.modifiedDate);
     }
-
-    @Override
-    public int hashCode(){
-        return Objects.hash(boardNo, usrEmail, boardTitle, boardContents);
-    }
-
 
 }
 
