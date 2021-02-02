@@ -21,7 +21,6 @@ export default {
   },
   methods: {
     select (selected) {
-      console.log(222)
       this.selected = selected
     }
   }

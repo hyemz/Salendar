@@ -12,9 +12,8 @@ import FullCalendar from '@fullcalendar/vue';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { createEventId } from './event-utils';
+// import { createEventId } from './event-utils';
 
-import getFollowing from "../lib/getFollowing"
 import MoreModal from './MoreModal';
 import axios from 'axios';
 
@@ -31,65 +30,6 @@ export default {
       dialog: false,
       focus: null,
       allEvents: [
-          // {
-          //   title: "올리브영 🥑",
-          //   start: new Date("2021-01-01"),
-          //   end: new Date("2021-01-10"),
-          //   allDay:true,
-          //   color: "#A2D42F",
-          //   forceEventDuration:true
-          // },
-          // {
-          //   title: '랄라블라 💗',
-          //   start: new Date("2021-01-01"),
-          //   end: new Date("2021-01-10"),
-          //   allDay:true,
-          //   color: "#012E40",
-          //   // borderColor: 'black',
-          // },
-          // {
-          //   title: "에뛰드 하우스 👑",
-          //   start: new Date("2021-01-01"),
-          //   end: new Date("2021-01-10"),
-          //   allDay:true,
-          //   color:"#F27EA9",
-          // },
-          // {
-          //   title: "미샤 💋",
-          //   start: new Date("2021-01-01"),
-          //   end: new Date("2021-01-10"),
-          //   allDay:true,
-          //   color:"#D9043D",
-          // },
-          // {
-          //   title: "아리따움 🎀",
-          //   start: new Date("2021-01-01"),
-          //   end: new Date("2021-01-10"),
-          //   allDay:true,
-          //   color:"#F2ACAC",
-          // },
-          // {
-          //   title: "더 페이스샵 👩",
-          //   start: new Date("2021-01-01"),
-          //   end: new Date("2021-01-10"),
-          //   allDay:true,
-          //   color:"#9CBF4E",
-          // },
-          // {
-          //   title: "토니모리 🐼",
-          //   start: new Date("2021-01-01"),
-          //   end: new Date("2021-01-10"),
-          //   allDay:true,
-          //   color:"#121212",
-          // },
-          // {
-          //   title: "이니스프리 🌿",
-          //   start: new Date("2021-01-01"),
-          //   end: new Date("2021-01-10"),
-          //   allDay:true,
-          //   color:"#C0D99C",
-          //   textColor:'black',
-          // },
           {
             title: '올리브영 🥑',
             start: new Date('2021-01-01'),
@@ -192,61 +132,61 @@ export default {
     };
   },
   created() {
-    console.log("this");
-    getFollowing;
+
+    // 전체 세일정보 가져오기
     axios
       .create({
         headers: {
           'x-auth-token':localStorage.getItem('jwt')
         }
       })
-      .get("http://localhost:8080/api/sale/token/list/follow")
+      .get("http://localhost:8080/api/sale/list")
       .then((res) => {
-        // this.events = res.data;
         console.log(res)
+        
       })
       .catch((err) => {
         console.log(err);
       });
+
     for (const idx in this.selected){
       this.calendarOptions.events.push(this.allEvents[this.selected[idx]])
     }
-    console.log(this.calendarOptions.events)
   },
   methods: {
     showMore(clickInfo) {
       this.dialog = true;
       this.focus = clickInfo.event;
     },
-    handleWeekendsToggle() {
-      this.calendarOptions.weekends = !this.calendarOptions.weekends; // update a property
-    },
-    handleDateSelect(selectInfo) {
-      let title = prompt('Please enter a new title for your event');
-      let calendarApi = selectInfo.view.calendar;
 
-      calendarApi.unselect(); // clear date selection
+    // handleWeekendsToggle() {
+    //   this.calendarOptions.weekends = !this.calendarOptions.weekends; // update a property
+    // },
+    // handleDateSelect(selectInfo) {
+    //   let title = prompt('Please enter a new title for your event');
+    //   let calendarApi = selectInfo.view.calendar;
 
-      if (title) {
-        calendarApi.addEvent({
-          id: createEventId(),
-          title,
-          start: selectInfo.startStr,
-          end: selectInfo.endStr,
-          allDay: selectInfo.allDay,
-        });
-      }
-    },
+    //   calendarApi.unselect(); // clear date selection
 
-    handleEventClick(clickInfo) {
-      if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-        clickInfo.event.remove();
-      }
-    },
+    //   if (title) {
+    //     calendarApi.addEvent({
+    //       id: createEventId(),
+    //       title,
+    //       start: selectInfo.startStr,
+    //       end: selectInfo.endStr,
+    //       allDay: selectInfo.allDay,
+    //     });
+    //   }
+    // },
+    // handleEventClick(clickInfo) {
+    //   if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
+    //     clickInfo.event.remove();
+    //   }
+    // },
+    // handleEvents(events) {
+    //   this.currentEvents = events;
+    // },
 
-    handleEvents(events) {
-      this.currentEvents = events;
-    },
     close(dialog) {
       this.dialog = dialog;
     },
@@ -257,6 +197,7 @@ export default {
       for (const idx in this.selected){
       this.calendarOptions.events.push(this.allEvents[this.selected[idx]])
     }
+    console.log("이벤트")
     console.log(this.calendarOptions.events)
     }
   }
