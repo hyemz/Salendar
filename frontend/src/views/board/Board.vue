@@ -51,6 +51,7 @@
                 sort-by="id"
                 sort-desc="true"
                 @click:row="detail"
+                data-table-header-sort-badge-min-width="300px"
               ></v-data-table>
 
               <div class="text-center pt-2">
@@ -84,9 +85,10 @@
             sortable: false,
             value: 'id',
           },
-          { text: '제목', value: 'title', align: 'start',},
-          { width: '150', text: '작성자', value: 'username', align: 'start',},
-          { width: '150', text: '등록일', value: 'created_at', align: 'center',},
+          // 내용에 sortable: false를 추가하면 제목을 클릭 시 sort 되는 것을 제거
+          { text: '제목', value: 'title', align: 'start', sortable: false,},
+          { width: '150', text: '작성자', value: 'username', align: 'start', sortable: false,},
+          { width: '150', text: '등록일', value: 'created_at', align: 'center', sortable: false,},
         ],
         contents: [
           {
@@ -318,7 +320,7 @@
         this.$router.push({
           path: '/board/detail'
         })
-      }
+      },
     }
   }
 </script>
