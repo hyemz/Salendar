@@ -11,11 +11,11 @@
           :cycle="cycle"
           hide-delimiter-background
           show-arrows-on-hover
-          height=""
+          height="450"
           max-width=""
           hide-delimiters
           justify=""
-          class="d-flex justify-center"
+          class="d-flex justify-center align-start"
         >
           <v-carousel-item
             v-for="(item, i) in items"
@@ -25,25 +25,87 @@
             max-width=""
             
           >
-
               <v-row
-                class="fill-height"
+                class="fill-height mr-4"
                 align="end"
                 justify="end"
               >
-              <v-card-text class="text-right mr-10 pr-1 pl-1">{{ i+1 }} / {{ items.length }}</v-card-text>
+
+              <v-card 
+                class="d-flex align-end justify-end" 
+                color="transparent"
+                elevation="0"
+                >
+                <v-btn
+                  elevation="2"
+                  color="grey lighten-2"
+                  fab
+                  x-small
+                >
+                  <v-icon
+                    color="white"
+                  >
+                    mdi-chevron-left
+                  </v-icon>
+                </v-btn>
+
+                <div class="mr-2 ml-2" color="black">
+                  {{ i+1 }} / {{ items.length }}
+                </div>
+
+
+                <v-btn
+                  class="mr-2"
+                  elevation="2"
+                  color="grey lighten-2"
+                  fab
+                  x-small
+                  @click="i++"
+                >
+                  <v-icon
+                    color="white"
+                  >
+                    mdi-chevron-right
+                  </v-icon>
+                </v-btn>
+
+                <v-btn
+                  elevation="2"
+                  color="grey lighten-2"
+                  fab
+                  x-small
+                  @click="cycle=!cycle"
+                >
+                  <v-icon
+                    color="blue"
+                    v-if="!cycle"
+                  >
+                    mdi-play
+                  </v-icon>
+                  <v-icon
+                    color="red"
+                    v-else
+                  >
+                    mdi-pause
+                  </v-icon>
+                </v-btn>
+              </v-card>
+
               </v-row>
 
           </v-carousel-item>
         </v-carousel>
         <v-list-item-action class="d-flex align-end justify-end">
           <div>
+            
+
             <v-switch
               v-model="cycle"
               inset
               color="red"
             >
             </v-switch>
+
           </div>
 
         </v-list-item-action>
@@ -324,7 +386,7 @@ export default {
       slideGroup: 0,
       nextSlide() {
         this.slideGroup++;
-        this.slideGroup == 4 ? (this.slideGroup = 0) : "";
+        this.slideGroup == 12 ? (this.slideGroup = 0) : "";
       },
       previousSlide() {
         this.slideGroup--;
