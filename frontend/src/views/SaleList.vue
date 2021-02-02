@@ -5,17 +5,19 @@
       color="grey lighten-5"
       height=""
       >
+        
 
         <v-carousel
+          v-model="model"
           :continuous="true"
           :cycle="cycle"
+          :show-arrows="false"
           hide-delimiter-background
-          show-arrows-on-hover
-          height=""
+          height="450"
           max-width=""
           hide-delimiters
           justify=""
-          class="d-flex justify-center"
+          class="d-flex justify-center align-start"
         >
           <v-carousel-item
             v-for="(item, i) in items"
@@ -23,27 +25,139 @@
             :src="item.src"
             max-height=""
             max-width=""
-            
           >
-
               <v-row
-                class="fill-height"
+                class="fill-height mr-4"
                 align="end"
                 justify="end"
               >
-              <v-card-text class="text-right mr-10 pr-1 pl-1">{{ i+1 }} / {{ items.length }}</v-card-text>
+
+              <v-card 
+                class="d-flex align-end justify-end" 
+                color="transparent"
+                elevation="0"
+                >
+                <v-btn
+                  elevation="2"
+                  color="grey lighten-2"
+                  fab
+                  x-small
+                  @click="model--"
+                >
+                  <v-icon
+                    color="white"
+                  >
+                    mdi-chevron-left
+                  </v-icon>
+                </v-btn>
+
+                <div class="mr-2 ml-2" color="black">
+                  {{ i+1 }} / {{ items.length }}
+                </div>
+
+
+                <v-btn
+                  class="mr-2"
+                  elevation="2"
+                  color="grey lighten-2"
+                  fab
+                  x-small
+                  @click="model++"
+                >
+                  <v-icon
+                    color="white"
+                  >
+                    mdi-chevron-right
+                  </v-icon>
+                </v-btn>
+
+                <v-btn
+                  elevation="2"
+                  color="grey lighten-2"
+                  fab
+                  x-small
+                  @click="cycle=!cycle"
+                >
+                  <v-icon
+                    color="blue"
+                    v-if="!cycle"
+                  >
+                    mdi-play
+                  </v-icon>
+                  <v-icon
+                    color="red"
+                    v-else
+                  >
+                    mdi-pause
+                  </v-icon>
+                </v-btn>
+              </v-card>
+
               </v-row>
 
           </v-carousel-item>
         </v-carousel>
+
+        <v-row justify="center" align="right">
+          <v-btn 
+            @click="model--"
+            elevation="2"
+            color="grey lighten-2"
+            fab
+            x-small
+          >
+            <v-icon>
+              mdi-chevron-left
+            </v-icon>
+          </v-btn>
+
+          <v-btn
+            color="transparent"
+            elevation="0"
+            aria-disabled="10"
+          >
+            {{ model + 1 }} / {{ items.length }}
+          </v-btn>
+
+          <v-btn
+            class="mr-2"
+            @click="model++"
+            elevation="2"
+            color="grey lighten-2"
+            fab
+            x-small
+          >
+            <v-icon>
+              mdi-chevron-right
+            </v-icon>
+          </v-btn>
+
+          <v-btn
+                  elevation="2"
+                  color="grey lighten-2"
+                  fab
+                  x-small
+                  @click="cycle=!cycle"
+                >
+                  <v-icon
+                    color="blue"
+                    v-if="!cycle"
+                  >
+                    mdi-play
+                  </v-icon>
+                  <v-icon
+                    color="red"
+                    v-else
+                  >
+                    mdi-pause
+                  </v-icon>
+                </v-btn>
+        </v-row>
+
         <v-list-item-action class="d-flex align-end justify-end">
           <div>
-            <v-switch
-              v-model="cycle"
-              inset
-              color="red"
-            >
-            </v-switch>
+            
+
           </div>
 
         </v-list-item-action>
@@ -72,7 +186,7 @@
               max-width=""
             >
               <v-slide-group
-                v-model="model"
+                v-model="model1"
                 class="pa-4"
                 center-active
                 show-arrows
@@ -317,6 +431,7 @@ export default {
         ],
         cycle: true,
         model: null,
+        model1: null,
         model2: null,
       }
     },
@@ -324,7 +439,7 @@ export default {
       slideGroup: 0,
       nextSlide() {
         this.slideGroup++;
-        this.slideGroup == 4 ? (this.slideGroup = 0) : "";
+        this.slideGroup == 12 ? (this.slideGroup = 0) : "";
       },
       previousSlide() {
         this.slideGroup--;
