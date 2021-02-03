@@ -101,6 +101,7 @@ export default {
           console.log(res);
           localStorage.setItem('jwt', res.data.token);
           this.$store.dispatch('login', true);
+          this.$store.dispatch('updateFollowing', true)
           this.$router.push('/salelist');
         })
         .catch((err) => {
