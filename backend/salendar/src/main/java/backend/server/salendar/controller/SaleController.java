@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,23 +28,16 @@ import java.util.Map;
 @CrossOrigin("http://localhost:8081")
 @RequestMapping("/api/sale")
 public class SaleController {
-    @Autowired
+
     SaleService saleService;
-    @Autowired
     UserService userService;
     private final SaleRepository saleRepository;
     private final StoreRepository storeRepository;
 
     //    세일 DB 업데이트
-    @ApiOperation(value = "세일 DB 업데이트", notes = "관리자")
-    @PutMapping(value = "/admin/updateDB")
-    public ResponseEntity<String> updateSaleDB() {
-        try {
-            saleService.crawlAll();
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>("OK", HttpStatus.OK);
+    @Scheduled(cron = "0 30 6 * * *", zone = "Asia/Seoul")
+    public void updateSaleDB() {
+        saleService.crawlAll();
     }
 
 
