@@ -21,7 +21,7 @@
                   >
                   </v-badge>
                 </v-col>
-                <v-btn icon @click="removeCard(i)">
+                <v-btn icon @click="unFollow(i)">
                   <v-icon>mdi-minus-circle</v-icon>
                 </v-btn>
               </v-card-actions>
@@ -147,7 +147,7 @@ export default {
     },
 
     // 팔로우 취소
-    removeCard(i) {
+    unFollow(i) {
       console.log(this.datas['Aritaum']);
       alert(this.cards[i].title + '를 찜 목록에서 삭제합니다.');
       axiosClient
