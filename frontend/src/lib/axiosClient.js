@@ -1,9 +1,12 @@
 import axios from "axios";
 
 const baseURL = "http://localhost:8080";
-
-const axiosClient = axios.create({
+const headers = {
+  "x-auth-token": localStorage.getItem("jwt"),
+};
+const axiosDefault = axios.create({
   baseURL,
+  headers,
 });
 
-export default axiosClient;
+export default axiosDefault;
