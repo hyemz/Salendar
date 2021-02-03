@@ -97,7 +97,7 @@ public class UserController {
     @GetMapping(value = "/token/mypage")
     public ResponseEntity<User> getUser(HttpServletRequest request) {
         Optional<User> user = Optional.ofNullable(userService.findByToken(jwtTokenProvider.resolveToken(request)));
-        if (user.isPresent()){
+        if (user.isPresent()) {
             return new ResponseEntity<>(user.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(user.get(), HttpStatus.NOT_FOUND);
@@ -121,19 +121,21 @@ public class UserController {
     }
 
 
-    // 회원번호로 회원 수정(usrNo로 회원을 찾아 Member 객체의 id, Nick을 수정함)
+    // 회원 정보 수정
     @ApiOperation(value = "회원 정보 변경", notes = "token 필요")
     @PutMapping(value = "/token/update", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> updateMember(@RequestBody Map<String, String> user, HttpServletRequest request) {
         Optional<User> curUser = Optional.ofNullable(userService.findByToken(JwtTokenProvider.resolveToken(request)));
         try {
-            userService.validateDuplicateUserNick(user.get("usrNick"));
+            if (user.get("usrNick") != curUser.get().getUsrNick()) {
+                userService.validateDuplicateUserNick(user.get("usrNick"));
+            }
         } catch (IllegalStateException e) {
             return new ResponseEntity<String>(e.toString(), HttpStatus.BAD_REQUEST);
         }
         if (curUser.isPresent()) {
             curUser.get().setUsrNick(user.get("usrNick"));
-            curUser.get().setUsrPwd(user.get("usrPwd"));
+            curUser.get().setUsrPwd(passwordEncoder.encode(user.get("usrPwd")));
             userRepository.save(curUser.get());
         }
         return new ResponseEntity<String>(user.get("usrNick"), HttpStatus.OK);
@@ -208,7 +210,7 @@ public class UserController {
     @PostMapping(value = "/token/pwdConfirm")
     public HttpStatus pwdConfirm(HttpServletRequest request, @RequestBody String pwd) {
         User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
-        if (!passwordEncoder.matches(pwd, user.getPassword())) {
+        if (!passwordEncoder.matches(pwd.substring(0, pwd.length() - 1), user.getPassword())) {
             return HttpStatus.NOT_ACCEPTABLE;
         }
         return HttpStatus.OK;

@@ -36,7 +36,7 @@ public class SaleController {
 
     //    세일 DB 업데이트
     @ApiOperation(value = "세일 DB 업데이트", notes = "관리자")
-    @PostMapping(value = "/admin/updateDB")
+    @PutMapping(value = "/admin/updateDB")
     public ResponseEntity<String> updateSaleDB() {
         try {
             saleService.crawlAll();
@@ -51,8 +51,9 @@ public class SaleController {
     @Transactional
     @ApiOperation(value = "세일 전체 리스트", notes = "카드 형태 페이지, 전체 반환")
     @GetMapping(value = "/list")
-    public ResponseEntity<List<Sale>> saleList(){
-        return new ResponseEntity<>(saleRepository.findAll(), HttpStatus.OK);
+    public ResponseEntity<Map<String, List<Sale>>> saleList(){
+        Map<String, List<Sale>> result = saleService.findSalesByStores();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 
