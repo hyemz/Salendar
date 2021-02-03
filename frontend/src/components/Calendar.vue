@@ -13,7 +13,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 // import { createEventId } from './event-utils';
-
+import { mapState } from 'vuex';
 import MoreModal from './MoreModal';
 import axios from 'axios';
 
@@ -24,6 +24,9 @@ export default {
   },
   props: {
     selected: Array,
+  },
+  computed: {
+    ...mapState(['following']),
   },
   data: function() {
     return {

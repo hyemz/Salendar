@@ -108,6 +108,7 @@ export default {
     logout() {
       localStorage.removeItem('jwt');
       this.$store.dispatch('login', false);
+      this.$store.dispatch('updateFollowing', false)
     },
   },
 };

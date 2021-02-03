@@ -46,13 +46,13 @@
 </template>
 <script>
 import axiosClient from '../lib/axiosClient'
+import { mapState } from 'vuex'
 
 export default {
   data() {
     return {
       selected: [],
       show: true,
-      following: [],
       items: [
         {
           title: '올리브영',
@@ -105,28 +105,25 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapState(['following']),
+  },
   watch: {
     selected: function () {
       this.$emit('select', this.selected)
+    },
+    following: function () {
+      for (const idx in this.items){
+        if (this.following[this.items[idx].storeName]) {
+          this.items[idx].followed = true
+          this.selected.push(Number(idx))
+        }
+      }
     }
   },
   created () {  
-    axiosClient
-      .get("/api/user/token/followings")
-      .then((res) => {
-        this.following = res.data
-        for (const idx in this.items){
-          if (this.following[this.items[idx].storeName]) {
-            this.items[idx].followed = true
-            this.selected.push(Number(idx))
-          }
-        }
-      })
-      .catch((err) => {
-        console.log('찜 목록을 불러오지 못했습니다.', err);
-      });
+    this.$store.dispatch('updateFollowing', true)
     this.$emit('select', this.selected)
-    
   },
   methods: {
     follow(item) {
@@ -146,6 +143,7 @@ export default {
       .post(`/api/user/token/follow/${storeName}`)
       .then((res) => {
         console.log(res);
+        this.$store.dispatch('updateFollowing', true)
       })
       .catch((err) => {
         console.log("팔로우에 실패했습니다.", err);
@@ -157,6 +155,7 @@ export default {
       .post(`/api/user/token/unfollow/${storeName}`)
       .then((res) => {
         console.log(res);
+        this.$store.dispatch('updateFollowing', true)
       })
       .catch((err) => {
         console.log("언팔로우에 실패했습니다.", err);
