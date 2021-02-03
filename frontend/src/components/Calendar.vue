@@ -138,11 +138,6 @@ export default {
 
     // 전체 세일정보 가져오기
     axios
-      .create({
-        headers: {
-          'x-auth-token':localStorage.getItem('jwt')
-        }
-      })
       .get("http://localhost:8080/api/sale/list")
       .then((res) => {
         console.log(res)
