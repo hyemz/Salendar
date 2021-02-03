@@ -11,7 +11,7 @@
       <v-list-item three-line>
         <v-list-item-content>
           <v-list-item-title class="headline mb-1 text-center">
-            {{ nickname }} 님 환영합니다
+            {{ fakenickname }} 님 환영합니다
           </v-list-item-title>
           <hr />
         </v-list-item-content>
@@ -98,7 +98,9 @@ export default {
       canChangePwd: false,
       myEmail: '',
       nickname: '',
+      fakenickname: '',
       myPwd: '',
+      accessPwd: '',
       password: '',
       newPwd: '',
       newPwdConfirm: '',
@@ -135,7 +137,8 @@ export default {
         console.log(res);
         this.myEmail = res.data.usrEmail;
         this.nickname = res.data.usrNick;
-        this.myPwd = 'aa111111';
+        this.fakenickname = res.data.usrNick;
+        this.myPwd = res.data.usrPwd;
       })
       .catch((err) => {
         console.log('정보를 불러오는 것을 실패했습니다.', err);
@@ -143,15 +146,13 @@ export default {
   },
   watch: {
     password: function() {
+      this.checkPwd();
       this.checkForm();
     },
     newPwd: function() {
       this.checkForm();
     },
     newPwdConfirm: function() {
-      this.checkForm();
-    },
-    nickname: function() {
       this.checkForm();
     },
     changePwd: function() {
@@ -161,21 +162,52 @@ export default {
   methods: {
     // 프로필 변경하기
     updateProfile() {
-      var userForm = {
-        usrNick: this.nickname,
-        usrPwd: this.newPwd,
-      };
+      var userForm;
+      if (this.changePwd) {
+        userForm = {
+          usrNick: this.nickname,
+          usrPwd: this.newPwdConfirm,
+        };
+      } else {
+        userForm = {
+          usrNick: this.nickname,
+          usrPwd: this.myPwd,
+        };
+      }
+
+      // var userForm = {
+      //   usrNick: this.nickname,
+      //   usrPwd: this.newPwdConfirm,
+      // };
+      console.log(userForm);
       axiosClient
-        .post('/api/user/token/update', userForm)
+        .put('/api/user/token/update', userForm)
         .then((res) => {
+          alert('유저 정보가 변경되었습니다.');
           console.log('유저 정보가 변경되었습니다.', res);
+          this.$router.push('/salelist');
         })
         .catch((err) => {
           console.log('유저 정보 변경이 실패했습니다.', err);
         });
     },
+    checkPwd() {
+      axiosClient
+        .post('/api/user/token/pwdConfirm', this.password)
+        .then((res) => {
+          console.log(res);
+          this.accessPwd = res.data;
+          if (this.password.length >= 0 && this.accessPwd == 'OK') {
+            this.canChangePwd = true;
+            this.myPwd = this.password;
+          } else this.canChangePwd = false;
+        })
+        .catch((err) => {
+          console.log('비밀번호 일치여부 확인 불가', err);
+        });
+    },
     checkForm() {
-      if (this.password.length >= 0 && this.myPwd == this.password) this.canChangePwd = true;
+      if (this.password.length >= 0 && this.accessPwd == 'OK') this.canChangePwd = true;
       else this.canChangePwd = false;
 
       if (this.newPwd.length >= 0 && !this.passwordSchema.validate(this.newPwd))
