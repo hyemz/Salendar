@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ResponseHeader;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.eclipse.jetty.util.security.Password;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -200,6 +201,16 @@ public class UserController {
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
+    }
 
+    //  비밀번호 일치 여부
+    @ApiOperation(value = "비밀번호 일치 여부")
+    @PostMapping(value = "/token/pwdConfirm")
+    public HttpStatus pwdConfirm(HttpServletRequest request, @RequestBody String pwd) {
+        User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
+        if (!passwordEncoder.matches(pwd, user.getPassword())) {
+            return HttpStatus.NOT_ACCEPTABLE;
+        }
+        return HttpStatus.OK;
     }
 }

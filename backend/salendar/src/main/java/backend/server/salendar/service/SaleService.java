@@ -116,7 +116,6 @@ public class SaleService {
         user.getUsrFollowing()
                 .stream()
                 .forEach(store -> {
-                    System.out.println(store);
                     result.put(store.getStoreName(), new ArrayList<>());
                     saleRepository.findSalesByStore(store)
                             .forEach(res -> result.get(store.getStoreName()).add(res));

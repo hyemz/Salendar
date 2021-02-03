@@ -13,7 +13,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 // import { createEventId } from './event-utils';
-
+import { mapState } from 'vuex';
 import MoreModal from './MoreModal';
 import axios from 'axios';
 
@@ -24,6 +24,9 @@ export default {
   },
   props: {
     selected: Array,
+  },
+  computed: {
+    ...mapState(['following']),
   },
   data: function() {
     return {
@@ -135,11 +138,6 @@ export default {
 
     // 전체 세일정보 가져오기
     axios
-      .create({
-        headers: {
-          'x-auth-token':localStorage.getItem('jwt')
-        }
-      })
       .get("http://localhost:8080/api/sale/list")
       .then((res) => {
         console.log(res)
@@ -187,8 +185,8 @@ export default {
     //   this.currentEvents = events;
     // },
 
-    close(dialog) {
-      this.dialog = dialog;
+    close(isDialog) {
+      this.dialog = isDialog;
     },
   },
   watch: {
