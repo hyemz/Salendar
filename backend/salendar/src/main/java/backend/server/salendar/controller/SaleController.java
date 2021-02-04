@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,9 +30,8 @@ import java.util.Map;
 @CrossOrigin("http://localhost:8081")
 @RequestMapping("/api/sale")
 public class SaleController {
-    @Autowired
+
     SaleService saleService;
-    @Autowired
     UserService userService;
     private final SaleRepository saleRepository;
     private final StoreRepository storeRepository;
