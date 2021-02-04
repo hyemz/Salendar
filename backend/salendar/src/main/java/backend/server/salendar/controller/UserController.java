@@ -125,18 +125,16 @@ public class UserController {
     @ApiOperation(value = "회원 정보 변경", notes = "token 필요")
     @PutMapping(value = "/token/update", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> updateMember(@RequestBody Map<String, String> user, HttpServletRequest request) {
-        Optional<User> curUser = Optional.ofNullable(userService.findByToken(JwtTokenProvider.resolveToken(request)));
+        User curUser = userService.findByToken(JwtTokenProvider.resolveToken(request));
         try {
-            if (user.get("usrNick") != curUser.get().getUsrNick()) {
+            if (!user.get("usrNick").equals(curUser.getUsrNick())) {
                 userService.validateDuplicateUserNick(user.get("usrNick"));
+                curUser.setUsrNick(user.get("usrNick"));
             }
+            curUser.setUsrPwd(passwordEncoder.encode(user.get("usrPwd")));
+            userRepository.save(curUser);
         } catch (IllegalStateException e) {
             return new ResponseEntity<String>(e.toString(), HttpStatus.BAD_REQUEST);
-        }
-        if (curUser.isPresent()) {
-            curUser.get().setUsrNick(user.get("usrNick"));
-            curUser.get().setUsrPwd(passwordEncoder.encode(user.get("usrPwd")));
-            userRepository.save(curUser.get());
         }
         return new ResponseEntity<String>(user.get("usrNick"), HttpStatus.OK);
     }
