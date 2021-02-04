@@ -4,9 +4,9 @@ const baseURL = "http://localhost:8080";
 const headers = {
   "x-auth-token": localStorage.getItem("jwt"),
 };
-const axiosDefault = axios.create({
+const axiosClient = axios.create({
   baseURL,
   headers,
 });
 
-export default axiosDefault;
+export default axiosClient;

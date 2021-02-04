@@ -86,7 +86,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import PV from 'password-validator';
 import axiosClient from '../../lib/axiosClient';
 
@@ -112,14 +111,10 @@ export default {
       show: false,
       isSubmit: false,
       component: this,
-      // rule: {
-      //   passowrd: !this.error.password || 'Max 25 characters',
-      // },
     };
   },
   created() {
     this.component = this;
-
     this.passwordSchema
       .is()
       .min(8)
@@ -174,12 +169,7 @@ export default {
           usrPwd: this.myPwd,
         };
       }
-
-      // var userForm = {
-      //   usrNick: this.nickname,
-      //   usrPwd: this.newPwdConfirm,
-      // };
-      console.log(userForm);
+      // 유저 정보 변경하기
       axiosClient
         .put('/api/user/token/update', userForm)
         .then((res) => {
@@ -192,6 +182,7 @@ export default {
         });
     },
     checkPwd() {
+      // 비밀번호 백엔드와 일치하는지
       axiosClient
         .post('/api/user/token/pwdConfirm', this.password)
         .then((res) => {
@@ -227,29 +218,6 @@ export default {
         });
         this.isSubmit = isSubmit;
       }
-    },
-    // 유저 프로필 수정시 동작
-    changeProfile() {
-      alert('회원정보가 수정되었습니다.');
-      if (this.changePwd) {
-        var changeForm = {
-          usrNick: this.nickname,
-          usrPwd: this.newPwd,
-        };
-      } else {
-        changeForm = {
-          usrNick: this.nickname,
-        };
-      }
-
-      axios
-        .post('', changeForm)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
     },
   },
 };

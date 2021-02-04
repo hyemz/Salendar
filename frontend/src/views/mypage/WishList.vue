@@ -44,7 +44,8 @@
 </template>
 <script>
 import axiosClient from '../../lib/axiosClient';
-import { mapState } from 'vuex'
+import axiosDefault from '../../lib/axiosDefault';
+import { mapState } from 'vuex';
 
 export default {
   data: () => ({
@@ -119,17 +120,26 @@ export default {
     ...mapState(['following']),
   },
   created: function() {
-    this.$store.dispatch('updateFollowing', true)
+    axiosDefault
+      .get(`/api/sale/storelist`)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log('매장 정보를 불러오지 못했어요.', err);
+      });
+
+    this.$store.dispatch('updateFollowing', true);
     for (let index = 0; index < this.cards.length; index++) {
       this.cards[index].show = this.following[this.cards[index].storeName];
     }
   },
   watch: {
-    following: function () {
+    following: function() {
       for (let index = 0; index < this.cards.length; index++) {
         this.cards[index].show = this.following[this.cards[index].storeName];
       }
-    }
+    },
   },
   methods: {
     // 테스트를 위한 팔로우 함수
@@ -146,19 +156,17 @@ export default {
 
     // 팔로우 취소
     unFollow(i) {
-      console.log(this.datas['Aritaum']);
       alert(this.cards[i].title + '를 찜 목록에서 삭제합니다.');
       axiosClient
         .post(`/api/user/token/unfollow/${this.cards[i].storeName}`)
         .then((res) => {
           console.log(res);
-          this.$store.dispatch('updateFollowing', true)
-          alert(this.cards[i].title + '가 찜 목록에서 삭제되었습니다.');
+          this.$store.dispatch('updateFollowing', true);
+          this.cards.splice(this.cards[i], 1);
         })
         .catch((err) => {
           console.log('찜 목록이 삭제 되지 못했습니다.', err);
         });
-      this.cards.splice(this.cards[i], 1);
     },
   },
 };
