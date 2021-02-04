@@ -30,14 +30,16 @@ import java.util.Map;
 @CrossOrigin("http://localhost:8081")
 @RequestMapping("/api/sale")
 public class SaleController {
-
+    @Autowired
     SaleService saleService;
+    @Autowired
     UserService userService;
     private final SaleRepository saleRepository;
     private final StoreRepository storeRepository;
 
     //    세일 DB 업데이트
     @ApiOperation(value = "세일 DB 업데이트")
+    @Scheduled(cron = "0 30 6 * * *", zone = "Asia/Seoul")
     @PutMapping(value = "/updateDB")
     public ResponseEntity<String> updateSaleDB() {
         try {
@@ -81,6 +83,7 @@ public class SaleController {
     }
 
     //    전체 매장 리스트
+    @Transactional
     @ApiOperation(value = "전체 매장 리스트")
     @GetMapping(value = "/storelist")
     public List<Map<String, String>> storeList() {

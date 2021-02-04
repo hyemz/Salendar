@@ -2,50 +2,39 @@ package backend.server.salendar.util;
 
 import backend.server.salendar.domain.Sale;
 import lombok.SneakyThrows;
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import javax.imageio.ImageIO;
 import javax.net.ssl.*;
-import javax.print.Doc;
-import java.awt.image.BufferedImage;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.springframework.security.core.parameters.P;
 
 public class Crawler {
 
-    //WebDriver 설정
-    private static WebDriver driver;
-    private WebElement element;
-    private String url;
-
-    //Properties 설정
-    public static String WEB_DRIVER_ID = "webdriver.chrome.driver";
-    public static String WEB_DRIVER_PATH = "salendar/chromedriver.exe";
 
     public static String crawl(String url) {
+
+        //WebDriver 설정
+        WebDriver driver;
+
+        //Properties 설정
+        String WEB_DRIVER_ID = "webdriver.chrome.driver";
+        String WEB_DRIVER_PATH = "salendar/chromedriver.exe";
+
         System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
         ChromeOptions options = new ChromeOptions();
         options.setCapability("ignoreProtectedModeSettings", true);
