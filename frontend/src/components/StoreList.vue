@@ -113,6 +113,7 @@ export default {
       this.$emit('select', this.selected)
     },
     following: function () {
+      this.selected = []
       for (const idx in this.items){
         if (this.following[this.items[idx].storeName]) {
           this.items[idx].followed = true
