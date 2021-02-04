@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +39,7 @@ public class SaleController {
 
     //    세일 DB 업데이트
     @ApiOperation(value = "세일 DB 업데이트")
+    @Scheduled(cron = "0 30 6 * * *", zone = "Asia/Seoul")
     @PutMapping(value = "/updateDB")
     public ResponseEntity<String> updateSaleDB() {
         try {
@@ -81,6 +83,7 @@ public class SaleController {
     }
 
     //    전체 매장 리스트
+    @Transactional
     @ApiOperation(value = "전체 매장 리스트")
     @GetMapping(value = "/storelist")
     public List<Map<String, String>> storeList() {

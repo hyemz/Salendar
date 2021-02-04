@@ -11,8 +11,6 @@ import lombok.SneakyThrows;
 import javax.transaction.Transactional;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class SaleService {
@@ -58,6 +56,7 @@ public class SaleService {
                         });
             } catch (Exception e) {
                 e.printStackTrace();
+                System.out.println(e.toString());
             }
         });
     }
