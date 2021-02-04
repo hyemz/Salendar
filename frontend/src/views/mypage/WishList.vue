@@ -45,6 +45,7 @@
 <script>
 import axiosClient from '../../lib/axiosClient';
 import axiosDefault from '../../lib/axiosDefault';
+import axios from 'axios'
 import { mapState } from 'vuex';
 
 export default {
@@ -157,7 +158,15 @@ export default {
     // 팔로우 취소
     unFollow(i) {
       alert(this.cards[i].title + '를 찜 목록에서 삭제합니다.');
-      axiosClient
+      const headers = {
+          "x-auth-token": localStorage.getItem("jwt"),
+      };
+      const baseURL = "http://localhost:8080";
+      axios
+        .create({
+            baseURL,
+            headers,
+        })
         .post(`/api/user/token/unfollow/${this.cards[i].storeName}`)
         .then((res) => {
           console.log(res);

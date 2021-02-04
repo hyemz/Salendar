@@ -45,7 +45,7 @@
   </div>
 </template>
 <script>
-import axiosClient from '../lib/axiosClient'
+import axios from 'axios'
 import { mapState } from 'vuex'
 
 export default {
@@ -139,7 +139,15 @@ export default {
       }
     },
     Follow(storeName) {
-      axiosClient
+      const headers = {
+          "x-auth-token": localStorage.getItem("jwt"),
+      };
+      const baseURL = "http://localhost:8080";
+      axios
+      .create({
+          baseURL,
+          headers,
+      })
       .post(`/api/user/token/follow/${storeName}`)
       .then((res) => {
         console.log(res);
@@ -151,7 +159,15 @@ export default {
     },
     
     unFollow(storeName) {
-      axiosClient
+      const headers = {
+          "x-auth-token": localStorage.getItem("jwt"),
+      };
+      const baseURL = "http://localhost:8080";
+      axios
+      .create({
+          baseURL,
+          headers,
+      })
       .post(`/api/user/token/unfollow/${storeName}`)
       .then((res) => {
         console.log(res);
