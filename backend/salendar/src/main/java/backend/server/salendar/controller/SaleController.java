@@ -37,8 +37,8 @@ public class SaleController {
     private final StoreRepository storeRepository;
 
     //    세일 DB 업데이트
-    @ApiOperation(value = "세일 DB 업데이트", notes = "관리자")
-    @PutMapping(value = "/admin/updateDB")
+    @ApiOperation(value = "세일 DB 업데이트")
+    @PutMapping(value = "/updateDB")
     public ResponseEntity<String> updateSaleDB() {
         try {
             saleService.crawlAll();
