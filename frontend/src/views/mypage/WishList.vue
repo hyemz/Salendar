@@ -1,42 +1,56 @@
 <template>
   <v-container fluid>
     <v-card flat>
-      <v-col class="col-md-2 offset-md-2">
-        <h1>찜 목록</h1>
-      </v-col>
       <!-- <v-btn @click="follow">팔로우</v-btn> -->
       <v-card class="mx-auto" max-width="1000" flat>
+        <v-col class="d-flex flex-column justify-center mt-12">
+          <h1>찜 목록</h1>
+        </v-col>
         <v-row dense rows="12">
-          <v-col v-for="(card, i) in cards" :key="card.title" :cols="card.flex">
-            <v-card v-if="card.show">
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-col cols="10">
-                  <v-badge
-                    :value="card.badge"
-                    color="deep-purple accent-4"
-                    content="세일중"
-                    left
-                    transition="slide-x-transition"
-                  >
-                  </v-badge>
-                </v-col>
-                <v-btn icon @click="unFollow(i)">
-                  <v-icon>mdi-minus-circle</v-icon>
-                </v-btn>
-              </v-card-actions>
+          <div
+            v-for="(card, i) in cards"
+            :key="card.title"
+            :cols="card.flex"
+            class="d-flex flex-column justify-center align-center mt-2"
+          >
+            <v-col v-if="card.show">
+              <v-hover v-slot="{ hover }">
+                <v-card :elevation="hover ? 12 : 1.5" :class="{ 'on-hover': hover }" id="c">
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-col cols="9">
+                      <v-badge
+                        :value="card.badge"
+                        color="deep-purple accent-4"
+                        content="세일중"
+                        left
+                        transition="slide-x-transition"
+                      >
+                      </v-badge>
+                    </v-col>
+                    <v-btn icon @click="unFollow(i)">
+                      <v-hover v-slot="{ hover }">
+                        <v-icon v-if="!hover">mdi-minus-circle</v-icon>
+                        <v-icon v-else-if="hover" color="deep-orange darken-3"
+                          >mdi-minus-circle</v-icon
+                        >
+                      </v-hover>
+                    </v-btn>
+                  </v-card-actions>
 
-              <router-link to="/calendar" class="white--text text-decoration-none"
-                ><v-img
-                  :src="card.src"
-                  class="white--text align-end"
-                  gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.3)"
-                  height="200px"
-                >
-                  <v-card-title v-text="card.title"></v-card-title> </v-img
-              ></router-link>
-            </v-card>
-          </v-col>
+                  <router-link to="/calendar" class="text-decoration-none"
+                    ><v-img
+                      :src="card.src"
+                      class="white--text d-flex flex-column justify-center"
+                      gradient="to bottom, rgba(255,255,250,.3), rgba(0,0,10,.16)"
+                      height="200px"
+                    >
+                      <v-card-title v-text="card.title"></v-card-title> </v-img
+                  ></router-link>
+                </v-card>
+              </v-hover>
+            </v-col>
+          </div>
         </v-row>
       </v-card>
     </v-card>
@@ -45,7 +59,7 @@
 <script>
 import axiosClient from '../../lib/axiosClient';
 import axiosDefault from '../../lib/axiosDefault';
-import axios from 'axios'
+import axios from 'axios';
 import { mapState } from 'vuex';
 
 export default {
@@ -157,21 +171,20 @@ export default {
 
     // 팔로우 취소
     unFollow(i) {
-      alert(this.cards[i].title + '를 찜 목록에서 삭제합니다.');
       const headers = {
-          "x-auth-token": localStorage.getItem("jwt"),
+        'x-auth-token': localStorage.getItem('jwt'),
       };
-      const baseURL = "http://localhost:8080";
+      const baseURL = 'http://localhost:8080';
       axios
         .create({
-            baseURL,
-            headers,
+          baseURL,
+          headers,
         })
         .post(`/api/user/token/unfollow/${this.cards[i].storeName}`)
         .then((res) => {
           console.log(res);
           this.$store.dispatch('updateFollowing', true);
-          this.cards.splice(this.cards[i], 1);
+          alert(this.cards[i].title + '매장이 찜 목록에서 삭제되었습니다.');
         })
         .catch((err) => {
           console.log('찜 목록이 삭제 되지 못했습니다.', err);
@@ -180,3 +193,12 @@ export default {
   },
 };
 </script>
+<style scoped>
+#c {
+  transition: opacity 0.4s ease-in-out;
+}
+
+#c:not(.on-hover) {
+  opacity: 0.9;
+}
+</style>
