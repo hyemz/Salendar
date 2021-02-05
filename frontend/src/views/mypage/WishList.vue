@@ -15,7 +15,12 @@
           >
             <v-col v-if="card.show">
               <v-hover v-slot="{ hover }">
-                <v-card :elevation="hover ? 12 : 1.5" :class="{ 'on-hover': hover }" id="c">
+                <v-card
+                  :elevation="hover ? 12 : 1.5"
+                  :class="{ 'on-hover': hover }"
+                  id="c"
+                  height="250"
+                >
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-col cols="9">
@@ -43,7 +48,7 @@
                       :src="card.src"
                       class="white--text d-flex flex-column justify-center"
                       gradient="to bottom, rgba(255,255,250,.3), rgba(0,0,10,.16)"
-                      height="200px"
+                      height="100"
                     >
                       <v-card-title v-text="card.title"></v-card-title> </v-img
                   ></router-link>
