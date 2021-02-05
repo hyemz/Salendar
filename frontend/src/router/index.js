@@ -38,12 +38,12 @@ const routes = [
     component: Calendar
   },
   {
-    path: '/board/create',
+    path: '/board/create/:boardNo?',
     name: 'Create',
     component: Create
   },
   {
-    path: '/board/detail',
+    path: '/board/detail/:boardNo',
     name: 'Detail',
     component: Detail
   },
