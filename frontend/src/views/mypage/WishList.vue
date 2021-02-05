@@ -2,6 +2,7 @@
   <v-container fluid>
     <v-card flat>
       <!-- <v-btn @click="follow">팔로우</v-btn> -->
+      <!-- {{ $moment(this.saleData.Etude[0].sale_start_date).isAfter('2019-01-01') }} -->
       <v-card class="mx-auto" max-width="1000" flat>
         <v-col class="d-flex flex-column justify-center mt-12">
           <h1>찜 목록</h1>
@@ -16,10 +17,11 @@
             <v-col v-if="card.show">
               <v-hover v-slot="{ hover }">
                 <v-card
-                  :elevation="hover ? 12 : 1.5"
+                  :elevation="hover ? 3 : 1"
                   :class="{ 'on-hover': hover }"
                   id="c"
                   height="250"
+                  outlined
                 >
                   <v-card-actions>
                     <v-spacer></v-spacer>
@@ -45,12 +47,12 @@
 
                   <router-link to="/calendar" class="text-decoration-none"
                     ><v-img
+                      id="test"
                       :src="card.src"
                       class="white--text d-flex flex-column justify-center"
-                      gradient="to bottom, rgba(255,255,250,.3), rgba(0,0,10,.16)"
                       height="100"
                     >
-                      <v-card-title v-text="card.title"></v-card-title> </v-img
+                    </v-img
                   ></router-link>
                 </v-card>
               </v-hover>
@@ -99,7 +101,7 @@ export default {
         storeName: 'Lalavla',
         src: require('@/assets/Logo/Lalavla.png'),
         flex: 6,
-        badge: true,
+        badge: false,
         show: false,
       },
       {
@@ -107,7 +109,7 @@ export default {
         storeName: 'Missha',
         src: require('@/assets/Logo/Missha.png'),
         flex: 6,
-        badge: true,
+        badge: false,
         show: false,
       },
       {
@@ -115,7 +117,7 @@ export default {
         storeName: 'Oliveyoung',
         src: require('@/assets/Logo/Oliveyoung.png'),
         flex: 6,
-        badge: true,
+        badge: false,
         show: false,
       },
       {
@@ -123,7 +125,7 @@ export default {
         storeName: 'Thefaceshop',
         src: require('@/assets/Logo/Thefaceshop.png'),
         flex: 6,
-        badge: true,
+        badge: false,
         show: false,
       },
       {
@@ -131,7 +133,7 @@ export default {
         storeName: 'Tonymoly',
         src: require('@/assets/Logo/Tonymoly.png'),
         flex: 6,
-        badge: true,
+        badge: false,
         show: false,
       },
     ],
@@ -140,6 +142,8 @@ export default {
     ...mapState(['following']),
   },
   created: function() {
+    // 데이터 요청
+    // 팔로우 매장 정보 가져오기
     axiosDefault
       .get(`/api/sale/storelist`)
       .then((res) => {
@@ -149,6 +153,40 @@ export default {
         console.log('매장 정보를 불러오지 못했어요.', err);
       });
 
+    // 팔로우 한 세일정보 가져오기
+    const headers = {
+      'x-auth-token': localStorage.getItem('jwt'),
+    };
+    const baseURL = 'http://localhost:8080';
+    axios
+      .create({
+        baseURL,
+        headers,
+      })
+      .get('/api/sale/token/list/follow')
+      .then((res) => {
+        const saleData = res.data;
+        this.cards.forEach((store) => {
+          const storeNow = saleData[store.storeName];
+          for (const index in storeNow) {
+            if (
+              !this.$moment(storeNow[index].sale_start_date).isAfter(
+                this.$moment().format('YYYY-MM-DD')
+              ) &&
+              this.$moment(storeNow[index].sale_end_date).isAfter(
+                this.$moment().format('YYYY-MM-DD')
+              )
+            ) {
+              store.badge = true;
+            }
+          }
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    // 데이터 처리
     this.$store.dispatch('updateFollowing', true);
     for (let index = 0; index < this.cards.length; index++) {
       this.cards[index].show = this.following[this.cards[index].storeName];
@@ -205,5 +243,8 @@ export default {
 
 #c:not(.on-hover) {
   opacity: 0.9;
+}
+#test {
+  margin-top: 20px;
 }
 </style>
