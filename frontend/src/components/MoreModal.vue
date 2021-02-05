@@ -7,7 +7,7 @@
             <v-spacer></v-spacer
             ><v-card-actions>
               <v-btn color="grey" text @click="isDialog = false">
-                <v-icon>mdi-close-box-outline</v-icon>
+                <v-icon>mdi-window-close</v-icon>
               </v-btn>
             </v-card-actions>
           </v-toolbar>
@@ -119,6 +119,7 @@ export default {
 <style scoped>
 #bigImg {
   width: 100% !important;
+  margin-bottom: -8px;
   /* height: auto !important; */
 }
 </style>
