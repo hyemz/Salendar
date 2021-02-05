@@ -67,9 +67,11 @@ public class SaleService {
         user.getUsrFollowing()
                 .stream()
                 .forEach(store -> {
-                    result.put(store.getStoreName(), new ArrayList<>());
-                    saleRepository.findSalesByStore(store)
-                            .forEach(res -> result.get(store.getStoreName()).add(res));
+                    if (!saleRepository.findSalesByStore(store).isEmpty()) {
+                        result.put(store.getStoreName(), new ArrayList<>());
+                        saleRepository.findSalesByStore(store)
+                                .forEach(res -> result.get(store.getStoreName()).add(res));
+                    }
                 });
         return result;
     }
@@ -80,9 +82,11 @@ public class SaleService {
         storeRepository.findAll()
                 .stream()
                 .forEach(store -> {
-                    result.put(store.getStoreName(), new ArrayList<>());
-                    saleRepository.findSalesByStore(store)
-                            .forEach(res -> result.get(store.getStoreName()).add(res));
+                    if (!saleRepository.findSalesByStore(store).isEmpty()) {
+                        result.put(store.getStoreName(), new ArrayList<>());
+                        saleRepository.findSalesByStore(store)
+                                .forEach(res -> result.get(store.getStoreName()).add(res));
+                    }
                 });
         return result;
     }
