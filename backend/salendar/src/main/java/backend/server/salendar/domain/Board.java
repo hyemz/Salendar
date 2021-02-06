@@ -28,15 +28,18 @@ public class Board {
     private String createdDate;
     private String modifiedDate;
     private String boardType;
+    private String imgUrl;
 
     @Builder
-    public Board(String usrEmail, String boardTitle, String boardContents, String createdDate, String modifiedDate, String boardType) {
+    public Board(String usrEmail, String boardTitle, String boardContents,
+                 String createdDate, String modifiedDate, String boardType, String imgUrl) {
         this.usrEmail = usrEmail;
         this.boardTitle = boardTitle;
         this.boardContents = boardContents;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
         this.boardType = boardType;
+        this.imgUrl = imgUrl;
     }
 
     public String getUsrEmail() {
@@ -87,6 +90,14 @@ public class Board {
         this.boardType = boardType;
     }
 
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
     @Override
     public boolean equals(Object o){
         if(this == o)   return true;
@@ -98,7 +109,8 @@ public class Board {
                 Objects.equals(boardContents, board.boardContents) &&
                 Objects.equals(createdDate, board.createdDate) &&
                 Objects.equals(modifiedDate, board.modifiedDate) &&
-                Objects.equals(boardType, board.boardType);
+                Objects.equals(boardType, board.boardType) &&
+                Objects.equals(imgUrl, board.imgUrl);
     }
 
 }
