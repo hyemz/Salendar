@@ -114,7 +114,7 @@
             :items="category"
             label="글의 분류를 선택하세요"
             outlined
-            v-model="items.boardType"
+            v-model="itemss.boardType"
             ></v-select>
           </v-col>
 
@@ -129,7 +129,7 @@
             :rules="titlerules"
             hide-details="auto"
             outlined
-            v-model="items.boardTitle"
+            v-model="itemss.boardTitle"
             ></v-text-field>
 
           <v-card-text
@@ -143,7 +143,7 @@
             hide-details="auto"
             outlined
             height=200
-            v-model="items.boardContents"
+            v-model="itemss.boardContents"
             ></v-textarea>
 
           <v-card-text
@@ -196,7 +196,7 @@ export default {
       type: '',
       title: '',
       content: '',
-      items: [],
+      itemss: [],
       // template의 분류에 들어가는 내용
       category: ['자유게시판', '리뷰 게시판', '세일 제보 게시판',],
       // 제목과 내용의 작성 규칙을 정해주는 내용
@@ -217,7 +217,7 @@ export default {
     axios
       .get(`http://localhost:8080/api/boardList/${this.$route.params.boardNo}`)
       .then((res) => {
-        this.items = res.data
+        this.itemss = res.data
         console.log(res.data)
       })
       .catch((err) => {
@@ -275,9 +275,9 @@ export default {
       // template에서 수정된 내용을 묶음
       var BoardModifyForm = {
         // 앞의 이름은 백앤드의 이름 && 뒤의 이름은 template에서 설정한 이름
-        boardContents: this.items.boardContents,
-        boardTitle: this.items.boardTitle,
-        boardType: this.items.boardType,
+        boardContents: this.itemss.boardContents,
+        boardTitle: this.itemss.boardTitle,
+        boardType: this.itemss.boardType,
       };
       // 사용자 인증을 수정된 내용과 함께 보내기 위한 코드
       const headers = {
@@ -290,7 +290,7 @@ export default {
           headers,
         })
         // 해당 게시글을 수정하는 요청을 수정된 내용의 묶음과 함께 보냄
-        .post(`http://localhost:8080/api/boardList/token/${this.items.boardNo}`, BoardModifyForm)
+        .post(`http://localhost:8080/api/boardList/token/${this.$route.params.boardNo}`, BoardModifyForm)
         .then((res) => {
           console.log(res);
           // 수정을 완료하면 해당 게시글의 디테일 페이지로 이동
