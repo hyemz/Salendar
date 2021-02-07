@@ -48,7 +48,7 @@
                 :items-per-page="itemsPerPage"
                 hide-default-footer
                 @page-count="pageCount = $event"
-                sort-by="id"
+                sort-by="boardNo"
                 sort-desc="true"
                 @click:row="rowClick"
                 data-table-header-sort-badge-min-width="300px"
@@ -101,7 +101,7 @@ import axios from 'axios'
             value: 'boardNo',
           },
           // 내용에 sortable: false를 추가하면 제목을 클릭 시 sort 되는 것을 제거
-          { width: '100', text: '분류', value: 'boardType', align: 'start', sortable: false,},
+          { text: '제목', value: 'boardTitle', align: 'start', sortable: false,},
           { width: '150', text: '작성자', value: 'usrEmail', align: 'start', sortable: false,},
           { width: '150', text: '등록일', value: 'createdDate', align: 'center', sortable: false,},
         ],

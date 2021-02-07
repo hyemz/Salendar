@@ -103,10 +103,9 @@
               <v-text-field
                 class="pl-4 pr-4 mb-4"
                 label="댓글을 입력해 주세요!"
-                :rules="titlerules"
                 hide-details="auto"
                 outlined
-                v-model="comment"
+                v-model="commentinput"
                 @keypress.enter="commentcreate"
                 ></v-text-field>
               <v-btn
@@ -121,37 +120,89 @@
               </v-card-text>
 
               <div v-for="(comment, idx) in comments" :key='idx'>
-                  <div>
+                <div class="pl-4 pr-4">
+                  <v-card
+                    class="pl-3 pr-3 mt-1 mb-1 justify-space-between"
+                    elevation=""
+                    outlined
+                  >
+                    게시글 번호 : {{ comment.commentNo }}
                     작성자 : {{ comment.usrEmail }}
                     내용 : {{ comment.commentContents }}
                     작성시간 : {{ comment.createdDate }}
-                    <v-btn color="red" @click="deleteComment(comment.id)">삭제</v-btn>
+                    <v-btn 
+                      v-if="comment.usrEmail == myEmail"
+                      class="justify"
+                      color="red lighten-2"
+                      @click="commentupdate(comment.commentNo)"
+                      >수정</v-btn>
+                    <v-btn 
+                      v-if="comment.usrEmail == myEmail"
+                      class="justify"
+                      color="red lighten-2"
+                      @click="commentdelete(comment.commentNo)"
+                      >삭제</v-btn>
+                    <div>
+                      <v-row justify="center">
+                        <v-dialog
+                          v-model="dialog"
+                          persistent
+                          max-width="600px"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                              color="primary"
+                              dark
+                              v-bind="attrs"
+                              v-on="on"
+                            >
+                              수정
+                            </v-btn>
+                          </template>
+                          <v-card>
+                            <v-card-title>
+                              <span class="headline">댓글 수정하기</span>
+                            </v-card-title>
+                            <v-card-text>
+                              <v-container>
+                                <v-row>
+                                  <v-col cols="12">
+                                    <v-text-field
+                                      label="comment"
+                                      required
+                                      v-model="comment.commentContents"
+                                    ></v-text-field>
+                                  </v-col>
+                                </v-row>
+                              </v-container>
+                              <small>*indicates required field</small>
+                            </v-card-text>
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+                              <v-btn
+                                color="blue darken-1"
+                                text
+                                @click="dialog = false"
+                              >
+                                Close
+                              </v-btn>
+                              <v-btn
+                                color="blue darken-1"
+                                text
+                                @click="[dialog = false, commentupdate(comment)]"
+                              >
+                                Save
+                              </v-btn>
+                            </v-card-actions>
+                          </v-card>
+                        </v-dialog>
+                      </v-row>
+                    </div>
+                    
+                  </v-card>
+                </div>
 
-                  </div>
 
-
-              </div>
-
-              <div class="pl-4 pr-4">
-                <v-card
-                  class="pl-3 pr-3 mt-1 mb-1"
-                  elevation=""
-                  outlined
-                >저는 뾰루지가 가라앉네요 쫀득하고 지금 계절에 좋아요</v-card>
-              </div>
-              <div class="pl-4 pr-4">
-                <v-card
-                  class="pl-3 pr-3 mt-1 mb-1"
-                  elevation=""
-                  outlined
-                >저는 사계절 내내 피지오겔만 써요 오랫동안 촉촉한 유지하는 거 피지오겔 만한게 없어요</v-card>
-              </div>
-              <div class="pl-4 pr-4 pb-6">
-                <v-card
-                  class="pl-3 pr-3"
-                  elevation=""
-                  outlined
-                >부모님이 사용하시는데 아주 만족해하세요. 피부톤이 하애지고 기미가 많이 줄어드셨데요</v-card>
               </div>
             </v-card>         
           </div>
@@ -163,20 +214,22 @@
 </template>
 
 <script>
-import axiosClient from '../../lib/axiosClient'
 import axios from 'axios'
 export default {
   data () {
     return {
+      dialog: false,
       myEmail: '',
       items: [],
       comment: '',
       comments: [],
+      commentinput: '',
     };
   },
 
   created () {
     this.getItems()
+    this.getcomments()
     // 프로필 가져오기
     const headers = {
       "x-auth-token": localStorage.getItem("jwt"),
@@ -196,21 +249,12 @@ export default {
       .catch((err) => {
         console.log(err);
       });
-    axios
-      .create({
-        baseURL,
-        headers,
-      })
-      .get(`api/boardList/${this.$route.params.boardNo}/comment`)
-      .then((res) => {
-        this.comments = res.data
-        console.log(res.data);
-      })
   },
 
   methods: {
+    // 게시물에 대한 정보를 가져오는 것
     getItems () {
-      axiosClient
+      axios
         .get(`http://localhost:8080/api/boardList/${this.$route.params.boardNo}`)
         .then((res) => {
           this.items = res.data
@@ -221,11 +265,30 @@ export default {
         })
 
     },
+    // 댓글 리스트 불러오기
+    getcomments () {
+      const headers = {
+        "x-auth-token": localStorage.getItem("jwt"),
+      };
+      const baseURL = "http://localhost:8080/";
+      axios
+        .create({
+          baseURL,
+          headers,
+        })
+        .get(`api/boardList/${this.$route.params.boardNo}/comment`)
+        .then((res) => {
+          this.comments = res.data
+          console.log(res);
+        })
+    },
+    // 전체 게시판 페이지로 돌아가기
     backtoboard () {
       this.$router.push({
       path: '/board'
       })
     },
+    // 게시글 업데이트
     update () {
       this.$router.push({
       path: `/board/create/${this.$route.params.boardNo}`
@@ -253,12 +316,12 @@ export default {
           console.log(err);
         });
         alert("게시글이 삭제 되었습니다.");
-      }
     },
     commentcreate () {
       var CommentCreateForm = {
-        commentContents: this.comment,
+        commentContents: this.commentinput,
       }
+      
       // 사용자 인증을 댓글 내용과 함께 보내기 위한 코드
       const headers = {
         "x-auth-token": localStorage.getItem("jwt"),
@@ -272,10 +335,19 @@ export default {
         .put(`api/boardList/${this.$route.params.boardNo}/comment`, CommentCreateForm)
         .then((res) => {
           console.log(res);
+          this.getcomments()
+          // 댓글을 작성을 완료하면 댓글 입력창을 다시 빈칸으로 바꿔주는 것
+          this.commentinput = ''
+        })
+        .catch((err) => {
+          console.log(err);
         });
         alert("댓글 작성이 완료되었습니다.")
     },
-    commentdelete (idx) {
+    commentupdate (comment) {
+      var CommentModifyForm = {
+        commentContents: this.comment.commentContents,
+      }
       const headers = {
         "x-auth-token": localStorage.getItem('jwt'),
       };
@@ -285,13 +357,35 @@ export default {
           baseURL,
           headers,
         })
-        .delete(`api/boardList/token/${this.$route.params.boardNo}/comment/${Number(idx)}`)
+        .get(`api/boardList/token/${this.$route.params.boardNo}/comment/${comment.commentNo}`, CommentModifyForm)
         .then((res) => {
           console.log(res);
         })
         .catch((err) => {
           console.log(err);
         });
+        alert("댓글이 수정되었습니다.")
+    },
+    commentdelete (commentNo) {
+      const headers = {
+        "x-auth-token": localStorage.getItem('jwt'),
+      };
+      const baseURL = "http://localhost:8080/";
+      axios
+        .create({
+          baseURL,
+          headers,
+        })
+        .delete(`api/boardList/token/${this.$route.params.boardNo}/comment/${commentNo}`)
+        .then((res) => {
+          console.log(res);
+          this.getcomments()
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+        alert("댓글이 삭제되었습니다.")
+    },
 
     }
   }
