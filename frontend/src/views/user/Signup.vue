@@ -40,6 +40,11 @@
           @click:append="show = !show"
           :rules="[!this.error.passwordConfirm || this.error.passwordConfirm]"
         ></v-text-field>
+
+        <v-checkbox
+          v-model="alarm"
+          label="찜한 매장의 세일 정보를 메일로 받겠습니다."
+        ></v-checkbox>
       </v-form>
     </div>
     <v-btn elevation="2" @click="signup" :disabled="!isSubmit" color="primary">signup </v-btn>
@@ -60,6 +65,7 @@ export default {
       nickname: '',
       password: '',
       passwordConfirm: '',
+      alarm: false,
       passwordSchema: new PV(),
       error: {
         email: false,
@@ -127,6 +133,7 @@ export default {
         usrNick: this.nickname,
         usrEmail: this.email,
         usrPwd: this.password,
+        usrAlarm: this.alarm,
       };
       axios
         .post('http://localhost:8080/api/user/join', ResisterForm)

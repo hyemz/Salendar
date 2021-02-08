@@ -3,9 +3,29 @@
     <h1>마이페이지</h1>
     <v-card class="mx-auto mt-10 pa-5" width="600" outlined>
       <div class="mt-5 d-flex flex-column align-center">
-        <v-avatar class="mx-auto profile" size="150">
-          <v-img src="https://cdn.pixabay.com/photo/2020/07/12/07/47/bee-5396362_1280.jpg"></v-img>
-        </v-avatar>
+        <!-- <v-badge
+          bottom
+          color="deep-purple accent-4"
+          offset-x="20"
+          offset-y="20"
+          icon="mdi-plus-thick"
+        > -->
+          <v-hover v-slot="{ hover }">
+            <v-avatar v-if="!hover" class="mx-auto profile" size="150">
+              <v-img src="https://cdn.pixabay.com/photo/2020/07/12/07/47/bee-5396362_1280.jpg"></v-img>
+            </v-avatar>
+            <v-avatar v-else-if="hover" class="mx-auto d-flex justify-center align-center profile" size="150" style="position:relative">
+                <v-img src="https://cdn.pixabay.com/photo/2020/07/12/07/47/bee-5396362_1280.jpg" style="opacity:0.4"></v-img>
+                <v-file-input
+                  class="mt-0 pt-0 d-flex justify-center align-center"
+                  hide-input="true"
+                  prepend-icon="mdi-plus"
+                  color="white"
+                  style="position:absolute"
+                ></v-file-input>
+            </v-avatar>
+          </v-hover>
+        <!-- </v-badge> -->
       </div>
 
       <v-list-item three-line>
@@ -61,19 +81,23 @@
             v-model="newPwd"
             @keypress.enter="login"
             @click:append="show = !show"
-            :rules="[!this.error.password || '영문,숫자 포함 8 자리이상이어야 합니다.']"
+            :rules="[!this.error.password || this.error.password]"
           ></v-text-field>
           <v-text-field
             v-if="changePwd"
             :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
             :type="show ? 'text' : 'password'"
-            label="새 비밀번호 학인"
+            label="새 비밀번호 확인"
             style="width:500px"
             v-model="newPwdConfirm"
             @keypress.enter="login"
             @click:append="show = !show"
             :rules="[!this.error.passwordConfirm || this.error.passwordConfirm]"
           ></v-text-field>
+          <v-checkbox
+            v-model="alarm"
+            label="찜한 매장의 세일 정보를 메일로 받겠습니다."
+          ></v-checkbox>
         </v-form>
       </div>
       <div class="d-flex flex-row-reverse mt-4">
@@ -87,7 +111,7 @@
 
 <script>
 import PV from 'password-validator';
-import axiosClient from '../../lib/axiosClient';
+import axios from 'axios';
 
 export default {
   name: 'mypage',
@@ -98,11 +122,11 @@ export default {
       myEmail: '',
       nickname: '',
       fakenickname: '',
-      myPwd: '',
       accessPwd: '',
       password: '',
       newPwd: '',
       newPwdConfirm: '',
+      alarm: false,
       passwordSchema: new PV(),
       error: {
         password: false,
@@ -126,14 +150,22 @@ export default {
       .letters();
 
     // 프로필 가져오기
-    axiosClient
+      const headers = {
+            "x-auth-token": localStorage.getItem("jwt"),
+        };
+      const baseURL = "http://localhost:8080";
+      axios
+      .create({
+          baseURL,
+          headers,
+      })
       .get('/api/user/token/mypage')
       .then((res) => {
         console.log(res);
         this.myEmail = res.data.usrEmail;
         this.nickname = res.data.usrNick;
         this.fakenickname = res.data.usrNick;
-        this.myPwd = res.data.usrPwd;
+        this.alarm = res.data.usrAlarm
       })
       .catch((err) => {
         console.log('정보를 불러오는 것을 실패했습니다.', err);
@@ -143,6 +175,9 @@ export default {
     password: function() {
       this.checkPwd();
       this.checkForm();
+    },
+    canChangePwd: function() {
+      this.checkForm()
     },
     newPwd: function() {
       this.checkForm();
@@ -162,15 +197,25 @@ export default {
         userForm = {
           usrNick: this.nickname,
           usrPwd: this.newPwdConfirm,
+          usrAlarm: this.alarm,
         };
       } else {
         userForm = {
           usrNick: this.nickname,
-          usrPwd: this.myPwd,
+          usrPwd: this.password,
+          usrAlarm: this.alarm,
         };
       }
       // 유저 정보 변경하기
-      axiosClient
+      const headers = {
+            "x-auth-token": localStorage.getItem("jwt"),
+        };
+      const baseURL = "http://localhost:8080";
+      axios
+        .create({
+            baseURL,
+            headers,
+        })
         .put('/api/user/token/update', userForm)
         .then((res) => {
           alert('유저 정보가 변경되었습니다.');
@@ -183,14 +228,20 @@ export default {
     },
     checkPwd() {
       // 비밀번호 백엔드와 일치하는지
-      axiosClient
+      const headers = {
+            "x-auth-token": localStorage.getItem("jwt"),
+        };
+      const baseURL = "http://localhost:8080";
+        axios
+        .create({
+            baseURL,
+            headers,
+        })
         .post('/api/user/token/pwdConfirm', this.password)
         .then((res) => {
-          console.log(res);
           this.accessPwd = res.data;
-          if (this.password.length >= 0 && this.accessPwd == 'OK') {
+          if (this.password.length > 0 && this.accessPwd == 'OK') {
             this.canChangePwd = true;
-            this.myPwd = this.password;
           } else this.canChangePwd = false;
         })
         .catch((err) => {
@@ -198,12 +249,16 @@ export default {
         });
     },
     checkForm() {
-      if (this.password.length >= 0 && this.accessPwd == 'OK') this.canChangePwd = true;
-      else this.canChangePwd = false;
+      // if (this.password.length >= 0 && this.accessPwd == 'OK') this.canChangePwd = true;
+      // else this.canChangePwd = false;
 
-      if (this.newPwd.length >= 0 && !this.passwordSchema.validate(this.newPwd))
-        this.error.password = true;
+      if (this.newPwd.length >= 0 && !this.passwordSchema.validate(this.newPwd) )
+        this.error.password = '영문,숫자 포함 8 자리이상이어야 합니다.';
       else this.error.password = false;
+
+      if (this.password == this.newPwd) {
+        this.error.password = "기존 비밀번호는 사용하실 수 없습니다"
+      }
 
       if (this.newPwdConfirm.length >= 0 && this.newPwd !== this.newPwdConfirm)
         this.error.passwordConfirm = '패스워드와 일치하지 않습니다.';
@@ -211,14 +266,35 @@ export default {
 
       let isSubmit = true;
       if (!this.changePwd) {
-        this.isSubmit = this.canChangePwd && this.nickname;
+        if ( this.canChangePwd && this.nickname ) {
+          isSubmit = true;
+        } else {
+          isSubmit =false
+        }
       } else {
         Object.values(this.error).map((v) => {
-          if (v || !this.nickname) isSubmit = false;
+          if (v || !this.nickname) {
+            isSubmit = false
+          } 
         });
-        this.isSubmit = isSubmit;
       }
+      this.isSubmit = isSubmit;
     },
   },
 };
 </script>
+
+<style>
+.v-application--is-ltr .v-input__prepend-outer{
+  margin-right: 0px;
+  color:white;
+  width:100px
+}
+
+.mdi-plus::before {
+    color: white;
+    font-size: 80px;
+    opacity: 0.9;
+}
+
+</style>
