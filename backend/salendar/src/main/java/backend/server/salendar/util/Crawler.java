@@ -2,49 +2,39 @@ package backend.server.salendar.util;
 
 import backend.server.salendar.domain.Sale;
 import lombok.SneakyThrows;
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import javax.imageio.ImageIO;
 import javax.net.ssl.*;
-import javax.print.Doc;
-import java.awt.image.BufferedImage;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 public class Crawler {
 
-    //WebDriver 설정
-    private static WebDriver driver;
-    private WebElement element;
-    private String url;
-
-    //Properties 설정
-    public static String WEB_DRIVER_ID = "webdriver.chrome.driver";
-    public static String WEB_DRIVER_PATH = "salendar/chromedriver.exe";
 
     public static String crawl(String url) {
+
+        //WebDriver 설정
+        WebDriver driver;
+
+        //Properties 설정
+        String WEB_DRIVER_ID = "webdriver.chrome.driver";
+        String WEB_DRIVER_PATH = "salendar/chromedriver.exe";
+
         System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
         ChromeOptions options = new ChromeOptions();
         options.setCapability("ignoreProtectedModeSettings", true);
@@ -198,15 +188,15 @@ public class Crawler {
             Sale curSale = new Sale();
             curSale.setSaleTitle(e.select("a > div.evt_txt_area > strong").text());
             curSale.setSaleDsc(e.select("a > div.evt_txt_area > strong").text());
-            curSale.setSaleThumbnail(e.select("a > div.evt_img_area.lazy_load_wrap.loaded > img").attr("src"));
-            curSale.setSaleLink(e.select("head > link:nth-child(7)").attr("href"));
-
+            curSale.setSaleThumbnail(e.select("a > div.evt_img_area > img").attr("alt"));
+            String temp = e.select("a").attr("onclick");
+            curSale.setSaleLink("https://www.etude.com/kr/ko/display/event_detail?planDisplaySn=" + temp.substring(temp.indexOf("planDisplaySn") + 15, temp.indexOf("planDisplayTitle") - 2));
             Elements eventDate = e.select("a > div.evt_txt_area > span");
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy.MM.dd");
 
             int index = eventDate.text().indexOf("~");
             String eventStart = eventDate.text().substring(0, index);
-            String eventEnd = eventDate.text().substring(index + 1, index + 13);
+            String eventEnd = eventDate.text().substring(index + 1, index + 11);
             Date eventStartDate = inputFormat.parse(eventStart);
             Date eventEndDate = inputFormat.parse(eventEnd);
 
@@ -242,6 +232,17 @@ public class Crawler {
             curSale.setSaleThumbnail(e.select("td:nth-child(2) > a > img").attr("src"));
             curSale.setSaleLink("http://lalavla.gsretail.com" + e.select("td:nth-child(2) > a").attr("href"));
 
+            Elements eventDate = e.select("td.ft_lt > div > p.period");
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy.MM.dd");
+
+            int index = eventDate.text().indexOf("~");
+            String eventStart = eventDate.text().substring(index - 11, index - 1);
+            String eventEnd = eventDate.text().substring(index + 2, index + 12);
+            Date eventStartDate = inputFormat.parse(eventStart);
+            Date eventEndDate = inputFormat.parse(eventEnd);
+
+            curSale.setSaleStartDate(eventStartDate);
+            curSale.setSaleEndDate(eventEndDate);
             if (saleFilter(curSale)) {
                 curSale.setSaleBigImg(Jsoup.parse(crawl(curSale.getSaleLink()))
                         .select("#contents > div.cnt > div > div.brdwrap > div.tblwrap > div > div.evt_memo > span > p > img").attr("src"));
@@ -287,7 +288,6 @@ public class Crawler {
             if (saleFilter(curSale)) {
                 curSale.setSaleBigImg(Jsoup.parse(crawl(curSale.getSaleLink()))
                         .select("body > div.RootDiv > div.MallDiv > section > div > table > tbody > tr:nth-child(2) > td > div.pt20.editArea > onfocus=\"this.blur()\" > p > img:nth-child(1)").attr("src"));
-
                 result.add(curSale);
             }
         }
@@ -354,8 +354,11 @@ public class Crawler {
             curSale.setSaleTitle(e.select("a > span.descWrap > strong").text());
             curSale.setSaleDsc(e.select("a > span.descWrap > strong").text());
             curSale.setSaleThumbnail(e.select("a > span.img > img").attr("src"));
-            curSale.setSaleLink(e.select("a").attr("href"));
-
+            String tempLink = e.select("a").attr("href");
+            if (!tempLink.startsWith("http")) {
+                tempLink = "https://www.innisfree.com/" + tempLink;
+            }
+            curSale.setSaleLink(tempLink);
             Elements eventDate = e.select("a > span.descWrap > span");
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -396,12 +399,12 @@ public class Crawler {
     public static void main(String[] args) throws KeyManagementException, NoSuchAlgorithmException, IOException {
 //        System.out.println(crawlOliveyoung());
 //        System.out.println(crawlAritaum());
-        System.out.println(crawlMissha());
-        System.out.println(crawlEtude());
-        System.out.println(crawlLalavla());
-        System.out.println(crawlThefaceshop());
-        System.out.println(crawlTonymoly());
-        System.out.println(crawlInnisfree());
+//        System.out.println(crawlMissha());
+//        System.out.println(crawlEtude());
+//        System.out.println(crawlLalavla());
+//        System.out.println(crawlThefaceshop());
+//        System.out.println(crawlTonymoly());
+//        System.out.println(crawlInnisfree());
     }
 
 
@@ -418,7 +421,7 @@ public class Crawler {
         }
 
 //      불필요 단어 + 과도한 % 필터링
-        List<String> donIncludeWords = Arrays.asList("카드", "출석", "출첵", "LIVE", "쿠폰", "사은품", "증정");
+        List<String> donIncludeWords = Arrays.asList("카드", "출석", "출첵", "LIVE", "쿠폰", "사은품", "증정", "배송", "제휴", "멤버쉽", "포장", "적립");
         List<Pattern> patterns = new ArrayList<>();
         for (String word : donIncludeWords) {
             patterns.add(Pattern.compile("(?m)" + word));

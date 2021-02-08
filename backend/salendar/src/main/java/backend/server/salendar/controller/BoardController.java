@@ -99,6 +99,8 @@ public class BoardController {
             //  일치하면 게시글 수정
             board.get().setBoardTitle(newBoard.getBoardTitle());
             board.get().setBoardContents(newBoard.getBoardContents());
+            board.get().setBoardType(newBoard.getBoardType());
+            board.get().setImgUrl(newBoard.getImgUrl());
 
             //  수정 시각 업데이트
             Date date = new Date();

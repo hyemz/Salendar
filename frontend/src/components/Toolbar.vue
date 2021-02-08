@@ -47,7 +47,7 @@
         </v-btn>
       </template>
       <template v-if="isLogin">
-        <v-btn text color="white" disabled class="w" v-if="isLogin">설렌다님 환영합니다.</v-btn>
+        <v-btn text color="white" disabled class="w" v-if="isLogin">{{ nickname }}님 환영합니다.</v-btn>
         <!-- <v-btn text color="white" @click.native="logout" v-if="isLogin">
           <router-link :to="{ name: 'Login' }" color="red" class="text-decoration-none"
             >로그아웃</router-link
@@ -84,11 +84,31 @@
 
 <script>
 import { mapState } from 'vuex';
+import axios from 'axios'
+
 export default {
   created() {
     this.token = localStorage.getItem('jwt');
     if(this.token) {
-      this.$store.dispatch('login', true);
+      const headers = {
+          "x-auth-token": localStorage.getItem("jwt"),
+      };
+      const baseURL = "http://localhost:8080";
+      axios
+      .create({
+          baseURL,
+          headers,
+      })
+      .get('/api/user/token/mypage')
+      .then((res)=>{
+        this.nickname = res.data.usrNick;
+        this.$store.dispatch('login', true);
+      })
+      .catch((err)=>{
+        console.log(err)
+        localStorage.removeItem('jwt');
+        this.$store.dispatch('login', false);
+      })
     }
     console.log(this.token);
   },
@@ -98,16 +118,39 @@ export default {
   watch: {
     isLogin: function() {
       this.token = localStorage.getItem('jwt');
+      if(this.token) {
+      const headers = {
+          "x-auth-token": localStorage.getItem("jwt"),
+      };
+      const baseURL = "http://localhost:8080";
+      axios
+      .create({
+          baseURL,
+          headers,
+      })
+      .get('/api/user/token/mypage')
+      .then((res)=>{
+        this.nickname = res.data.usrNick;
+        this.$store.dispatch('login', true);
+      })
+      .catch((err)=>{
+        console.log(err)
+        localStorage.removeItem('jwt');
+        this.$store.dispatch('login', false);
+      })
+    }
     }
   },
   data: () => ({
     token: localStorage.getItem('jwt'),
     items: [{ title: '마이페이지' }],
+    nickname:'',
   }),
   methods: {
     logout() {
       localStorage.removeItem('jwt');
       this.$store.dispatch('login', false);
+      this.$store.dispatch('updateFollowing', false)
     },
   },
 };

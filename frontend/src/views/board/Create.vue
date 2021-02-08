@@ -8,9 +8,9 @@
         cols="12"
         sm="10"
       >
-        <div>
+        <div v-if="`${this.$route.params.boardNo}`=='undefined'">
           <v-card-title>
-            <h1 class="pt-2">새 글 작성하기 / 글 수정하기</h1>
+            <h1 class="pt-2">새 글 작성하기</h1>
           </v-card-title>
           <br>
           <v-card>
@@ -28,6 +28,7 @@
             :items="category"
             label="글의 분류를 선택하세요"
             outlined
+            v-model="type"
             ></v-select>
           </v-col>
 
@@ -42,7 +43,7 @@
             :rules="titlerules"
             hide-details="auto"
             outlined
-            
+            v-model="title"
             ></v-text-field>
 
           <v-card-text
@@ -56,6 +57,7 @@
             hide-details="auto"
             outlined
             height=200
+            v-model="content"
             ></v-textarea>
 
           <v-card-text
@@ -86,7 +88,93 @@
           <v-btn 
             class="mb-6"
             elevation="2"
-            @click="backtoboard"
+            @click="board"
+            color="grey lighten-2"
+            >목록</v-btn>
+          </v-card>
+        </div>
+
+        <div v-else>
+          <v-card-title>
+            <h1 class="pt-2">글 수정하기</h1>
+          </v-card-title>
+          <br>
+          <v-card>
+
+          <v-card-text
+          >분류
+          </v-card-text>
+
+          <v-col
+            class="pl-4"
+            cols="12"
+            sm="3"
+            >
+            <v-select
+            :items="category"
+            label="글의 분류를 선택하세요"
+            outlined
+            v-model="itemss.boardType"
+            ></v-select>
+          </v-col>
+
+
+          <v-card-text
+          >제목
+          </v-card-text>
+          
+          <v-text-field
+            class="pl-4 pr-4 mb-4"
+            label="제목을 입력해 주십시오"
+            :rules="titlerules"
+            hide-details="auto"
+            outlined
+            v-model="itemss.boardTitle"
+            ></v-text-field>
+
+          <v-card-text
+          >내용
+          </v-card-text>
+
+          <v-textarea
+            class="pl-4 pr-4 mb-4"
+            label="내용을 입력해 주십시오"
+            :rules="contentrules"
+            hide-details="auto"
+            outlined
+            height=200
+            v-model="itemss.boardContents"
+            ></v-textarea>
+
+          <v-card-text
+          >TAG
+          </v-card-text>
+
+          <v-text-field
+            class="pl-4 pr-4 mb-4"
+            label="태그를 입력해 주십시오"
+            outlined
+            ></v-text-field>
+
+          <v-card-text
+          >파일첨부
+          </v-card-text>
+
+          <v-file-input
+            truncate-length="15"
+            class="pl-5 pr-5 mb-4"
+            ></v-file-input>
+
+          <v-btn 
+            class="mr-1 ml-4 mb-6"
+            elevation="2"
+            @click="update"
+            color="grey lighten-2"
+            >저장</v-btn>
+          <v-btn 
+            class="mb-6"
+            elevation="2"
+            @click="board"
             color="grey lighten-2"
             >목록</v-btn>
           </v-card>
@@ -99,8 +187,19 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
-    data: () => ({
+  name: 'BoardCreate',
+  data () {
+    return {
+      // 새 글 작성에서 template에 들어가는 내용 받는 것
+      type: '',
+      title: '',
+      content: '',
+      itemss: [],
+      // template의 분류에 들어가는 내용
+      category: ['자유게시판', '리뷰 게시판', '세일 제보 게시판',],
+      // 제목과 내용의 작성 규칙을 정해주는 내용
       titlerules: [
         value => (value && value.length >= 3) || '최소 3글자 이상 입력해 주세요',
         value => (value && value.length <= 25) || '25자 이상 입력할 수 없습니다',
@@ -109,17 +208,99 @@ export default {
         value => (value && value.length >= 3) || '최소 3글자 이상 입력해 주세요',
         value => (value && value.length <= 50) || '50자 이상 입력할 수 없습니다',
       ],
-      category: ['자유게시판', '제품 리뷰', '세일 제보 게시판',],
-    }),
-    methods: {
-        backtoboard () {
-          this.$router.push({
-          path: '/board'
+    }
+  },
+
+  // 페이지가 켜질 때 자동으로 실행되는 코드
+  created() {
+    // 디테일 페이지의 내용을 불러오기 위한 코드
+    axios
+      .get(`http://localhost:8080/api/boardList/${this.$route.params.boardNo}`)
+      .then((res) => {
+        this.itemss = res.data
+        console.log(res.data)
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  },
+
+  // 게시판으로 돌아가기, 새 글 작성, 글 수정 함수
+  methods: {
+    // 게시판으로 돌아가기
+    board () {
+      this.$router.push({
+      path: '/board'
+      })
+    },
+    // 글 생성 함수
+    create () {
+      // template에서 입력되 내용을 묶음
+      var BoardCreateForm = {
+        // 앞의 이름은 백앤드의 이름 && 뒤의 이름은 template에서 설정한 이름
+        boardContents: this.content,
+        boardTitle: this.title,
+        boardType: this.type,
+      };
+      // 사용자 인증을 입력된 내용과 함께 보내기 위한 코드
+      const headers = {
+        "x-auth-token": localStorage.getItem("jwt"),
+      };
+      const baseURL = "http://localhost:8080/";
+      // 제목과 내용의 길이에 따라서 작성이 되고/안되고 설정해주는 것 ((((진행 중))))
+      if(this.titlerules && this.contentrules){
+        axios
+          .create({
+            baseURL,
+            headers,
           })
-        },
-        create () {
-            alert("새 글 작성이 완료되었습니다.")
+          // 게시글 작성을 요청과 작성된 내용의 묶음을 함께 보냄
+          .put('api/boardList/token/createboard', BoardCreateForm)
+          .then((res) => {
+            console.log(res.data);
+            // 게시글 작성이 완료되면 해당 게시글의 디테일 페이지로 이동
+            this.$router.push(`/board/detail/${res.data.boardNo}`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+          alert("새 글 작성이 완료되었습니다.");
+        } else {
+          alert("제목과 내용의 길이에 주의해 주세요.")
+          // 제목과 내용의 길이 주의 문구를 따로 설정해 주면 좋을 것 같음 ((((진행 중))))
         }
+    },
+    // 글 수정 함수
+    update () {
+      // template에서 수정된 내용을 묶음
+      var BoardModifyForm = {
+        // 앞의 이름은 백앤드의 이름 && 뒤의 이름은 template에서 설정한 이름
+        boardContents: this.itemss.boardContents,
+        boardTitle: this.itemss.boardTitle,
+        boardType: this.itemss.boardType,
+      };
+      // 사용자 인증을 수정된 내용과 함께 보내기 위한 코드
+      const headers = {
+        "x-auth-token": localStorage.getItem("jwt"),
+      };
+      const baseURL = "http://localhost:8080/";
+      axios
+        .create({
+          baseURL,
+          headers,
+        })
+        // 해당 게시글을 수정하는 요청을 수정된 내용의 묶음과 함께 보냄
+        .post(`http://localhost:8080/api/boardList/token/${this.$route.params.boardNo}`, BoardModifyForm)
+        .then((res) => {
+          console.log(res);
+          // 수정을 완료하면 해당 게시글의 디테일 페이지로 이동
+          this.$router.push(`/board/detail/${this.$route.params.boardNo}`);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+        alert("글 수정이 완료되었습니다.");
+      },
     }
   }
 </script>
