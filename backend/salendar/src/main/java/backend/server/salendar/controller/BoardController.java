@@ -1,8 +1,10 @@
 package backend.server.salendar.controller;
 
 import backend.server.salendar.domain.Board;
+import backend.server.salendar.domain.Comment;
 import backend.server.salendar.domain.User;
 import backend.server.salendar.repository.BoardRepository;
+import backend.server.salendar.repository.CommentRepository;
 import backend.server.salendar.security.JwtTokenProvider;
 import backend.server.salendar.service.UserService;
 import io.swagger.annotations.Api;
@@ -32,6 +34,9 @@ public class BoardController {
 
     @Autowired
     private BoardRepository boardRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     @Autowired
     UserService userService;
@@ -132,6 +137,13 @@ public class BoardController {
             }
 
             Long boardNo = no;
+
+            List<Comment> comments = commentRepository.findCommentsByBoard(board);
+            for(int i=0; i<comments.size(); i++){
+                commentRepository.deleteById(comments.get(i).getCommentNo());
+            }
+
+
             boardRepository.deleteById(boardNo);
 
             return "Delete Success";
