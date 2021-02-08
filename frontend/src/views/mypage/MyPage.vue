@@ -197,11 +197,13 @@ export default {
         userForm = {
           usrNick: this.nickname,
           usrPwd: this.newPwdConfirm,
+          usrAlarm: this.alarm,
         };
       } else {
         userForm = {
           usrNick: this.nickname,
           usrPwd: this.password,
+          usrAlarm: this.alarm,
         };
       }
       // 유저 정보 변경하기
