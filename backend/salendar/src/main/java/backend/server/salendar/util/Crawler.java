@@ -245,7 +245,7 @@ public class Crawler {
             curSale.setSaleEndDate(eventEndDate);
             if (saleFilter(curSale)) {
                 curSale.setSaleBigImg(Jsoup.parse(crawl(curSale.getSaleLink()))
-                        .select("#contents > div.cnt > div > div.brdwrap > div.tblwrap > div > div.evt_memo > span > p > img").attr("src"));
+                        .select("#contents > div.cnt > div > div.brdwrap > div.tblwrap > div > div.evt_memo span> div > img").attr("src"));
                 result.add(curSale);
             }
         }
