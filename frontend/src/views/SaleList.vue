@@ -25,79 +25,11 @@
             max-height=""
             max-width=""
           >
-              <v-row
-                class="fill-height mr-4"
-                align="end"
-                justify="end"
-              >
-
-              <v-card 
-                class="d-flex align-end justify-end" 
-                color="transparent"
-                elevation="0"
-                >
-                <v-btn
-                  elevation="2"
-                  color="grey lighten-2"
-                  fab
-                  x-small
-                  @click="model--"
-                >
-                  <v-icon
-                    color="white"
-                  >
-                    mdi-chevron-left
-                  </v-icon>
-                </v-btn>
-
-                <div class="mr-2 ml-2" color="black">
-                  {{ i+1 }} / {{ items.length }}
-                </div>
-
-
-                <v-btn
-                  class="mr-2"
-                  elevation="2"
-                  color="grey lighten-2"
-                  fab
-                  x-small
-                  @click="model++"
-                >
-                  <v-icon
-                    color="white"
-                  >
-                    mdi-chevron-right
-                  </v-icon>
-                </v-btn>
-
-                <v-btn
-                  elevation="2"
-                  color="grey lighten-2"
-                  fab
-                  x-small
-                  @click="cycle=!cycle"
-                >
-                  <v-icon
-                    color="blue"
-                    v-if="!cycle"
-                  >
-                    mdi-play
-                  </v-icon>
-                  <v-icon
-                    color="red"
-                    v-else
-                  >
-                    mdi-pause
-                  </v-icon>
-                </v-btn>
-              </v-card>
-
-              </v-row>
 
           </v-carousel-item>
         </v-carousel>
 
-        <v-row justify="center" align="right">
+        <v-row justify="center" style="margin-top:-40px" align="right">
           <v-btn 
             @click="model--"
             elevation="2"
@@ -200,8 +132,8 @@
                     :color="active ? 'primary' : 'grey lighten-3'"
                     class="ma-4"
                     height="200"
-                    width="200"
-                    @click="toggle, more(nowSale)"
+                    width="400"
+                    @click="more(nowSale), toggle"
                   >
                     <v-row
                       class="fill-height"
@@ -253,7 +185,7 @@
                     :color="active ? 'primary' : 'grey lighten-1'"
                     class="ma-4"
                     height="200"
-                    width="200"
+                    width="400"
                     @click="toggle"
                   >
                     <v-row
@@ -446,6 +378,21 @@ export default {
             }
           })
         })
+        if (this.preSales.length == 0 ) {
+          this.preSales.push(
+            {
+            sale_thumbnail:require("@/assets/SaleListSmall/nosale.jpg")
+            },
+            {
+            sale_thumbnail:require("@/assets/SaleListSmall/nosale.jpg")
+            },
+          {
+            sale_thumbnail:require("@/assets/SaleListSmall/nosale.jpg")
+          },
+          {
+            sale_thumbnail:require("@/assets/SaleListSmall/nosale.jpg")
+          },)
+        }
       })
       .catch((err) => {
         console.log("세일 로드에 실패했습니다.", err);
