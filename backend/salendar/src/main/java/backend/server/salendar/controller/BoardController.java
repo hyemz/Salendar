@@ -54,8 +54,11 @@ public class BoardController {
         try {
             Long boardNo = Long.parseLong(no);
             Optional<Board> board = boardRepository.findById((boardNo));
+            board.get().setHit(board.get().getHit()+1);
 
-            return board.get();
+            Board newBoard = boardRepository.save(board.get());
+
+            return newBoard;
 
         }catch (Exception e){
             return null;
@@ -77,6 +80,7 @@ public class BoardController {
         String dateString = format.format(date);
         board.setCreatedDate(dateString);
         board.setModifiedDate(dateString);
+        board.setHit(0L);
 
         Board newBoard = boardRepository.save(board);
 

@@ -29,10 +29,12 @@ public class Board {
     private String modifiedDate;
     private String boardType;
     private String imgUrl;
+    private Long hit;
 
     @Builder
     public Board(String usrEmail, String boardTitle, String boardContents,
-                 String createdDate, String modifiedDate, String boardType, String imgUrl) {
+                 String createdDate, String modifiedDate, String boardType, String imgUrl,
+                Long hit) {
         this.usrEmail = usrEmail;
         this.boardTitle = boardTitle;
         this.boardContents = boardContents;
@@ -40,6 +42,7 @@ public class Board {
         this.modifiedDate = modifiedDate;
         this.boardType = boardType;
         this.imgUrl = imgUrl;
+        this.hit = hit;
     }
 
     public String getUsrEmail() {
@@ -98,6 +101,14 @@ public class Board {
         this.imgUrl = imgUrl;
     }
 
+    public Long getHit() {
+        return hit;
+    }
+
+    public void setHit(Long hit) {
+        this.hit = hit;
+    }
+
     @Override
     public boolean equals(Object o){
         if(this == o)   return true;
@@ -110,7 +121,8 @@ public class Board {
                 Objects.equals(createdDate, board.createdDate) &&
                 Objects.equals(modifiedDate, board.modifiedDate) &&
                 Objects.equals(boardType, board.boardType) &&
-                Objects.equals(imgUrl, board.imgUrl);
+                Objects.equals(imgUrl, board.imgUrl) &&
+                Objects.equals(hit, board.hit);
     }
 
 }
