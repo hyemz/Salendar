@@ -39,7 +39,6 @@ public class SaleController {
 
     //    세일 DB 업데이트
     @ApiOperation(value = "세일 DB 업데이트")
-    @Scheduled(cron = "0 30 6 * * *", zone = "Asia/Seoul")
     @PutMapping(value = "/updateDB")
     public ResponseEntity<String> updateSaleDB() {
         try {

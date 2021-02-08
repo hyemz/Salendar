@@ -7,6 +7,7 @@ import backend.server.salendar.repository.SaleRepository;
 import backend.server.salendar.repository.StoreRepository;
 import backend.server.salendar.repository.UserRepository;
 import lombok.SneakyThrows;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.transaction.Transactional;
 import java.lang.reflect.Method;
@@ -25,6 +26,7 @@ public class SaleService {
     }
 
     @SneakyThrows
+    @Scheduled(cron = "0 30 6 * * *", zone = "Asia/Seoul")
     public void crawlAll() {
         Class[] noParam = {};
         Class cls = Class.forName("backend.server.salendar.util.Crawler");

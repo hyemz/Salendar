@@ -47,6 +47,7 @@ public class UserController {
                     .usrPwd(passwordEncoder.encode(user.get("usrPwd")))
                     .usrNick(user.get("usrNick"))
                     .roles(Collections.singletonList(user.get("usrEmail").endsWith("@admin.com") ? "ROLE_ADMIN" : "ROLE_USER"))
+                    .usrAlarm(Boolean.valueOf(user.get("usrAlarm")))
                     .build());
             return new ResponseEntity<String>(user.get("usrNick"), HttpStatus.OK);
         } catch (IllegalStateException e) {
@@ -125,6 +126,7 @@ public class UserController {
                 curUser.setUsrNick(user.get("usrNick"));
             }
             curUser.setUsrPwd(passwordEncoder.encode(user.get("usrPwd")));
+            curUser.setUsrAlarm(Boolean.valueOf(user.get("userAlarm")));
             userRepository.save(curUser);
         } catch (IllegalStateException e) {
             return new ResponseEntity<String>(e.toString(), HttpStatus.BAD_REQUEST);

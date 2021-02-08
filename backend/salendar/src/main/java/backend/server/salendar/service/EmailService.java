@@ -6,6 +6,7 @@ import backend.server.salendar.repository.UserRepository;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -66,15 +67,18 @@ public class EmailService {
         return templateEngine.process("page/mail", context);
     }
 
-//    /*
-//     * 알림 메일 전송
-//     */
-//    @Transactional
-//    public void mailAlertSale() {
-//        List<User> users = userRepository.findAll();
-//        users.stream()
-//                .forEach(user -> {
-//
-//                });
-//    }
+    /*
+     * 알림 메일 전송
+     */
+    @Transactional
+    @Scheduled(cron = "0 0 9 1 * *", zone = "Asia/Seoul")
+    public void mailAlertSale() {
+        List<User> users = userRepository.findAll();
+        users.stream()
+                .forEach(user -> {
+                    if (user.getUsrAlarm()) {
+                        sendMail(user);
+                    }
+                });
+    }
 }

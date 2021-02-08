@@ -42,6 +42,11 @@ public class User implements UserDetails {
     @JsonProperty("usrEmail")
     private String usrEmail;
 
+    // 메일 알람 수신 동의
+    @JsonProperty("usrAlarm")
+    @Builder.Default
+    private Boolean usrAlarm = false;
+
     // 팔로우 매장
     @ManyToMany
     @JsonBackReference
