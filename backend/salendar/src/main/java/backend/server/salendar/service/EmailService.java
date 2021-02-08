@@ -29,36 +29,40 @@ public class EmailService {
     }
 
     public void sendMail(User user) {
-//        Map<String, List<Sale>> sales = saleService.findSalesByFollowingStores(user);
-        Map<String, List<Sale>> salesMap = saleService.findSalesByStores();
-        MimeMessagePreparator message = mimeMessage -> {
-            String content = buildSales(salesMap);
-
-            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
-            messageHelper.setTo(user.getUsrEmail());
-            Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Asia/Seoul"));
-            String month = String.valueOf(cal.get(Calendar.MONTH));
-            messageHelper.setSubject(month + "월의 세일입니다.");
-            messageHelper.setText(content, true);
-        };
-        javaMailSender.send(message);
+        Map<String, List<Sale>> salesMap = saleService.findSalesByFollowingStores(user);
+        if (!salesMap.isEmpty()) {
+            MimeMessagePreparator message = mimeMessage -> {
+                String content = buildSales(salesMap);
+                MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+                messageHelper.setTo(user.getUsrEmail());
+                Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Asia/Seoul"));
+                String month = String.valueOf(cal.get(Calendar.MONTH));
+                messageHelper.setSubject(month + "월의 세일 소식을 전해드립니다!");
+                messageHelper.setText(content, true);
+            };
+            javaMailSender.send(message);
+        }
     }
 
     private String buildSales(Map<String, List<Sale>> salesMap) {
         Context context = new Context();
-        Map<String, String> restSales = new HashMap<>();
-        Map<String, Sale> resultSales = new HashMap<>();
+        List<String> storeNames = new ArrayList<>();
+        List<Sale> sales = new ArrayList<>();
+        List<String> saleDscs = new ArrayList<>();
+
         for (String storeName : salesMap.keySet()) {
+            storeNames.add(storeName);
             String salesDsc = "";
             for (Sale sale : salesMap.get(storeName)) {
-                salesDsc += sale.getSaleTitle() + (salesMap.get(storeName).indexOf(sale) != salesMap.get(storeName).size() ? ", " : "");
+                salesDsc += sale.getSaleTitle() + (salesMap.get(storeName).indexOf(sale) != salesMap.get(storeName).size() - 1 ? ", " : "");
             }
-            restSales.put(storeName, salesDsc);
+            saleDscs.add(salesDsc);
 
-            resultSales.put("storeName", salesMap.get(storeName).get(0));
+            sales.add(salesMap.get(storeName).get(0));
         }
-        context.setVariable("salesMap", resultSales);
-        context.setVariable("salesDsc", restSales);
+        context.setVariable("storeNames", storeNames);
+        context.setVariable("sales", sales);
+        context.setVariable("saleDscs", saleDscs);
         return templateEngine.process("page/mail", context);
     }
 

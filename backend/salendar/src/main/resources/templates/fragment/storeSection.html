@@ -15,7 +15,6 @@
                         <td align="center" class="section-img">
                             <a href=""
                                style=" border-style: none !important; display: block; border: 0 !important;"><img
-                                    src=""
                                     th:attr="src=${sale.getSaleThumbnail()}"
                                     style="display: block; width: 590px;" width="590" border="0" alt=""/></a>
 
@@ -32,7 +31,7 @@
 
                             <div style="line-height: 35px">
 
-                                NEW IN <span style="color: #5caad2;" th:text="${storeName}"></span>
+                                NEW IN <span style="color: #5caad2;" th:text=${storeName}></span>
 
                             </div>
                         </td>
@@ -67,7 +66,7 @@
 
 
                                         <div style="line-height: 24px">
-                                            More: <span th:text="saleDsc"></span>
+                                            More: <span th:text=${saleDsc}></span>
                                         </div>
                                     </td>
                                 </tr>

@@ -2,22 +2,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layout/default_layout"
-      xmlns:v="urn:schemas-microsoft-com:vml">
-
-<!-- index.html 고유 CSS 추가 -->
-<!--    <th:block layout:fragment="css">-->
-<!--        <link rel="stylesheet" th:href="@{/css/page/home.css}" >-->
-<!--    </th:block>-->
-
-<!-- index.html 고유 스크립트 추가 -->
-<!--    <th:block layout:fragment="script">-->
-<!--        <script th:src="@{/js/page/home.js}"></script>-->
-<!--    </th:block>-->
+      layout:decorator="layout/default_layout">
 
 <div layout:fragment="content">
-    <tr th:each="entry, index: ${salesMap}">
-        <th:block ></th:block>
+    <th:block th:replace="fragment/header :: headerFragment"></th:block>
+
+    <tr th:each="storeName: ${storeNames}">
+        <th:block
+                th:replace="fragment/storeSection :: storeSectionFragment (${storeName}, ${sales.get(storeNameStat.index)}, ${saleDscs.get(storeNameStat.index)})"></th:block>
+        <th:block th:if="${storeNameStat.first}" th:replace="fragment/divider :: dividerFragment"></th:block>
     </tr>
+
+    <th:block th:replace="fragment/footer :: footerFragment"></th:block>
 </div>
 </html>
