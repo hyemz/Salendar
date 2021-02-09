@@ -5,24 +5,17 @@ import backend.server.salendar.domain.Comment;
 import backend.server.salendar.domain.User;
 import backend.server.salendar.repository.BoardRepository;
 import backend.server.salendar.repository.CommentRepository;
-import backend.server.salendar.security.JwtTokenProvider;
+import backend.server.salendar.service.JwtService;
 import backend.server.salendar.service.UserService;
 import io.swagger.annotations.Api;
-import org.springframework.beans.NullValueInNestedPathException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.HandlerMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Api(tags = {"3. Board"})
@@ -68,7 +61,7 @@ public class BoardController {
     public Board createBoard(@RequestBody Board board,
                              HttpServletRequest request){
 
-        User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
+        User user = userService.findByToken(JwtService.resolveToken(request));
         board.setUsrEmail(user.getUsrEmail());
 
         //  현재시각 가져오기
@@ -91,7 +84,7 @@ public class BoardController {
 
         try {
             //  수정하려는 사람이 글 작성자와 일치하는지 확인
-            User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
+            User user = userService.findByToken(JwtService.resolveToken(request));
             Long boardNo = Long.parseLong(no);
             Optional<Board> board = boardRepository.findById(boardNo);
             String boardWriter = board.get().getUsrEmail();
@@ -127,7 +120,7 @@ public class BoardController {
                               HttpServletRequest request){
 
         try {
-            User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
+            User user = userService.findByToken(JwtService.resolveToken(request));
 
             Board board = boardRepository.findById(no).get();
             String boardWriter = board.getUsrEmail();

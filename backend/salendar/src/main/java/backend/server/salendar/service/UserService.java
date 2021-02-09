@@ -4,7 +4,6 @@ import backend.server.salendar.domain.Store;
 import backend.server.salendar.domain.User;
 import backend.server.salendar.repository.StoreRepository;
 import backend.server.salendar.repository.UserRepository;
-import backend.server.salendar.security.JwtTokenProvider;
 import lombok.SneakyThrows;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -77,7 +76,7 @@ public class UserService implements UserDetailsService {
      * Token으로 회원찾기
      */
     public User findByToken(String token) {
-        return loadUserByUsername(JwtTokenProvider.getUserNo(token));
+        return loadUserByUsername(JwtService.getUserNo(token));
     }
 
 

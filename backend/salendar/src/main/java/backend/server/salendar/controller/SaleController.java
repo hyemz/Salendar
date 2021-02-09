@@ -5,7 +5,7 @@ import backend.server.salendar.domain.Store;
 import backend.server.salendar.domain.User;
 import backend.server.salendar.repository.SaleRepository;
 import backend.server.salendar.repository.StoreRepository;
-import backend.server.salendar.security.JwtTokenProvider;
+import backend.server.salendar.service.JwtService;
 import backend.server.salendar.service.SaleService;
 import backend.server.salendar.service.UserService;
 import io.swagger.annotations.Api;
@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -65,7 +64,7 @@ public class SaleController {
     @ApiOperation(value = "팔로우 중인 매장의 세일 리스트")
     @GetMapping(value = "/token/list/follow")
     public ResponseEntity<Map<String, List<Sale>>> saleFollowingList(HttpServletRequest request) {
-        User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
+        User user = userService.findByToken(JwtService.resolveToken(request));
         Map<String, List<Sale>> result = saleService.findSalesByFollowingStores(user);
         if (result.isEmpty()) {
             return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
