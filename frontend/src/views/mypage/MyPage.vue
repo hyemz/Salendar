@@ -12,15 +12,17 @@
         > -->
           <v-hover v-slot="{ hover }">
             <v-avatar v-if="!hover" class="mx-auto profile" size="150">
-              <v-img src="https://cdn.pixabay.com/photo/2020/07/12/07/47/bee-5396362_1280.jpg"></v-img>
+              <v-img :src='myImg'></v-img>
             </v-avatar>
             <v-avatar v-else-if="hover" class="mx-auto d-flex justify-center align-center profile" size="150" style="position:relative">
-                <v-img src="https://cdn.pixabay.com/photo/2020/07/12/07/47/bee-5396362_1280.jpg" style="opacity:0.4"></v-img>
+                <v-img :src='myImg' style="opacity:0.4"></v-img>
                 <v-file-input
                   class="mt-0 pt-0 d-flex justify-center align-center"
-                  hide-input="true"
+                  :hide-input='true'
+                  accept="image/*"
                   prepend-icon="mdi-plus"
                   color="white"
+                  v-model="file"
                   style="position:absolute"
                 ></v-file-input>
             </v-avatar>
@@ -120,6 +122,7 @@ export default {
       changePwd: false,
       canChangePwd: false,
       myEmail: '',
+      myImg:'https://cdn.pixabay.com/photo/2020/07/12/07/47/bee-5396362_1280.jpg',
       nickname: '',
       fakenickname: '',
       accessPwd: '',
@@ -135,6 +138,8 @@ export default {
       show: false,
       isSubmit: false,
       component: this,
+      file: '',
+
     };
   },
   created() {
@@ -188,22 +193,49 @@ export default {
     changePwd: function() {
       this.checkForm();
     },
+    file: function() {
+      // this.file.type = 'multipart/form-data'
+      console.log(this.file)
+      this.myImg = URL.createObjectURL(this.file)
+    }
   },
   methods: {
     // 프로필 변경하기
     updateProfile() {
+
+      // if (this.file) {
+      //   var fd = new FormData()
+      //   fd.append('usrImg', this.file)
+      //   console.log(fd)
+        
+      //   axios.post( , fd{
+      //     headers: {
+      //       'Content-Type': 'multipart/form-data'
+      //     }
+      //   })
+      //   .then(res => {
+      //     console.log(res.data)
+      //     var imgUrl = res.data.url
+      //   })
+      //   .catch( err => {
+      //     console.log(err)
+      //   })
+      // }
+
       var userForm;
       if (this.changePwd) {
         userForm = {
           usrNick: this.nickname,
           usrPwd: this.newPwdConfirm,
           usrAlarm: this.alarm,
+          // usrImgUrl: imgUrl,
         };
       } else {
         userForm = {
           usrNick: this.nickname,
           usrPwd: this.password,
           usrAlarm: this.alarm,
+          // usrImgUrl: imgUrl
         };
       }
       // 유저 정보 변경하기

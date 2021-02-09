@@ -34,10 +34,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         // 헤더에서 JWT 를 받아옵니다.
         final Cookie jwtCookie = cookieService.getCookie(request, JwtService.ACCESS_TOKEN_NAME);
-        String token = jwtCookie.getValue();
 
         // 유효한 토큰인지 확인합니다.
-        if (token != null) {
+        if (jwtCookie != null) {
+            String token = jwtCookie.getValue();
+
             if (jwtService.validateToken(token)) {
                 Authentication authentication = jwtService.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);

@@ -74,7 +74,7 @@
                   max-width="400"
                 >
                   <v-img
-                    src="@/assets/productSample/product_image_sample.png"
+                    :src="boardImg"
                     max-height="400"
                     max-width="400"
                     contain
@@ -224,6 +224,7 @@ export default {
       comment: '',
       comments: [],
       commentinput: '',
+      boardImg:'@/assets/productSample/product_image_sample.png'
     };
   },
 
