@@ -42,6 +42,11 @@ public class User implements UserDetails {
     @JsonProperty("usrEmail")
     private String usrEmail;
 
+    // 메일 알람 수신 동의
+    @JsonProperty("usrAlarm")
+    @Builder.Default
+    private Boolean usrAlarm = false;
+
     // 팔로우 매장
     @ManyToMany
     @JsonBackReference
@@ -53,9 +58,8 @@ public class User implements UserDetails {
 
     // 프로필 이미지
     @JsonProperty("usrImgUrl")
-//    @Lob DB에 저장하는 용도
-//    private Byte[] usrImg;
-    private String usrImgUrl;
+    @Lob
+    private Byte[] usrImg;
 
     // User 모델 복사
     public void CopyData(User param) {
@@ -63,7 +67,7 @@ public class User implements UserDetails {
         this.usrPwd = param.getUsrPwd();
         this.usrNick = param.getUsrNick();
         this.usrEmail = param.getUsrEmail();
-        this.usrImgUrl = param.getUsrImgUrl();
+        this.usrImg = param.getUsrImg();
 //        this.usrFollowing = param.getUsrFollowing();
     }
 
