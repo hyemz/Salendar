@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -151,32 +152,19 @@ public class UserController {
         return new ResponseEntity<String>(user.get("usrNick"), HttpStatus.OK);
     }
 
-    // 프로필 이미지 설정 -> 이건 DB에 들어가는 용
-//    @ApiOperation(value = "프로필 이미지 설정", notes = "Img file, token")
-//    @PutMapping(value = "/token/profileImg")
-//    public ResponseEntity<String> setUserProfileImg(@ApiParam(value = "image file") @RequestParam("img") MultipartFile file,
-//                                                    HttpServletRequest request) {
-//        try {
-//            userService.saveUserImage(JwtTokenProvider.resolveToken(request), file);
-//            return new ResponseEntity<>("OK", HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
-//        }
-//    }
-
-    // 이게 우리가 정한 방법
-    @ApiOperation(value = "프로필 이미지 설정", notes = "Img file Url, token")
+//     프로필 이미지 설정 -> 이건 DB에 들어가는 용
+    @ApiOperation(value = "프로필 이미지 설정", notes = "Img file, token")
     @PutMapping(value = "/token/profileImg")
-    public ResponseEntity<String> setUserProfileImgUrl
-    (@ApiParam(value = "image file Url") @RequestParam("imgUrl") String Url,
-     HttpServletRequest request) {
+    public ResponseEntity<String> setUserProfileImg(@ApiParam(value = "image file") @RequestParam("usrImg") MultipartFile file,
+                                                    HttpServletRequest request) {
         try {
-            userService.saveUserImageUrl(JwtService.resolveToken(request), Url);
+            userService.saveUserImage(JwtService.resolveToken(request), file);
             return new ResponseEntity<>("OK", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
         }
     }
+
 
     //    팔로우
     @ApiOperation(value = "매장 팔로우", notes = "token, storeName")
