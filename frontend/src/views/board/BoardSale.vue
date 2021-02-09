@@ -10,7 +10,7 @@
       >
           <div>
               <v-card-title>
-                <h1>전체 게시판</h1>
+                <h1>세일 제보 게시판</h1>
                 <v-spacer></v-spacer>
                 <v-spacer></v-spacer>
                 <v-spacer></v-spacer>
@@ -68,8 +68,6 @@
                 data-table-header-sort-badge-min-width="300px"
               ></v-data-table>
 
-
-
               <div class="text-center pt-2">
               <v-pagination
                 v-model="page"
@@ -93,8 +91,6 @@ import axios from 'axios'
       this.getnotifications()
       // 공지사항 제외 게시판 글 가져오기
       this.getboards()
-      // 오늘 날짜 받아오기
-      this.getToday()
     },
     data () {
       return {
@@ -104,7 +100,7 @@ import axios from 'axios'
         itemsPerPage: 10,
         headers: [
           {
-            width: '90',
+            width: '100',
             text: '게시글 번호',
             align: 'center',
             sortable: false,
@@ -117,7 +113,9 @@ import axios from 'axios'
           { width: '120', text: '등록일', value: 'createdDate', align: 'center', sortable: false,},
           { width: '90', text: '조회수', value: 'hit', align: 'center', sortable: false,},
         ],
-        contents: [],
+        contents: [
+        
+        ],
       }
     },
     methods: {
@@ -133,8 +131,7 @@ import axios from 'axios'
         axios
           .get("http://localhost:8080/api/boardList/")
           .then((res) => {
-            console.log(res.data[1].createdDate.slice(undefined, 4) + "/" + res.data[1].createdDate.slice(5, 7) + "/" + res.data[1].createdDate.slice(8, 10))
-            console.log(res.data[1].createdDate.slice(undefined, 10))
+            // console.log(res.data[1].boardType)
             for (var i = 0; i < res.data.length; i++) {
               if (res.data[i].boardType === "공지사항") {
                 res.data[i].createdDate = res.data[i].createdDate.slice(2, 4) + "/" + res.data[i].createdDate.slice(5, 7) + "/" + res.data[i].createdDate.slice(8, 10)
@@ -156,41 +153,15 @@ import axios from 'axios'
           .then((res) => {
             var count = 0
             for (var i = 0; i < res.data.length; i++) {
-              if (res.data[i].boardType === "리뷰 게시판") {
-                if (res.data[i].createdDate.slice(undefined, 10) == this.getToday()) {
-                  res.data[i].createdDate = res.data[i].createdDate.slice(10)
-                } else {
-                  res.data[i].createdDate = res.data[i].createdDate.slice(2, 4) + "/" + res.data[i].createdDate.slice(5, 7) + "/" + res.data[i].createdDate.slice(8, 10)
-                }
-                count += 1
-                res.data[i].modifiedDate = count
-                res.data[i].boardType = "리뷰"
-
-                this.contents.push(res.data[i])
-                console.log(this.contents)
-              }
-              if (res.data[i].boardType === "자유 게시판") {
-                if (res.data[i].createdDate.slice(undefined, 10) == this.getToday()) {
-                  res.data[i].createdDate = res.data[i].createdDate.slice(10)
-                } else {
-                  res.data[i].createdDate = res.data[i].createdDate.slice(2, 4) + "/" + res.data[i].createdDate.slice(5, 7) + "/" + res.data[i].createdDate.slice(8, 10)
-                }
-                count += 1
-                res.data[i].modifiedDate = count
-                res.data[i].boardType = "자유"
-
-                this.contents.push(res.data[i])
-                console.log(this.contents)
-              }
               if (res.data[i].boardType === "세일 제보 게시판") {
                 if (res.data[i].createdDate.slice(undefined, 10) == this.getToday()) {
                   res.data[i].createdDate = res.data[i].createdDate.slice(10)
                 } else {
                   res.data[i].createdDate = res.data[i].createdDate.slice(2, 4) + "/" + res.data[i].createdDate.slice(5, 7) + "/" + res.data[i].createdDate.slice(8, 10)
                 }
+                res.data[i].boardType = "제보"
                 count += 1
                 res.data[i].modifiedDate = count
-                res.data[i].boardType = "제보"
 
                 this.contents.push(res.data[i])
                 console.log(this.contents)
