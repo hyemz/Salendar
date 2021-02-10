@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.CookieGenerator;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -31,9 +32,10 @@ import java.util.*;
 @CrossOrigin("http://localhost:8081")
 @RequestMapping("/api/user")
 public class UserController {
-    // 기본형
     @Autowired
-    UserService userService;
+    private UserService userService;
+    @Autowired
+    private RedisService redisService;
 
     private final UserRepository userRepository;
     private final JwtService jwtService;
@@ -73,15 +75,18 @@ public class UserController {
             if (!passwordEncoder.matches(user.get("usrPwd"), member.getPassword())) {
                 throw new IllegalArgumentException("잘못된 비밀번호입니다.");
             }
-            final String token = JwtService.createToken(member.getUsrEmail(), member.getRoles());
-            final String refreshJwt = JwtService.createRefreshToken(member.getUsrEmail(), member.getRoles());
+            final String token = JwtService.createToken(member.getUsername(), member.getRoles());
+            final String refreshJwt = JwtService.createRefreshToken(member.getUsername(), member.getRoles());
             Cookie accessToken = CookieService.createCookie(JwtService.ACCESS_TOKEN_NAME, token);
             Cookie refreshToken = CookieService.createCookie(JwtService.REFRESH_TOKEN_NAME, refreshJwt);
-            RedisService.setDataExpire(refreshJwt, member.getUsrEmail(), JwtService.REFRESH_TOKEN_VALIDATION_SECOND);
-
+            redisService.setDataExpire(refreshJwt, member.getUsername(), JwtService.REFRESH_TOKEN_VALIDATION_SECOND);
+            CookieGenerator cg = new CookieGenerator();
+            cg.setCookieName(JwtService.ACCESS_TOKEN_NAME);
+            cg.addCookie(res, token);
             res.addCookie(accessToken);
             res.addCookie(refreshToken);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(e.toString(), HttpStatus.NOT_ACCEPTABLE);
         }
         return new ResponseEntity<>(user.get("usrEmail"), HttpStatus.OK);
@@ -93,7 +98,7 @@ public class UserController {
     @GetMapping("/logout")
     public void logout(HttpServletRequest req) {
         User user = userService.findByToken(CookieService.getCookie(req, JwtService.ACCESS_TOKEN_NAME).getValue());
-        RedisService.deleteData(CookieService.getCookie(req, JwtService.REFRESH_TOKEN_NAME).getValue());
+        redisService.deleteData(CookieService.getCookie(req, JwtService.REFRESH_TOKEN_NAME).getValue());
     }
 
     // 모든 회원 조회
@@ -109,11 +114,10 @@ public class UserController {
     @GetMapping(value = "/token/mypage")
     public ResponseEntity<User> getUser(HttpServletRequest request) {
         Optional<User> user = Optional.ofNullable(userService.findByToken(jwtService.resolveToken(request)));
-        if (user.isPresent()) {
-            return new ResponseEntity<>(user.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(user.get(), HttpStatus.NOT_FOUND);
-        }
+        System.out.println(user.toString());
+        return user
+                .map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(user.get(), HttpStatus.NOT_FOUND));
     }
 
 
@@ -152,7 +156,7 @@ public class UserController {
         return new ResponseEntity<String>(user.get("usrNick"), HttpStatus.OK);
     }
 
-//     프로필 이미지 설정 -> 이건 DB에 들어가는 용
+    //     프로필 이미지 설정 -> 이건 DB에 들어가는 용
     @ApiOperation(value = "프로필 이미지 설정", notes = "Img file, token")
     @PutMapping(value = "/token/profileImg")
     public ResponseEntity<String> setUserProfileImg(@ApiParam(value = "image file") @RequestParam("usrImg") MultipartFile file,

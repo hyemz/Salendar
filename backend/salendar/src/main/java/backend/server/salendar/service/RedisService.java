@@ -3,14 +3,14 @@ package backend.server.salendar.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 
-@Service
+@Component
 public class RedisService {
     @Autowired
-    private static StringRedisTemplate stringRedisTemplate;
+    private StringRedisTemplate stringRedisTemplate;
 
     public String getData(String key) {
         ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();
@@ -22,13 +22,13 @@ public class RedisService {
         valueOperations.set(key, value);
     }
 
-    public static void setDataExpire(String key, String value, long duration) {
+    public void setDataExpire(String key, String value, long duration) {
         ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();
         Duration expireDuration = Duration.ofSeconds(duration);
         valueOperations.set(key, value, expireDuration);
     }
 
-    public static void deleteData(String key) {
+    public void deleteData(String key) {
         stringRedisTemplate.delete(key);
     }
 }

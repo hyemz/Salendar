@@ -10,7 +10,8 @@ public class CookieService {
     public static Cookie createCookie(String cookieName, String value) {
         Cookie cookie = new Cookie(cookieName, value);
         cookie.setHttpOnly(true);
-        long time = cookieName == JwtService.ACCESS_TOKEN_NAME ? JwtService.TOKEN_VALIDATION_SEDOND : JwtService.REFRESH_TOKEN_VALIDATION_SECOND;
+        long time = (cookieName == JwtService.ACCESS_TOKEN_NAME) ? JwtService.TOKEN_VALIDATION_SEDOND : JwtService.REFRESH_TOKEN_VALIDATION_SECOND;
+        System.out.println(time);
         cookie.setMaxAge((int) time);
         cookie.setPath("/");
         return cookie;

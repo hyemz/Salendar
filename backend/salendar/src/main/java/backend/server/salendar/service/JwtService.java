@@ -18,7 +18,7 @@ import java.util.List;
 @Component
 public class JwtService {
 
-    private static String secretKey = "HueHyunGoYunKim";
+    private static String secretKey = "HueHyunGoYunKimHueHyunGoYunKimHueHyunGoYunKim";
 
     // 토큰 유효시간 30분
     public final static long TOKEN_VALIDATION_SEDOND = 60 * 1000L;
@@ -45,8 +45,7 @@ public class JwtService {
                 .setClaims(claims) // 정보 저장
                 .setIssuedAt(now) // 토큰 발행 시간 정보
                 .setExpiration(new Date(now.getTime() + TOKEN_VALIDATION_SEDOND)) // set Expire Time
-                .signWith(SignatureAlgorithm.HS256, secretKey)  // 사용할 암호화 알고리즘과
-                // signature 에 들어갈 secret값 세팅
+                .signWith(SignatureAlgorithm.HS256, secretKey)  // 사용할 암호화 알고리즘과 signature 에 들어갈 secret값 세팅
                 .compact();
     }
 
@@ -58,8 +57,7 @@ public class JwtService {
                 .setClaims(claims) // 정보 저장
                 .setIssuedAt(now) // 토큰 발행 시간 정보
                 .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_VALIDATION_SECOND)) // set Expire Time
-                .signWith(SignatureAlgorithm.HS256, secretKey)  // 사용할 암호화 알고리즘과
-                // signature 에 들어갈 secret값 세팅
+                .signWith(SignatureAlgorithm.HS256, secretKey)  // 사용할 암호화 알고리즘과 signature 에 들어갈 secret값 세팅
                 .compact();
     }
 
