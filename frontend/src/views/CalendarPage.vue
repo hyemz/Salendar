@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <StoreTag />
+    <StoreTag @select="select" />
     <div class="justify-center">
       <calendar :selected="selected" />
     </div>
