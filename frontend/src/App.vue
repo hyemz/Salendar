@@ -1,6 +1,5 @@
 <template>
-  <v-app id="test">
-    <!-- 헤더 -->
+  <v-app id="main">
     <Toolbar />
 
     <v-main>
@@ -24,9 +23,11 @@ export default {
 };
 </script>
 <style>
-#test {
+#main {
   font-family: 'NanumBarunGothic';
+
 }
+
 @font-face {
   font-family: '777Balsamtint';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_nine_@1.1/777Balsamtint.woff')

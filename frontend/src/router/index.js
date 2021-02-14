@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Intro from '../views/Intro.vue'
 import Login from '../views/user/Login.vue'
 import Signup from '../views/user/Signup.vue'
 import Board from '../views/board/Board.vue'
@@ -16,6 +17,11 @@ Vue.use(VueRouter)
 
 const routes = [
 
+  {
+    path: '/',
+    name: 'Intro',
+    component: Intro,
+  },
   {
     path: '/login',
     name: 'Login',
