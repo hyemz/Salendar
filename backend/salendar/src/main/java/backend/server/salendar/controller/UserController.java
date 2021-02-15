@@ -187,6 +187,34 @@ public class UserController {
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
+    //    게시글 좋아요
+    @ApiOperation(value = "게시글 좋아요 ", notes = "token, board")
+    @PostMapping(value = "/token/like/{boardNo}")
+    public ResponseEntity<String> likePost(@PathVariable("boardNo") String no, HttpServletRequest request) throws
+            URISyntaxException {
+        try {
+            Long boardNo = Long.parseLong(no);
+            userService.likePost(JwtTokenProvider.resolveToken(request), boardNo);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("OK", HttpStatus.OK);
+    }
+
+    //    게시글 좋아요 취소
+    @ApiOperation(value = "게시글 좋아요 취소", notes = "token, board")
+    @PostMapping(value = "/token/unlike/{boardNo}")
+    public ResponseEntity<String> unlikePost(@PathVariable("boardNo") String no, HttpServletRequest request) throws
+            URISyntaxException {
+        try {
+            Long boardNo = Long.parseLong(no);
+            userService.unlikePost(JwtTokenProvider.resolveToken(request), boardNo);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("OK", HttpStatus.OK);
+    }
+
     //    팔로우 조회
     @ApiOperation(value = "팔로우 중 매장 조회")
     @GetMapping(value = "/token/followings")

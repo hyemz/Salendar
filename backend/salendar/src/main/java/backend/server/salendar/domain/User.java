@@ -1,19 +1,16 @@
 package backend.server.salendar.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.Proxy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity(name = "user")
@@ -49,12 +46,19 @@ public class User implements UserDetails {
 
     // 팔로우 매장
     @ManyToMany
-    @JsonBackReference
+    @JsonBackReference(value = "user-following")
     @JoinTable(name = "user_following",
             joinColumns = @JoinColumn(name = "usr_no"),
             inverseJoinColumns = @JoinColumn(name = "store_no"))
     private List<Store> usrFollowing = new ArrayList<Store>();
 
+    // 사용자가 좋아요 한 게시물
+    @ManyToMany
+    @JsonBackReference(value = "board-like")
+    @JoinTable(name = "board_like",
+            joinColumns = @JoinColumn(name = "usr_no"),
+            inverseJoinColumns = @JoinColumn(name = "board_no"))
+    private List<Board> boardLike = new ArrayList<Board>();
 
     // 프로필 이미지
     @JsonProperty("usrImgUrl")
@@ -113,4 +117,6 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return false;
     }
+
+
 }

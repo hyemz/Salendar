@@ -41,7 +41,7 @@ public class Store {
 
     //    팔로워
     @ManyToMany(mappedBy = "usrFollowing")
-    @JsonManagedReference
+    //@JsonManagedReference(value = "user-following")
     private List<User> users = new ArrayList<User>();
 
     // Store 모델 복사
