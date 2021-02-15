@@ -142,6 +142,10 @@ public class UserService implements UserDetailsService {
         boardRepository.findById(boardNo).ifPresent(s -> {
             User user = findByToken(token);
             user.getBoardLike().add(s);
+            Board board = boardRepository.findById(boardNo).get();
+            int curLikeCnt = board.getLikeCnt();
+            board.setLikeCnt(curLikeCnt+1);
+            boardRepository.save(board);
             userRepository.save(user);
         });
     }
@@ -152,6 +156,10 @@ public class UserService implements UserDetailsService {
         boardRepository.findById(boardNo).ifPresent(s -> {
             User user = findByToken(token);
             user.getBoardLike().remove(s);
+            Board board = boardRepository.findById(boardNo).get();
+            int curLikeCnt = board.getLikeCnt();
+            board.setLikeCnt(curLikeCnt-1);
+            boardRepository.save(board);
             userRepository.save(user);
         });
     }
