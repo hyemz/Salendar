@@ -1,7 +1,9 @@
 package backend.server.salendar.service;
 
+import backend.server.salendar.domain.Board;
 import backend.server.salendar.domain.Store;
 import backend.server.salendar.domain.User;
+import backend.server.salendar.repository.BoardRepository;
 import backend.server.salendar.repository.StoreRepository;
 import backend.server.salendar.repository.UserRepository;
 import backend.server.salendar.security.JwtTokenProvider;
@@ -14,10 +16,12 @@ import java.util.*;
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final StoreRepository storeRepository;
+    private final BoardRepository boardRepository;
 
-    public UserService(UserRepository userRepository, StoreRepository storeRepository) {
+    public UserService(UserRepository userRepository, StoreRepository storeRepository, BoardRepository boardRepository) {
         this.userRepository = userRepository;
         this.storeRepository = storeRepository;
+        this.boardRepository = boardRepository;
     }
 
 
@@ -110,6 +114,7 @@ public class UserService implements UserDetailsService {
     /*
      * 팔로우하기
      */
+
     @Transactional
     public void Follow(String token, String storeName) {
         storeRepository.findStoreByStoreName(storeName).ifPresent(s -> {
@@ -127,6 +132,26 @@ public class UserService implements UserDetailsService {
         storeRepository.findStoreByStoreName(storeName).ifPresent(s -> {
             User user = findByToken(token);
             user.getUsrFollowing().remove(s);
+            userRepository.save(user);
+        });
+    }
+
+    //  게시글 좋아요
+    @Transactional
+    public void likePost(String token, Long boardNo) {
+        boardRepository.findById(boardNo).ifPresent(s -> {
+            User user = findByToken(token);
+            user.getBoardLike().add(s);
+            userRepository.save(user);
+        });
+    }
+
+    //  게시글 좋아요 취소
+    @Transactional
+    public void unlikePost(String token, Long boardNo) {
+        boardRepository.findById(boardNo).ifPresent(s -> {
+            User user = findByToken(token);
+            user.getBoardLike().remove(s);
             userRepository.save(user);
         });
     }
