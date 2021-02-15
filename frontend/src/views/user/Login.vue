@@ -1,32 +1,58 @@
 <template>
-  <div class="d-flex flex-column justify-center align-center">
-    <h1>로그인</h1>
-    <div class="d-flex justify-center">
+  <div class="d-flex flex-column justify-center align-center mt-12">
+    <v-img :src="this.src" width="250px"></v-img>
+    <div class="d-flex justify-center align-center mt-12">
       <v-form>
         <v-text-field
+          color="main text-center"
+          class="box"
           label="이메일을 입력해주세요"
-          style="width:300px"
           v-model="email"
+          rounded
+          clearable
+          outlined
           @keypress.enter="login"
+          prepend-inner-icon="mdi-email"
           :rules="[!this.error.email || '이메일 형식에 맞춰주세요']"
         ></v-text-field>
 
         <v-text-field
+          color="main"
+          class="box"
           :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
           :type="show ? 'text' : 'password'"
           label="비밀번호를 입력해주세요"
-          style="width:300px"
           v-model="password"
+          rounded
+          outlined
+          clearable
           @keypress.enter="login"
           @click:append="show = !show"
+          prepend-inner-icon="mdi-lock"
           :rules="[!this.error.password || '영문,숫자 포함 8 자리이상이어야 합니다.']"
         ></v-text-field>
       </v-form>
     </div>
-    <v-btn elevation="2" @click="login" :disabled="!isSubmit" color="primary">login </v-btn>
+    <v-btn
+      id="login"
+      depressed
+      @click="login"
+      :disabled="!isSubmit"
+      color="main"
+      height="55px"
+      rounded
+      class="box mt-9"
+      >LOGIN
+    </v-btn>
+    <div>
+      <router-link
+        class="grey--text text-decoration-none text-darken-1 font-weight-regular d-flex mt-3"
+        to="/signup"
+        >아직 회원이 아니신가요?</router-link
+      >
+    </div>
   </div>
 </template>
-
 
 <script>
 import axios from 'axios';
@@ -37,6 +63,7 @@ export default {
   name: 'Login',
   data() {
     return {
+      src: require('@/assets/Intro/shopping-animate.min.svg'),
       email: '',
       password: '',
       passwordSchema: new PV(),
@@ -56,20 +83,20 @@ export default {
     this.component = this;
 
     this.passwordSchema
-        .is()
-        .min(8)
-        .is()
-        .max(100)
-        .has()
-        .digits()
-        .has()
-        .letters();
+      .is()
+      .min(8)
+      .is()
+      .max(100)
+      .has()
+      .digits()
+      .has()
+      .letters();
   },
   watch: {
-    password: function () {
+    password: function() {
       this.checkForm();
     },
-    email: function () {
+    email: function() {
       this.checkForm();
     },
   },
@@ -101,7 +128,7 @@ export default {
           console.log(res);
           localStorage.setItem('jwt', res.data.token);
           this.$store.dispatch('login', true);
-          this.$store.dispatch('updateFollowing', true)
+          this.$store.dispatch('updateFollowing', true);
           this.$router.push('/salelist');
         })
         .catch((err) => {
@@ -111,4 +138,19 @@ export default {
   },
 };
 </script>
-<style></style>
+<style>
+.box {
+  width: 450px;
+}
+#login {
+  align-items: center;
+  color: white;
+  display: flex;
+  flex: 1 0 auto;
+  justify-content: inherit;
+  line-height: normal;
+  position: relative;
+  transition: inherit;
+  transition-property: opacity;
+}
+</style>
