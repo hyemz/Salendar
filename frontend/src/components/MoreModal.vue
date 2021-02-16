@@ -32,7 +32,7 @@
 
                     <v-list-item-subtitle>
                       {{ $moment(this.focus.start).format('YYYY-MM-DD') }} ~
-                      {{ $moment(this.focus.end).format('YYYY-MM-DD') }}
+                      {{ $moment(this.focus.end.setDate(this.focus.end.getDate()-1)).format('YYYY-MM-DD') }}
                     </v-list-item-subtitle>
                   </template>
                 </v-list-item-content>
@@ -103,7 +103,7 @@ export default {
   watch: {
     dialog: function() {
       this.data = this.focus._def.extendedProps;
-      console.log(this.data);
+      console.log(this.focus);
       this.isDialog = this.dialog;
       this.name = this.data.storeName.substring(0, this.data.storeName.length - 3);
       this.link = this.data.saleLink;

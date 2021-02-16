@@ -12,7 +12,6 @@ import FullCalendar from '@fullcalendar/vue';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-// import { createEventId } from './event-utils';
 import { mapState } from 'vuex';
 import MoreModal from './MoreModal';
 import axios from 'axios';
@@ -79,33 +78,23 @@ export default {
           left: 'prev,next today',
           center: 'title',
           right: '',
-          // right: 'dayGridMonth,timeGridWeek,timeGridDay',
         },
         initialView: 'dayGridMonth',
-        // editable: true,
-        // selectable: true,
-        // selectMirror: true,
+
         dayMaxEvents: true,
         weekends: true,
         select: this.handleDateSelect,
         locale: 'ko',
         eventClick: this.showMore,
         eventsSet: this.handleEvents,
-        /* you can update a remote database when these fire:
-        eventAdd:
-        eventChange:
-        eventRemove:
-        */
+
       },
       currentEvents: [],
     };
   },
   created() {
     this.getSale()
-    
-    // for (const idx in this.selected){
-    //   this.calendarOptions.events.push(this.allEvents[this.selected[idx]])
-    // }
+
   },
   methods: {
     showMore(clickInfo) {
@@ -129,10 +118,13 @@ export default {
         const now = res.data
         Object.keys(now).forEach(store => {
           now[store].forEach(el => {
+            let start = new Date(el.sale_start_date)
+            let end = new Date(el.sale_end_date)
+
             this.calendarOptions.events.push({
             title: this.stores[store].name + ' ' + ' '+ el.sale_title,
-            start: el.sale_start_date,
-            end: el.sale_end_date,
+            start: new Date(start.setDate(start.getDate() + 1)),
+            end: new Date(end.setDate(end.getDate() + 2)),
             bigImg: el.sale_big_img,
             thumbnail: el.sale_thumbnail,
             saleLink: el.sale_link,
@@ -150,33 +142,6 @@ export default {
         console.log("팔로우세일 로드에 실패했습니다.", err);
       });
     },
-    // handleWeekendsToggle() {
-    //   this.calendarOptions.weekends = !this.calendarOptions.weekends; // update a property
-    // },
-    // handleDateSelect(selectInfo) {
-    //   let title = prompt('Please enter a new title for your event');
-    //   let calendarApi = selectInfo.view.calendar;
-
-    //   calendarApi.unselect(); // clear date selection
-
-    //   if (title) {
-    //     calendarApi.addEvent({
-    //       id: createEventId(),
-    //       title,
-    //       start: selectInfo.startStr,
-    //       end: selectInfo.endStr,
-    //       allDay: selectInfo.allDay,
-    //     });
-    //   }
-    // },
-    // handleEventClick(clickInfo) {
-    //   if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-    //     clickInfo.event.remove();
-    //   }
-    // },
-    // handleEvents(events) {
-    //   this.currentEvents = events;
-    // },
 
     close(isDialog) {
       this.dialog = isDialog;
