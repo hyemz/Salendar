@@ -47,6 +47,7 @@ public class UserController {
                     .usrPwd(passwordEncoder.encode(user.get("usrPwd")))
                     .usrNick(user.get("usrNick"))
                     .roles(Collections.singletonList(user.get("usrEmail").endsWith("@admin.com") ? "ROLE_ADMIN" : "ROLE_USER"))
+                    .usrAlarm(Boolean.valueOf(user.get("usrAlarm")))
                     .build());
             return new ResponseEntity<String>(user.get("usrNick"), HttpStatus.OK);
         } catch (IllegalStateException e) {
@@ -125,6 +126,7 @@ public class UserController {
                 curUser.setUsrNick(user.get("usrNick"));
             }
             curUser.setUsrPwd(passwordEncoder.encode(user.get("usrPwd")));
+            curUser.setUsrAlarm(Boolean.valueOf(user.get("userAlarm")));
             userRepository.save(curUser);
         } catch (IllegalStateException e) {
             return new ResponseEntity<String>(e.toString(), HttpStatus.BAD_REQUEST);
@@ -179,6 +181,34 @@ public class UserController {
             URISyntaxException {
         try {
             userService.unFollow(JwtTokenProvider.resolveToken(request), storeName);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("OK", HttpStatus.OK);
+    }
+
+    //    게시글 좋아요
+    @ApiOperation(value = "게시글 좋아요 ", notes = "token, board")
+    @PostMapping(value = "/token/like/{boardNo}")
+    public ResponseEntity<String> likePost(@PathVariable("boardNo") String no, HttpServletRequest request) throws
+            URISyntaxException {
+        try {
+            Long boardNo = Long.parseLong(no);
+            userService.likePost(JwtTokenProvider.resolveToken(request), boardNo);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("OK", HttpStatus.OK);
+    }
+
+    //    게시글 좋아요 취소
+    @ApiOperation(value = "게시글 좋아요 취소", notes = "token, board")
+    @PostMapping(value = "/token/unlike/{boardNo}")
+    public ResponseEntity<String> unlikePost(@PathVariable("boardNo") String no, HttpServletRequest request) throws
+            URISyntaxException {
+        try {
+            Long boardNo = Long.parseLong(no);
+            userService.unlikePost(JwtTokenProvider.resolveToken(request), boardNo);
         } catch (Exception e) {
             return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
         }

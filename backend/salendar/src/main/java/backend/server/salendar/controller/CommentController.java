@@ -69,34 +69,36 @@ public class CommentController {
     }
 
     // 댓글 수정하기
-    @GetMapping("/token/{boardNo}/comment/{commentNo}")
+    @PutMapping("/token/{boardNo}/comment/{commentNo}")
     public Comment updateComment(@PathVariable("boardNo") Long no,
                                  @PathVariable("commentNo") Long commentNo,
                                  @RequestBody Comment comment,
                                  HttpServletRequest request){
 
         try {
-            User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
-            Comment com = commentRepository.findById(commentNo).get();
-            String commentWriter = com.getUsrEmail();
+            User user = userService.findByToken(JwtTokenProvider.resolveToken(request));// 로그인한 사용자
+            Comment com = commentRepository.findById(commentNo).get();// 수정할 댓글
+            String commentWriter = com.getUsrEmail();// 수정할 댓글의 작성자
 
-            //  댓글 수정 권한 확인
+            //  댓글 수정 권한 확인 (로그인한 사용자와 수정할 댓글의 작성자가 같은지 여부 확인)
             if(!commentWriter.equals(user.getUsrEmail())){  //  댓글 수정 권한 없ㅇ음
                 return null;
             }
 
             //  댓글 수정 권한 ㅇ
             Optional<Board> boardItem = boardRepository.findById(no);
-            comment.setBoard((boardItem.get()));
             Comment newComment = commentRepository.findById(commentNo).get();
+            newComment.setBoard((boardItem.get()));
             newComment.setCommentContents(comment.getCommentContents());
-            newComment.setUsrEmail(comment.getUsrEmail());
+            newComment.setUsrEmail(user.getUsrEmail());
 
             // 댓글 작성시각 업데이트 하기
             Date date = new Date();
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String dateString = format.format(date);
             newComment.setModifiedDate(dateString);
+
+            commentRepository.save(newComment);
 
             return newComment;
 
