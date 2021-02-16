@@ -1,16 +1,29 @@
 <template>
-  <v-container class="">
+  <v-container 
+    fluid
+  >
+    <v-img
+      height="100px"
+      src="@/assets/Board/board_title.jpg"
+    >
+    </v-img>
     <v-row no-gutters>
 
-      <v-col cols="12" sm="1"></v-col>
+      <v-col cols="12" sm="2"></v-col>
 
       <v-col
         cols="12"
-        sm="10"
+        sm="8"
       >
           <div>
               <v-card-title>
-                <h1>자유 게시판</h1>
+                <v-card
+                  color="transparent"
+                  outlined="false"
+                  style="margin-top:-150px"
+                >
+                  <h1>자유 게시판</h1>
+                </v-card>
                 <v-spacer></v-spacer>
                 <v-spacer></v-spacer>
                 <v-spacer></v-spacer>
@@ -24,6 +37,8 @@
                   label="Search"
                   single-line
                   hide-details
+                  outlined
+                  rounded
                 ></v-text-field>
 
                 <v-btn
@@ -100,7 +115,7 @@ import axios from 'axios'
         itemsPerPage: 10,
         headers: [
           {
-            width: '100',
+            width: '90',
             text: '게시글 번호',
             align: 'center',
             sortable: false,

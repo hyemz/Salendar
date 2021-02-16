@@ -1,16 +1,29 @@
 <template>
-  <v-container class="">
+  <v-container 
+    fluid
+  >
+    <v-img
+      height="100px"
+      src="@/assets/Board/board_title.jpg"
+    >
+    </v-img>
     <v-row no-gutters>
 
-      <v-col cols="12" sm="1"></v-col>
+      <v-col cols="12" sm="2"></v-col>
 
       <v-col
         cols="12"
-        sm="10"
+        sm="8"
       >
           <div>
               <v-card-title>
-                <h1>전체 게시판</h1>
+                <v-card
+                  color="transparent"
+                  outlined="false"
+                  style="margin-top:-150px"
+                >
+                  <h1>전체 게시판</h1>
+                </v-card>
                 <v-spacer></v-spacer>
                 <v-spacer></v-spacer>
                 <v-spacer></v-spacer>
@@ -24,6 +37,9 @@
                   label="Search"
                   single-line
                   hide-details
+                  outlined
+                  rounded
+                  height="10px"
                 ></v-text-field>
 
                 <v-btn
@@ -36,7 +52,6 @@
                   </v-icon>
                   New
                 </v-btn>
-
               </v-card-title>
                 <v-tabs>
                   <v-tab to="/board" class="ml-1 text-decoration-none font-weight-medium">
@@ -66,6 +81,8 @@
                 sort-by="modifiedDate"
                 @click:row="rowClick"
                 data-table-header-sort-badge-min-width="300px"
+                background-color="black"
+                flat
               ></v-data-table>
 
 
@@ -79,7 +96,7 @@
           </div>
       </v-col>
 
-      <v-col cols="12" sm="1"></v-col>
+      <v-col cols="12" sm="2"></v-col>
 
     </v-row>
   </v-container>
@@ -221,5 +238,12 @@ import axios from 'axios'
 }
 .v-application--is-ltr .v-data-table > .v-data-table__wrapper > table > thead > tr > th {
   text-align: center;
+}
+element.style {
+    padding-bottom: 0%;
+    background-color: black;
+}
+.v-responsive__sizer {
+    flex: 0px;
 }
 </style>

@@ -13,7 +13,6 @@ import MyPage from '../views/mypage/MyPage.vue'
 import MyPost from '../views/mypage/MyPost.vue'
 import WishList from '../views/mypage/WishList.vue'
 import SaleList from '../views/SaleList.vue'
-import HoverTest from '../views/HoverTest.vue'
 
 
 Vue.use(VueRouter)
@@ -85,11 +84,6 @@ const routes = [
     path: '/salelist',
     name: 'SaleList',
     component: SaleList
-  },
-  {
-    path: '/hovertest',
-    name: 'HoverTest',
-    component: HoverTest
   },
 
 ]
