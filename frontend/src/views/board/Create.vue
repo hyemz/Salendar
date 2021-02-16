@@ -16,16 +16,24 @@
           <v-card>
 
           <v-card-text
-          >분류
+          ><h2 style="color: grey">분류</h2>
           </v-card-text>
 
           <v-col
             class="pl-4"
             cols="12"
-            sm="3"
+            sm="4"
             >
             <v-select
+            v-if="this.myEmail === 'master@master.com'"
             :items="category"
+            label="글의 분류를 선택하세요"
+            outlined
+            v-model="type"
+            ></v-select>
+            <v-select
+            v-else
+            :items="category2"
             label="글의 분류를 선택하세요"
             outlined
             v-model="type"
@@ -34,7 +42,7 @@
 
 
           <v-card-text
-          >제목
+          ><h2 style="color: grey">제목</h2>
           </v-card-text>
           
           <v-text-field
@@ -47,7 +55,7 @@
             ></v-text-field>
 
           <v-card-text
-          >내용
+          ><h2 style="color: grey">내용</h2>
           </v-card-text>
 
           <v-textarea
@@ -61,7 +69,7 @@
             ></v-textarea>
 
           <v-card-text
-          >TAG
+          ><h2 style="color: grey">TAG</h2>
           </v-card-text>
 
           <v-text-field
@@ -71,14 +79,13 @@
             ></v-text-field>
 
           <v-card-text
-          >파일첨부
+          ><h2 style="color: grey">파일첨부</h2>
           </v-card-text>
 
           <v-file-input
             truncate-length="15"
             class="pl-5 pr-5 mb-4"
             ></v-file-input>
-
           <v-btn 
             class="mr-1 ml-4 mb-6"
             elevation="2"
@@ -196,9 +203,11 @@ export default {
       type: '',
       title: '',
       content: '',
+      myEmail: '',
       itemss: [],
       // template의 분류에 들어가는 내용
-      category: ['자유게시판', '리뷰 게시판', '세일 제보 게시판',],
+      category: ['자유 게시판', '리뷰 게시판', '세일 제보 게시판', '공지사항'],
+      category2: ['자유 게시판', '리뷰 게시판', '세일 제보 게시판'],
       // 제목과 내용의 작성 규칙을 정해주는 내용
       titlerules: [
         value => (value && value.length >= 3) || '최소 3글자 이상 입력해 주세요',
@@ -219,6 +228,23 @@ export default {
       .then((res) => {
         this.itemss = res.data
         console.log(res.data)
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    const headers = {
+      "x-auth-token": localStorage.getItem('jwt'),
+    };
+    const baseURL = "http://localhost:8080/";
+    axios
+      .create({
+        baseURL,
+        headers,
+      })
+      .get('api/user/token/mypage')
+      .then((res) => {
+        console.log(res.data.usrEmail);
+        this.myEmail = res.data.usrEmail;
       })
       .catch((err) => {
         console.log(err);
@@ -270,6 +296,25 @@ export default {
           // 제목과 내용의 길이 주의 문구를 따로 설정해 주면 좋을 것 같음 ((((진행 중))))
         }
     },
+    // 글의 제목과 내용의 글자 수 제한 확인
+    // checkForm() {
+    //   if (this.title >= 0 && !EV.validate(this.email)) this.error.email = true;
+    //   else this.error.email = false;
+
+    //   if (this.password.length >= 0 && !this.passwordSchema.validate(this.password))
+    //     this.error.password = true;
+    //   else this.error.password = false;
+
+    //   if (this.passwordConfirm.length >= 0 && this.password !== this.passwordConfirm)
+    //     this.error.passwordConfirm = '패스워드와 일치하지 않습니다.';
+    //   else this.error.passwordConfirm = false;
+
+    //   let isSubmit = true;
+    //   Object.values(this.error).map((v) => {
+    //     if (v || !this.nickname) isSubmit = false;
+    //   });
+    //   this.isSubmit = isSubmit;
+    // },
     // 글 수정 함수
     update () {
       // template에서 수정된 내용을 묶음

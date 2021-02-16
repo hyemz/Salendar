@@ -4,6 +4,9 @@ import Intro from '../views/Intro.vue'
 import Login from '../views/user/Login.vue'
 import Signup from '../views/user/Signup.vue'
 import Board from '../views/board/Board.vue'
+import BoardFree from '../views/board/BoardFree.vue'
+import BoardReview from '../views/board/BoardReview.vue'
+import BoardSale from '../views/board/BoardSale.vue'
 import Create from '../views/board/Create.vue'
 import Calendar from '../views/CalendarPage.vue'
 import Detail from '../views/board/Detail.vue'
@@ -37,6 +40,21 @@ const routes = [
     path: '/board',
     name: 'Board',
     component: Board
+  },
+  {
+    path: '/board/free',
+    name: 'BoardFree',
+    component: BoardFree
+  },
+  {
+    path: '/board/review',
+    name: 'BoardReview',
+    component: BoardReview
+  },
+  {
+    path: '/board/sale',
+    name: 'BoardSale',
+    component: BoardSale
   },
   {
     path: '/calendar',
