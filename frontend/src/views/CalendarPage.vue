@@ -1,29 +1,36 @@
 <template>
-  <div class="wrap">
-    <StoreList @select="select"/>
-    <calendar :selected="selected" />
-  </div>
+  <v-app>
+    <StoreTag @select="select" />
+    <div class="justify-center">
+      <calendar :selected="selected" />
+    </div>
+    <div class="wrap">
+      <!-- <StoreList @select="select" /> -->
+    </div>
+  </v-app>
 </template>
 
 <script>
 import Calendar from '../components/Calendar';
-import StoreList from '@/components/StoreList';
+// import StoreList from '@/components/StoreList';
+import StoreTag from '@/components/StoreTag';
 export default {
-  name:'CalendarPage',
+  name: 'CalendarPage',
   components: {
     Calendar,
-    StoreList,
+    // StoreList,
+    StoreTag,
   },
-  data () {
+  data() {
     return {
-      selected: []
-    }
+      selected: [],
+    };
   },
   methods: {
-    select (selected) {
-      this.selected = selected
-    }
-  }
+    select(selected) {
+      this.selected = selected;
+    },
+  },
 };
 </script>
 <style scoped>

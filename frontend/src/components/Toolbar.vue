@@ -12,7 +12,7 @@
         <v-toolbar-title 
           color="#6A76AB"
           class="white--text text-decoration-none font-weight-medium" 
-          ><router-link to="/calendar" class="text-decoration-none font-weight-medium"
+          ><router-link to="/" class="text-decoration-none font-weight-medium"
             ><v-img contain src="@/assets/logo.png" width=160></v-img></router-link
           ></v-toolbar-title
         >

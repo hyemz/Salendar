@@ -22,7 +22,7 @@
                   outlined="false"
                   style="margin-top:-150px"
                 >
-                  <h1>전체 게시판</h1>
+                  <h1>리뷰 게시판</h1>
                 </v-card>
                 <v-spacer></v-spacer>
                 <v-spacer></v-spacer>
@@ -39,7 +39,6 @@
                   hide-details
                   outlined
                   rounded
-                  height="10px"
                 ></v-text-field>
 
                 <v-btn
@@ -52,6 +51,7 @@
                   </v-icon>
                   New
                 </v-btn>
+
               </v-card-title>
                 <v-tabs>
                   <v-tab to="/board" class="ml-1 text-decoration-none font-weight-medium">
@@ -81,11 +81,7 @@
                 sort-by="modifiedDate"
                 @click:row="rowClick"
                 data-table-header-sort-badge-min-width="300px"
-                background-color="black"
-                flat
               ></v-data-table>
-
-
 
               <div class="text-center pt-2">
               <v-pagination
@@ -96,7 +92,7 @@
           </div>
       </v-col>
 
-      <v-col cols="12" sm="2"></v-col>
+      <v-col cols="12" sm="1"></v-col>
 
     </v-row>
   </v-container>
@@ -110,8 +106,6 @@ import axios from 'axios'
       this.getnotifications()
       // 공지사항 제외 게시판 글 가져오기
       this.getboards()
-      // 오늘 날짜 받아오기
-      this.getToday()
     },
     data () {
       return {
@@ -134,7 +128,9 @@ import axios from 'axios'
           { width: '120', text: '등록일', value: 'createdDate', align: 'center', sortable: false,},
           { width: '90', text: '조회수', value: 'hit', align: 'center', sortable: false,},
         ],
-        contents: [],
+        contents: [
+        
+        ],
       }
     },
     methods: {
@@ -150,8 +146,7 @@ import axios from 'axios'
         axios
           .get("http://localhost:8080/api/boardList/")
           .then((res) => {
-            console.log(res.data[1].createdDate.slice(undefined, 4) + "/" + res.data[1].createdDate.slice(5, 7) + "/" + res.data[1].createdDate.slice(8, 10))
-            console.log(res.data[1].createdDate.slice(undefined, 10))
+            // console.log(res.data[1].boardType)
             for (var i = 0; i < res.data.length; i++) {
               if (res.data[i].boardType === "공지사항") {
                 res.data[i].createdDate = res.data[i].createdDate.slice(2, 4) + "/" + res.data[i].createdDate.slice(5, 7) + "/" + res.data[i].createdDate.slice(8, 10)
@@ -179,35 +174,9 @@ import axios from 'axios'
                 } else {
                   res.data[i].createdDate = res.data[i].createdDate.slice(2, 4) + "/" + res.data[i].createdDate.slice(5, 7) + "/" + res.data[i].createdDate.slice(8, 10)
                 }
-                count += 1
-                res.data[i].modifiedDate = count
                 res.data[i].boardType = "리뷰"
-
-                this.contents.push(res.data[i])
-                console.log(this.contents)
-              }
-              if (res.data[i].boardType === "자유 게시판") {
-                if (res.data[i].createdDate.slice(undefined, 10) == this.getToday()) {
-                  res.data[i].createdDate = res.data[i].createdDate.slice(10)
-                } else {
-                  res.data[i].createdDate = res.data[i].createdDate.slice(2, 4) + "/" + res.data[i].createdDate.slice(5, 7) + "/" + res.data[i].createdDate.slice(8, 10)
-                }
                 count += 1
                 res.data[i].modifiedDate = count
-                res.data[i].boardType = "자유"
-
-                this.contents.push(res.data[i])
-                console.log(this.contents)
-              }
-              if (res.data[i].boardType === "세일 제보 게시판") {
-                if (res.data[i].createdDate.slice(undefined, 10) == this.getToday()) {
-                  res.data[i].createdDate = res.data[i].createdDate.slice(10)
-                } else {
-                  res.data[i].createdDate = res.data[i].createdDate.slice(2, 4) + "/" + res.data[i].createdDate.slice(5, 7) + "/" + res.data[i].createdDate.slice(8, 10)
-                }
-                count += 1
-                res.data[i].modifiedDate = count
-                res.data[i].boardType = "제보"
 
                 this.contents.push(res.data[i])
                 console.log(this.contents)
@@ -238,12 +207,5 @@ import axios from 'axios'
 }
 .v-application--is-ltr .v-data-table > .v-data-table__wrapper > table > thead > tr > th {
   text-align: center;
-}
-element.style {
-    padding-bottom: 0%;
-    background-color: black;
-}
-.v-responsive__sizer {
-    flex: 0px;
 }
 </style>
