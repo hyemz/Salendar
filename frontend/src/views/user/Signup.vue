@@ -1,12 +1,16 @@
-	
 <template>
-  <div class="d-flex flex-column justify-center align-center">
-    <h1>회원가입</h1>
-    <div class="d-flex justify-center">
+  <div class="d-flex flex-column justify-center align-center mt-12">
+    <v-img :src="this.src" width="200px"></v-img>
+    <div class="d-flex justify-center mt-8">
       <v-form>
         <v-text-field
           label="이메일을 입력해주세요"
-          style="width:300px"
+          class="box"
+          color="main"
+          rounded
+          clearable
+          outlined
+          prepend-inner-icon="mdi-email-outline"
           v-model="email"
           @keypress.enter="login"
           :rules="[!this.error.email || '이메일 형식에 맞춰주세요']"
@@ -14,16 +18,26 @@
 
         <v-text-field
           label="닉네임을 입력해주세요"
-          style="width:300px"
+          class="box"
+          color="main"
+          rounded
+          outlined
+          clearable
+          prepend-inner-icon="mdi-emoticon-cool-outline"
           v-model="nickname"
           @keypress.enter="login"
         ></v-text-field>
 
         <v-text-field
+          class="box"
           :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
           :type="show ? 'text' : 'password'"
           label="비밀번호를 입력해주세요"
-          style="width:300px"
+          rounded
+          color="main"
+          outlined
+          clearable
+          prepend-inner-icon="mdi-lock-outline"
           v-model="password"
           @keypress.enter="login"
           @click:append="show = !show"
@@ -31,21 +45,40 @@
         ></v-text-field>
 
         <v-text-field
+          class="box"
+          rounded
+          color="main"
+          outlined
+          clearable
           :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
           :type="show ? 'text' : 'password'"
           label="비밀번호를 다시 입력해주세요"
-          style="width:300px"
+          prepend-inner-icon="mdi-lock-check-outline"
           v-model="passwordConfirm"
           @keypress.enter="login"
           @click:append="show = !show"
           :rules="[!this.error.passwordConfirm || this.error.passwordConfirm]"
         ></v-text-field>
+        <v-checkbox
+          class="cbox"
+          v-model="alarm"
+          color="sub"
+          label="찜한 매장의 세일 정보를 메일로 받겠습니다."
+        ></v-checkbox>
       </v-form>
     </div>
-    <v-btn elevation="2" @click="signup" :disabled="!isSubmit" color="primary">signup </v-btn>
+    <v-btn
+      id="join"
+      :disabled="!isSubmit"
+      @click="signup"
+      color="main"
+      height="55px"
+      rounded
+      class="box mt-9"
+      >JOIN SALENDAR
+    </v-btn>
   </div>
 </template>
-
 
 <script>
 import axios from 'axios';
@@ -56,10 +89,12 @@ export default {
   name: 'Signup',
   data() {
     return {
+      src: require('@/assets/Intro/Timeline-bro.svg'),
       email: '',
       nickname: '',
       password: '',
       passwordConfirm: '',
+      alarm: false,
       passwordSchema: new PV(),
       error: {
         email: false,
@@ -78,26 +113,26 @@ export default {
     this.component = this;
 
     this.passwordSchema
-        .is()
-        .min(8)
-        .is()
-        .max(100)
-        .has()
-        .digits()
-        .has()
-        .letters();
+      .is()
+      .min(8)
+      .is()
+      .max(100)
+      .has()
+      .digits()
+      .has()
+      .letters();
   },
   watch: {
-    password: function () {
+    password: function() {
       this.checkForm();
     },
-    passwordConfirm: function () {
+    passwordConfirm: function() {
       this.checkForm();
     },
-    email: function () {
+    email: function() {
       this.checkForm();
     },
-    nickname: function () {
+    nickname: function() {
       this.checkForm();
     },
   },
@@ -127,6 +162,7 @@ export default {
         usrNick: this.nickname,
         usrEmail: this.email,
         usrPwd: this.password,
+        usrAlarm: this.alarm,
       };
       axios
         .post('http://localhost:8080/api/user/join', ResisterForm)
@@ -142,4 +178,30 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.box {
+  width: 450px;
+  color: 'main';
+}
+.v-text-field__slot {
+  margin-left: 6px;
+}
+#join {
+  align-items: center;
+  color: white;
+  display: flex;
+  flex: 1 0 auto;
+  justify-content: inherit;
+  line-height: normal;
+  position: relative;
+  transition: inherit;
+  transition-property: opacity;
+}
+.cbox {
+  padding-left: 15px;
+}
+.v-input--selection-controls {
+  margin-top: 0px !important;
+  padding-top: 0px !important;
+}
+</style>

@@ -12,8 +12,8 @@ import FullCalendar from '@fullcalendar/vue';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { createEventId } from './event-utils';
-
+// import { createEventId } from './event-utils';
+import { mapState } from 'vuex';
 import MoreModal from './MoreModal';
 import axios from 'axios';
 
@@ -25,139 +25,49 @@ export default {
   props: {
     selected: Array,
   },
+  computed: {
+    ...mapState(['following']),
+  },
   data: function() {
     return {
       dialog: false,
       focus: null,
-      allEvents: [
-          // {
-          //   title: "올리브영 🥑",
-          //   start: new Date("2021-01-01"),
-          //   end: new Date("2021-01-10"),
-          //   allDay:true,
-          //   color: "#A2D42F",
-          //   forceEventDuration:true
-          // },
-          // {
-          //   title: '랄라블라 💗',
-          //   start: new Date("2021-01-01"),
-          //   end: new Date("2021-01-10"),
-          //   allDay:true,
-          //   color: "#012E40",
-          //   // borderColor: 'black',
-          // },
-          // {
-          //   title: "에뛰드 하우스 👑",
-          //   start: new Date("2021-01-01"),
-          //   end: new Date("2021-01-10"),
-          //   allDay:true,
-          //   color:"#F27EA9",
-          // },
-          // {
-          //   title: "미샤 💋",
-          //   start: new Date("2021-01-01"),
-          //   end: new Date("2021-01-10"),
-          //   allDay:true,
-          //   color:"#D9043D",
-          // },
-          // {
-          //   title: "아리따움 🎀",
-          //   start: new Date("2021-01-01"),
-          //   end: new Date("2021-01-10"),
-          //   allDay:true,
-          //   color:"#F2ACAC",
-          // },
-          // {
-          //   title: "더 페이스샵 👩",
-          //   start: new Date("2021-01-01"),
-          //   end: new Date("2021-01-10"),
-          //   allDay:true,
-          //   color:"#9CBF4E",
-          // },
-          // {
-          //   title: "토니모리 🐼",
-          //   start: new Date("2021-01-01"),
-          //   end: new Date("2021-01-10"),
-          //   allDay:true,
-          //   color:"#121212",
-          // },
-          // {
-          //   title: "이니스프리 🌿",
-          //   start: new Date("2021-01-01"),
-          //   end: new Date("2021-01-10"),
-          //   allDay:true,
-          //   color:"#C0D99C",
-          //   textColor:'black',
-          // },
-          {
-            title: '올리브영 🥑',
-            start: new Date('2021-01-01'),
-            end: new Date('2021-01-10'),
-            allDay: true,
-            color: '#BDEDD1',
-            textColor: '#50555C',
-            content:"21년 올리브영 대박세일!",
-            fav:true,
-          },
-          {
-            title: '랄라블라 💗',
-            start: '2021-01-05',
-            end: new Date('2021-01-15'),
-            allDay: true,
-            color: '#FFCFDC',
-            textColor: '#50555C',
-          },
-          {
-            title: '이니스프리 🌿',
-            start: '2021-01-11',
-            end: new Date('2021-01-30'),
-            allDay: true,
-            color: '#f7f8fb',
-            textColor: '#50555C',
-            id: '111',
-            borderColor:'#CCD1D1',
-          },
-          {
-            title: '더 페이스샵 👩',
-            start: '2021-01-20',
-            end: new Date('2021-01-30'),
-            allDay: true,
-            color: '#DFC6FF',
-            textColor: '#50555C',
-          },
-          {
-            title: '에뛰드 하우스 👑',
-            start: '2021-01-07',
-            end: new Date('2021-01-17'),
-            allDay: true,
-            color: '#CFE4FF',
-            textColor: '#50555C',
-          },
-          {
-            title: '미샤 💋',
-            start: '2021-01-10',
-            end: new Date('2021-01-25'),
-            allDay: true,
-            color: '#FBEC8F',
-            textColor: '#50555C',
-          },
-          {
-            title: '아리따움 🎀',
-            start: '2021-01-13',
-            end: new Date('2021-01-23'),
-            allDay: true,
-            color: '#FFDABD',
-            textColor: '#50555C',
-          },
-          {
-            title: '토니모리 🐼',
-            start: '2021-01-25',
-            end: new Date('2021-01-30, 15:00:00 GMT'),
-            allDay: true,
-            color: '#CCD1D1',
-            textColor: '#50555C',
-          },
-      ],
+      followingEvents: [],
+      stores:{
+        Oliveyoung: {
+          name: '올리브영 🥑',
+          color: '#BDEDD1',
+        },
+        Lalavla: {
+          name: '랄라블라 💗',
+          color: '#FFCFDC',
+        },
+
+        Innisfree: {
+          name: '이니스프리 🌿',
+          color: '#f7f8fb',
+        },
+        Thefaceshop: {
+          name: '더 페이스샵 👩',
+          color: '#DFC6FF',
+        },
+        Etude: {
+          name: '에뛰드 하우스 👑',
+          color: '#CFE4FF',
+        },
+        Missha: {
+          name: '미샤 💋',
+          color: '#FBEC8F',
+        },
+        Aritaum: {
+          name: '아리따움 🎀',
+          color: '#FFDABD',
+        },
+        Tonymoly: {
+          name: '토니모리 🐼',
+          color: '#CCD1D1',
+        },
+      },
       calendarOptions: {
         events: [],
         plugins: [
@@ -191,64 +101,90 @@ export default {
     };
   },
   created() {
-    axios
-      .get()
-      .then((res) => {
-        this.events = res.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    for (const idx in this.selected){
-      this.calendarOptions.events.push(this.allEvents[this.selected[idx]])
-    }
-    console.log(this.calendarOptions.events)
+    this.getSale()
+    
+    // for (const idx in this.selected){
+    //   this.calendarOptions.events.push(this.allEvents[this.selected[idx]])
+    // }
   },
   methods: {
     showMore(clickInfo) {
       this.dialog = true;
       this.focus = clickInfo.event;
     },
-    handleWeekendsToggle() {
-      this.calendarOptions.weekends = !this.calendarOptions.weekends; // update a property
+    getSale(){
+      // 팔로우 한 세일정보 가져오기
+      const headers = {
+            "x-auth-token": localStorage.getItem("jwt"),
+        };
+      const baseURL = "http://localhost:8080";
+      axios
+      .create({
+          baseURL,
+          headers,
+      })
+      .get('/api/sale/token/list/follow')
+      .then((res) => {
+        this.calendarOptions.events = []
+        const now = res.data
+        Object.keys(now).forEach(store => {
+          now[store].forEach(el => {
+            this.calendarOptions.events.push({
+            title: this.stores[store].name + ' ' + ' '+ el.sale_title,
+            start: el.sale_start_date,
+            end: el.sale_end_date,
+            bigImg: el.sale_big_img,
+            thumbnail: el.sale_thumbnail,
+            saleLink: el.sale_link,
+            storeName: this.stores[store].name,
+            saleTitle: el.sale_title,
+            saleDsc: el.sale_dsc,
+            allDay: true,
+            color: this.stores[store].color,
+            textColor: '#50555C',
+            })
+          })
+        })
+      })
+      .catch((err) => {
+        console.log("팔로우세일 로드에 실패했습니다.", err);
+      });
     },
-    handleDateSelect(selectInfo) {
-      let title = prompt('Please enter a new title for your event');
-      let calendarApi = selectInfo.view.calendar;
+    // handleWeekendsToggle() {
+    //   this.calendarOptions.weekends = !this.calendarOptions.weekends; // update a property
+    // },
+    // handleDateSelect(selectInfo) {
+    //   let title = prompt('Please enter a new title for your event');
+    //   let calendarApi = selectInfo.view.calendar;
 
-      calendarApi.unselect(); // clear date selection
+    //   calendarApi.unselect(); // clear date selection
 
-      if (title) {
-        calendarApi.addEvent({
-          id: createEventId(),
-          title,
-          start: selectInfo.startStr,
-          end: selectInfo.endStr,
-          allDay: selectInfo.allDay,
-        });
-      }
-    },
+    //   if (title) {
+    //     calendarApi.addEvent({
+    //       id: createEventId(),
+    //       title,
+    //       start: selectInfo.startStr,
+    //       end: selectInfo.endStr,
+    //       allDay: selectInfo.allDay,
+    //     });
+    //   }
+    // },
+    // handleEventClick(clickInfo) {
+    //   if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
+    //     clickInfo.event.remove();
+    //   }
+    // },
+    // handleEvents(events) {
+    //   this.currentEvents = events;
+    // },
 
-    handleEventClick(clickInfo) {
-      if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-        clickInfo.event.remove();
-      }
-    },
-
-    handleEvents(events) {
-      this.currentEvents = events;
-    },
-    close(dialog) {
-      this.dialog = dialog;
+    close(isDialog) {
+      this.dialog = isDialog;
     },
   },
   watch: {
     selected: function () {
-      this.calendarOptions.events = []
-      for (const idx in this.selected){
-      this.calendarOptions.events.push(this.allEvents[this.selected[idx]])
-    }
-    console.log(this.calendarOptions.events)
+      this.getSale()
     }
   }
 };

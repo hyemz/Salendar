@@ -7,11 +7,12 @@ import backend.server.salendar.repository.SaleRepository;
 import backend.server.salendar.repository.StoreRepository;
 import backend.server.salendar.repository.UserRepository;
 import lombok.SneakyThrows;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.transaction.Transactional;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -27,12 +28,24 @@ public class SaleService {
     }
 
     @SneakyThrows
+//    @Scheduled(cron = "0 30 6 * * *", zone = "Asia/Seoul")
     public void crawlAll() {
+        List<Sale> cursales = saleRepository.findAll();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date today = Calendar.getInstance(TimeZone.getTimeZone("Asia/Seoul")).getTime();
+        for (Sale sale : cursales) {
+            if (Math.abs((sale.getSaleEndDate().getTime() - today.getTime()) / (24 * 60 * 60 * 1000)) > 365) {
+                saleRepository.delete(sale);
+            }
+        }
+
         Class[] noParam = {};
         Class cls = Class.forName("backend.server.salendar.util.Crawler");
         Object obj = cls.newInstance();
 
         Stream<Store> stores = storeRepository.findAll().stream();
+
+        Pattern pattern = Pattern.compile("(?m)^(\\[(.*?)\\])");
 
         stores.forEach(store -> {
             try {
@@ -40,11 +53,18 @@ public class SaleService {
                 List<Sale> sales = (List<Sale>) method.invoke(obj, null);
                 System.out.println("Store: " + store.getStoreName() + ", size: " + sales.size());
                 sales.stream()
-                        .filter(sale -> saleFilter(sale))
                         .forEach(sale -> {
                             saleRepository.findBySaleTitle(sale.getSaleTitle()).orElseGet(() -> {
                                 sale.setStore(store);
-                                if (sale.getSaleBigImg() == null) {
+                                if (pattern.matcher(sale.getSaleTitle()).find()) {
+                                    String newTitle = pattern.matcher(sale.getSaleTitle()).group();
+                                    sale.setSaleTitle(newTitle);
+                                }
+                                if (pattern.matcher(sale.getSaleDsc()).find()) {
+                                    String newDsc = pattern.matcher(sale.getSaleDsc()).group();
+                                    sale.setSaleDsc(newDsc);
+                                }
+                                if (sale.getSaleBigImg().strip().length() < 5) {
                                     sale.setSaleBigImg(sale.getSaleThumbnail());
                                 }
                                 if (sale.getSaleEndDate() == null) {
@@ -54,6 +74,7 @@ public class SaleService {
                                     sale.setSaleEndDate(cal.getTime());
                                 }
                                 saleRepository.save(sale);
+                                System.out.println(sale);
                                 return sale;
                             });
                         });
@@ -63,63 +84,32 @@ public class SaleService {
         });
     }
 
-    @SneakyThrows
-    public Boolean saleFilter(Sale sale) {
-
-
-//      기간 필터링: 기간이 10일 이하
-        if (sale.getSaleEndDate() != null) {
-            long eventPeriod = sale.getSaleEndDate().getTime() - sale.getSaleStartDate().getTime();
-            long eventPeriodInDays = eventPeriod / (24 * 60 * 60 * 1000);
-
-            if (eventPeriodInDays > 15) {
-                return false;
-            }
-        }
-
-
-//      불필요 단어 + 과도한 % 필터링
-        List<String> donIncludeWords = Arrays.asList("카드", "출석", "출첵", "LIVE", "쿠폰", "사은품", "증정");
-        List<Pattern> patterns = new ArrayList<>();
-        for (String word : donIncludeWords) {
-            patterns.add(Pattern.compile("(?m)" + word));
-        }
-        for (Pattern pattern : patterns) {
-            if (pattern.matcher(sale.getSaleTitle()).find()
-                    || pattern.matcher(sale.getSaleDsc()).find()) {
-                return false;
-            }
-        }
-
-        List<Pattern> patterns2 = Arrays.asList(Pattern.compile("(?m)\\d*%"), Pattern.compile("(?m)\\d*.\\d*%"));
-        for (Pattern pattern : patterns2) {
-            Optional<Double> per = Optional.empty();
-            Matcher matcher = pattern.matcher(sale.getSaleTitle());
-            while (matcher.find()) {
-                if (per.isPresent() && Double.parseDouble(matcher.group()) < per.get()) {
-                    per = Optional.of(Double.parseDouble(matcher.group()));
-                }
-            }
-            Matcher matcher2 = pattern.matcher(sale.getSaleDsc());
-            while (matcher2.find()) {
-                if (per.isPresent() && Double.parseDouble(matcher2.group()) < per.get()) {
-                    per = Optional.of(Double.parseDouble(matcher2.group()));
-                }
-            }
-        }
-        return true;
-    }
-
     @Transactional
     public Map<String, List<Sale>> findSalesByFollowingStores(User user) {
         Map<String, List<Sale>> result = new HashMap<>();
         user.getUsrFollowing()
                 .stream()
                 .forEach(store -> {
-                    System.out.println(store);
-                    result.put(store.getStoreName(), new ArrayList<>());
-                    saleRepository.findSalesByStore(store)
-                            .forEach(res -> result.get(store.getStoreName()).add(res));
+                    if (!saleRepository.findSalesByStore(store).isEmpty()) {
+                        result.put(store.getStoreName(), new ArrayList<>());
+                        saleRepository.findSalesByStore(store)
+                                .forEach(res -> result.get(store.getStoreName()).add(res));
+                    }
+                });
+        return result;
+    }
+
+    @Transactional
+    public Map<String, List<Sale>> findSalesByStores() {
+        Map<String, List<Sale>> result = new HashMap<>();
+        storeRepository.findAll()
+                .stream()
+                .forEach(store -> {
+                    if (!saleRepository.findSalesByStore(store).isEmpty()) {
+                        result.put(store.getStoreName(), new ArrayList<>());
+                        saleRepository.findSalesByStore(store)
+                                .forEach(res -> result.get(store.getStoreName()).add(res));
+                    }
                 });
         return result;
     }

@@ -1,8 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Intro from '../views/Intro.vue'
 import Login from '../views/user/Login.vue'
 import Signup from '../views/user/Signup.vue'
 import Board from '../views/board/Board.vue'
+import BoardFree from '../views/board/BoardFree.vue'
+import BoardReview from '../views/board/BoardReview.vue'
+import BoardSale from '../views/board/BoardSale.vue'
 import Create from '../views/board/Create.vue'
 import Calendar from '../views/CalendarPage.vue'
 import Detail from '../views/board/Detail.vue'
@@ -16,6 +20,11 @@ Vue.use(VueRouter)
 
 const routes = [
 
+  {
+    path: '/',
+    name: 'Intro',
+    component: Intro,
+  },
   {
     path: '/login',
     name: 'Login',
@@ -33,17 +42,32 @@ const routes = [
     component: Board
   },
   {
+    path: '/board/free',
+    name: 'BoardFree',
+    component: BoardFree
+  },
+  {
+    path: '/board/review',
+    name: 'BoardReview',
+    component: BoardReview
+  },
+  {
+    path: '/board/sale',
+    name: 'BoardSale',
+    component: BoardSale
+  },
+  {
     path: '/calendar',
     name: 'Calendar',
     component: Calendar
   },
   {
-    path: '/board/create',
+    path: '/board/create/:boardNo?',
     name: 'Create',
     component: Create
   },
   {
-    path: '/board/detail',
+    path: '/board/detail/:boardNo',
     name: 'Detail',
     component: Detail
   },

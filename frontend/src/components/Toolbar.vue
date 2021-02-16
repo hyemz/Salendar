@@ -11,9 +11,9 @@
       <v-col>
         <v-toolbar-title 
           color="#6A76AB"
-          class="white--text text-decoration-none mb-2 font-weight-medium" 
-          ><router-link to="/calendar" class="text-decoration-none mb-2 font-weight-medium"
-            ><v-img contain src="@/assets/logo.png" width=150></v-img></router-link
+          class="white--text text-decoration-none font-weight-medium" 
+          ><router-link to="/" class="text-decoration-none font-weight-medium"
+            ><v-img contain src="@/assets/logo.png" width=160></v-img></router-link
           ></v-toolbar-title
         >
       </v-col>
@@ -23,27 +23,17 @@
       <!-- <span id="title">야야야</span> -->
       <template>
         <v-tabs align-with-title>
-          <v-tab class="ml-1"
-            ><router-link to="/salelist" class="text-decoration-none mb-2 font-weight-medium"
-              >메인페이지</router-link
-            ></v-tab
+          <v-tab to="/salelist" class="ml-1 text-decoration-none font-weight-medium"
+            >메인페이지</v-tab
           >
-          <v-tab
-            ><router-link to="/calendar" class="text-decoration-none mb-2 font-weight-medium"
-              >세일캘린더</router-link
-            ></v-tab
+          <v-tab to="/calendar" class="text-decoration-none font-weight-medium"
+            >세일캘린더</v-tab
           >
-          <v-tab
-            ><router-link to="/board" class="text-decoration-none mb-2 font-weight-medium"
-              >게시판</router-link
-            ></v-tab
+          <v-tab to="/board" class="text-decoration-none font-weight-medium"
+            >게시판</v-tab
           >
-          <v-tab id="test"
-            ><router-link
-              to="/mypage/wishlist"
-              class=" text-decoration-none mb-2 font-weight-medium"
-              >찜목록</router-link
-            ></v-tab
+          <v-tab id="test" class="text-decoration-none font-weight-medium" to="/mypage/wishlist"
+            >찜목록</v-tab
           >
         </v-tabs>
       </template>
@@ -57,7 +47,7 @@
         </v-btn>
       </template>
       <template v-if="isLogin">
-        <v-btn text color="white" disabled class="w" v-if="isLogin">설렌다님 환영합니다.</v-btn>
+        <v-btn text color="white" disabled class="w" v-if="isLogin">{{ nickname }}님 환영합니다.</v-btn>
         <!-- <v-btn text color="white" @click.native="logout" v-if="isLogin">
           <router-link :to="{ name: 'Login' }" color="red" class="text-decoration-none"
             >로그아웃</router-link
@@ -94,11 +84,31 @@
 
 <script>
 import { mapState } from 'vuex';
+import axios from 'axios'
+
 export default {
   created() {
     this.token = localStorage.getItem('jwt');
     if(this.token) {
-      this.$store.dispatch('login', true);
+      const headers = {
+          "x-auth-token": localStorage.getItem("jwt"),
+      };
+      const baseURL = "http://localhost:8080";
+      axios
+      .create({
+          baseURL,
+          headers,
+      })
+      .get('/api/user/token/mypage')
+      .then((res)=>{
+        this.nickname = res.data.usrNick;
+        this.$store.dispatch('login', true);
+      })
+      .catch((err)=>{
+        console.log(err)
+        localStorage.removeItem('jwt');
+        this.$store.dispatch('login', false);
+      })
     }
     console.log(this.token);
   },
@@ -108,16 +118,39 @@ export default {
   watch: {
     isLogin: function() {
       this.token = localStorage.getItem('jwt');
+      if(this.token) {
+      const headers = {
+          "x-auth-token": localStorage.getItem("jwt"),
+      };
+      const baseURL = "http://localhost:8080";
+      axios
+      .create({
+          baseURL,
+          headers,
+      })
+      .get('/api/user/token/mypage')
+      .then((res)=>{
+        this.nickname = res.data.usrNick;
+        this.$store.dispatch('login', true);
+      })
+      .catch((err)=>{
+        console.log(err)
+        localStorage.removeItem('jwt');
+        this.$store.dispatch('login', false);
+      })
+    }
     }
   },
   data: () => ({
     token: localStorage.getItem('jwt'),
     items: [{ title: '마이페이지' }],
+    nickname:'',
   }),
   methods: {
     logout() {
       localStorage.removeItem('jwt');
       this.$store.dispatch('login', false);
+      this.$store.dispatch('updateFollowing', false)
     },
   },
 };

@@ -1,13 +1,11 @@
 package backend.server.salendar.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-import lombok.*;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.*;
 
 @Entity(name = "board")
 @Getter
@@ -20,42 +18,63 @@ public class Board {
     // 사용자 일련번호
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "board_no")
     private Long boardNo;
 
+    @JsonProperty("usrEmail")
     private String usrEmail;
+
+    @JsonProperty("usrNick")
+    private String usrNick;
+
+    @JsonProperty("boardTitle")
     private String boardTitle;
+
+    @JsonProperty("boardContents")
     private String boardContents;
 
-    @Builder
-    public Board(String usrEmail, String boardTitle, String boardContents) {
-        this.usrEmail = usrEmail;
-        this.boardTitle = boardTitle;
-        this.boardContents = boardContents;
+    @JsonProperty("createdDate")
+    private String createdDate;
+
+    @JsonProperty("modifiedDate")
+    private String modifiedDate;
+
+    @JsonProperty("boardType")
+    private String boardType;
+
+    @JsonProperty("imgUrl")
+    private String imgUrl;
+
+    @JsonProperty("hit")
+    private Long hit;
+
+    @JsonProperty("likeCnt")
+    private int likeCnt;
+
+    // 게시글 좋아요
+    @ManyToMany(mappedBy = "boardLike", fetch = FetchType.EAGER)
+    //@JsonManagedReference(value = "board-like")
+    private List<User> boards = new ArrayList<User>();
+
+    @Override
+    public boolean equals(Object o){
+        if(this == o)   return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        Board board = (Board)  o;
+        return Objects.equals(boardNo, board.boardNo) &&
+                Objects.equals(usrEmail, board.usrEmail) &&
+                Objects.equals(usrNick, board.usrNick) &&
+                Objects.equals(boardTitle, board.boardTitle) &&
+                Objects.equals(boardContents, board.boardContents) &&
+                Objects.equals(createdDate, board.createdDate) &&
+                Objects.equals(modifiedDate, board.modifiedDate) &&
+                Objects.equals(boardType, board.boardType) &&
+                Objects.equals(imgUrl, board.imgUrl) &&
+                Objects.equals(hit, board.hit) &&
+                Objects.equals(likeCnt, board.likeCnt);
+//        &&
+//                Objects.equals(board_like, board.board_like);
     }
-
-    public String getUsrEmail() {
-        return usrEmail;
-    }
-
-    public void setUsrEmail(String usrEmail) {
-        this.usrEmail = usrEmail;
-    }
-
-    public String getBoardTitle() {
-        return boardTitle;
-    }
-
-    public void setBoardTitle(String boardTitle) {
-        this.boardTitle = boardTitle;
-    }
-
-    public String getBoardContents() {
-        return boardContents;
-    }
-
-    public void setBoardContents(String boardContents) {
-        this.boardContents = boardContents;
-    }
-
-
 }
+
+

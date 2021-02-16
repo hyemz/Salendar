@@ -7,21 +7,15 @@ import backend.server.salendar.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ResponseHeader;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 
@@ -53,6 +47,7 @@ public class UserController {
                     .usrPwd(passwordEncoder.encode(user.get("usrPwd")))
                     .usrNick(user.get("usrNick"))
                     .roles(Collections.singletonList(user.get("usrEmail").endsWith("@admin.com") ? "ROLE_ADMIN" : "ROLE_USER"))
+                    .usrAlarm(Boolean.valueOf(user.get("usrAlarm")))
                     .build());
             return new ResponseEntity<String>(user.get("usrNick"), HttpStatus.OK);
         } catch (IllegalStateException e) {
@@ -91,6 +86,19 @@ public class UserController {
         return new ResponseEntity<List<User>>(users, HttpStatus.OK);
     }
 
+    // 토큰으로 회원조회
+    @ApiOperation(value = "token으로 회원 정보 조회")
+    @GetMapping(value = "/token/mypage")
+    public ResponseEntity<User> getUser(HttpServletRequest request) {
+        Optional<User> user = Optional.ofNullable(userService.findByToken(jwtTokenProvider.resolveToken(request)));
+        if (user.isPresent()) {
+            return new ResponseEntity<>(user.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(user.get(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+
     // 회원번호로 한명의 회원 조회
     @GetMapping(value = "/{usrNo}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<User> getMember(@PathVariable("usrNo") Long usrNo) {
@@ -107,20 +115,21 @@ public class UserController {
     }
 
 
-    // 회원번호로 회원 수정(usrNo로 회원을 찾아 Member 객체의 id, Nick을 수정함)
+    // 회원 정보 수정
     @ApiOperation(value = "회원 정보 변경", notes = "token 필요")
     @PutMapping(value = "/token/update", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> updateMember(@RequestBody Map<String, String> user, HttpServletRequest request) {
-        Optional<User> curUser = Optional.ofNullable(userService.findByToken(JwtTokenProvider.resolveToken(request)));
+        User curUser = userService.findByToken(JwtTokenProvider.resolveToken(request));
         try {
-            userService.validateDuplicateUserNick(user.get("usrNick"));
+            if (!user.get("usrNick").equals(curUser.getUsrNick())) {
+                userService.validateDuplicateUserNick(user.get("usrNick"));
+                curUser.setUsrNick(user.get("usrNick"));
+            }
+            curUser.setUsrPwd(passwordEncoder.encode(user.get("usrPwd")));
+            curUser.setUsrAlarm(Boolean.valueOf(user.get("userAlarm")));
+            userRepository.save(curUser);
         } catch (IllegalStateException e) {
             return new ResponseEntity<String>(e.toString(), HttpStatus.BAD_REQUEST);
-        }
-        if (curUser.isPresent()) {
-            curUser.get().setUsrNick(user.get("usrNick"));
-            curUser.get().setUsrPwd(user.get("usrPwd"));
-            userRepository.save(curUser.get());
         }
         return new ResponseEntity<String>(user.get("usrNick"), HttpStatus.OK);
     }
@@ -178,6 +187,34 @@ public class UserController {
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
+    //    게시글 좋아요
+    @ApiOperation(value = "게시글 좋아요 ", notes = "token, board")
+    @PostMapping(value = "/token/like/{boardNo}")
+    public ResponseEntity<String> likePost(@PathVariable("boardNo") String no, HttpServletRequest request) throws
+            URISyntaxException {
+        try {
+            Long boardNo = Long.parseLong(no);
+            userService.likePost(JwtTokenProvider.resolveToken(request), boardNo);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("OK", HttpStatus.OK);
+    }
+
+    //    게시글 좋아요 취소
+    @ApiOperation(value = "게시글 좋아요 취소", notes = "token, board")
+    @PostMapping(value = "/token/unlike/{boardNo}")
+    public ResponseEntity<String> unlikePost(@PathVariable("boardNo") String no, HttpServletRequest request) throws
+            URISyntaxException {
+        try {
+            Long boardNo = Long.parseLong(no);
+            userService.unlikePost(JwtTokenProvider.resolveToken(request), boardNo);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("OK", HttpStatus.OK);
+    }
+
     //    팔로우 조회
     @ApiOperation(value = "팔로우 중 매장 조회")
     @GetMapping(value = "/token/followings")
@@ -187,6 +224,16 @@ public class UserController {
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
+    }
 
+    //  비밀번호 일치 여부
+    @ApiOperation(value = "비밀번호 일치 여부")
+    @PostMapping(value = "/token/pwdConfirm")
+    public HttpStatus pwdConfirm(HttpServletRequest request, @RequestBody String pwd) {
+        User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
+        if (!passwordEncoder.matches(pwd.substring(0, pwd.length() - 1), user.getPassword())) {
+            return HttpStatus.NOT_ACCEPTABLE;
+        }
+        return HttpStatus.OK;
     }
 }

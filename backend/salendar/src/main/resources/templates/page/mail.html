@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default_layout">
+
+<div layout:fragment="content">
+    <th:block th:replace="fragment/header :: headerFragment"></th:block>
+
+    <tr th:each="storeName: ${storeNames}">
+        <th:block
+                th:replace="fragment/storeSection :: storeSectionFragment (${storeName}, ${sales.get(storeNameStat.index)}, ${saleDscs.get(storeNameStat.index)})"></th:block>
+        <th:block th:if="${storeNameStat.first}" th:replace="fragment/divider :: dividerFragment"></th:block>
+    </tr>
+
+    <th:block th:replace="fragment/footer :: footerFragment"></th:block>
+</div>
+</html>
