@@ -2,10 +2,7 @@
   <div>
     <div>
       <MoreModal :dialog="dialog" :focus="focus" @close="close" />
-      <v-card 
-      color="grey lighten-5"
-      height=""
-      >
+      <v-card color="grey lighten-5" height="">
         <v-carousel
           v-model="model"
           :continuous="true"
@@ -25,108 +22,56 @@
             max-height=""
             max-width=""
           >
-
           </v-carousel-item>
         </v-carousel>
 
         <v-row justify="center" style="margin-top:-40px" align="right">
-          <v-btn 
-            @click="model--"
-            elevation="2"
-            color="grey lighten-2"
-            fab
-            x-small
-          >
+          <v-btn @click="model--" elevation="2" color="grey lighten-2" fab x-small>
             <v-icon>
               mdi-chevron-left
             </v-icon>
           </v-btn>
 
-          <v-btn
-            color="transparent"
-            elevation="0"
-            aria-disabled="10"
-          >
+          <v-btn color="transparent" elevation="0" aria-disabled="10">
             {{ model + 1 }} / {{ items.length }}
           </v-btn>
 
-          <v-btn
-            class="mr-2"
-            @click="model++"
-            elevation="2"
-            color="grey lighten-2"
-            fab
-            x-small
-          >
+          <v-btn class="mr-2" @click="model++" elevation="2" color="grey lighten-2" fab x-small>
             <v-icon>
               mdi-chevron-right
             </v-icon>
           </v-btn>
 
-          <v-btn
-            elevation="2"
-            color="grey lighten-2"
-            fab
-            x-small
-            @click="cycle=!cycle"
-          >
-            <v-icon
-              color="blue"
-              v-if="!cycle"
-            >
+          <v-btn elevation="2" color="grey lighten-2" fab x-small @click="cycle = !cycle">
+            <v-icon color="blue" v-if="!cycle">
               mdi-play
             </v-icon>
-            <v-icon
-              color="red"
-              v-else
-            >
+            <v-icon color="red" v-else>
               mdi-pause
             </v-icon>
           </v-btn>
         </v-row>
 
         <v-list-item-action class="d-flex align-end justify-end">
-          <div>
-            
-
-          </div>
-
+          <div></div>
         </v-list-item-action>
       </v-card>
     </div>
 
     <v-container class="mt-10">
       <v-row no-gutters>
-
         <v-col cols="12" sm="1"></v-col>
 
         <v-col cols="12" sm="10">
           <div>
-            <v-card
-              max-width="130"
-              outlined
-              class="ml-16 h3"
-            >
+            <v-card max-width="130" outlined class="ml-16 h3">
               <h3 class="text-center">
                 진행 중인 세일
               </h3>
             </v-card>
-            <v-sheet
-              class="mx-auto"
-              elevation="0"
-              max-width=""
-            >
-              <v-slide-group
-                v-model="model1"
-                class="pa-4"
-                center-active
-                show-arrows
-              >
-                <v-slide-item
-                  v-for="(nowSale, i) in nowSales"
-                  :key="i"
-                  v-slot="{ active, toggle }"
-                >
+            <v-sheet class="mx-auto" elevation="0" max-width="">
+              <v-slide-group v-model="model1" class="pa-4" center-active show-arrows>
+                <v-slide-item v-for="(nowSale, i) in nowSales" :key="i" v-slot="{ active, toggle }">
                   <v-card
                     :img="nowSale.sale_thumbnail"
                     :color="active ? 'primary' : 'grey lighten-3'"
@@ -135,18 +80,9 @@
                     width="400"
                     @click="more(nowSale), toggle"
                   >
-                    <v-row
-                      class="fill-height"
-                      align="center"
-                      justify="center"
-                    >
+                    <v-row class="fill-height" align="center" justify="center">
                       <v-scale-transition>
-                        <v-icon
-                          v-if="active"
-                          color="white"
-                          size="48"
-                          v-text="''"
-                        ></v-icon>
+                        <v-icon v-if="active" color="white" size="48" v-text="''"></v-icon>
                       </v-scale-transition>
                     </v-row>
                   </v-card>
@@ -156,30 +92,14 @@
           </div>
 
           <div>
-            <v-card
-              max-width="130"
-              outlined
-              class="ml-16 h3"
-            >
+            <v-card max-width="130" outlined class="ml-16 h3">
               <h3 class="text-center">
-                진행 예정 세일
+                마감 임박 세일
               </h3>
             </v-card>
-            <v-sheet
-              class="mx-auto"
-              max-width=""
-            >
-              <v-slide-group
-                v-model="model2"
-                class="pa-4"
-                center-active
-                show-arrows
-              >
-                <v-slide-item
-                  v-for="(preSale, i) in preSales"
-                  :key="i"
-                  v-slot="{ active, toggle }"
-                >
+            <v-sheet class="mx-auto" max-width="">
+              <v-slide-group v-model="model2" class="pa-4" center-active show-arrows>
+                <v-slide-item v-for="(preSale, i) in preSales" :key="i" v-slot="{ active, toggle }">
                   <v-card
                     :img="preSale.sale_thumbnail"
                     :color="active ? 'primary' : 'grey lighten-1'"
@@ -188,18 +108,9 @@
                     width="400"
                     @click="toggle"
                   >
-                    <v-row
-                      class="fill-height"
-                      align="center"
-                      justify="center"
-                    >
+                    <v-row class="fill-height" align="center" justify="center">
                       <v-scale-transition>
-                        <v-icon
-                          v-if="active"
-                          color="white"
-                          size="48"
-                          v-text="''"
-                        ></v-icon>
+                        <v-icon v-if="active" color="white" size="48" v-text="''"></v-icon>
                       </v-scale-transition>
                     </v-row>
                   </v-card>
@@ -207,8 +118,8 @@
               </v-slide-group>
             </v-sheet>
           </div>
-        <v-row>
-          <!-- <v-col cols="12" sm="6">
+          <v-row>
+            <!-- <v-col cols="12" sm="6">
             <v-card outlined class="mb-6 mt-6">
               <h3 class="ml-2 mt-1 mb-1">공지사항</h3>
             </v-card>
@@ -250,33 +161,29 @@
             </v-card>
 
           </v-col> -->
-
-        </v-row>
-
+          </v-row>
         </v-col>
 
         <v-col cols="12" sm="1"></v-col>
       </v-row>
     </v-container>
-
-
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import moment from 'moment'
-import MoreModal from '../components/MoreModal'
+import axios from 'axios';
+import moment from 'moment';
+import MoreModal from '../components/MoreModal';
 
 export default {
-  components:{
+  components: {
     MoreModal,
   },
-  data () {
+  data() {
     return {
-      nowSales:[],
-      preSales:[],
-      stores:{
+      nowSales: [],
+      preSales: [],
+      stores: {
         Oliveyoung: {
           name: '올리브영 🥑',
           color: '#BDEDD1',
@@ -340,96 +247,97 @@ export default {
       model2: null,
       focus: null,
       dialog: false,
-    }
+    };
   },
   created() {
-    this.getSale()
+    this.getSale();
   },
   methods: {
     slideGroup: 0,
     nextSlide() {
       this.slideGroup++;
-      this.slideGroup == 12 ? (this.slideGroup = 0) : "";
+      this.slideGroup == 12 ? (this.slideGroup = 0) : '';
     },
     previousSlide() {
       this.slideGroup--;
     },
-    getSale(){
+    getSale() {
       // 세일정보 가져오기
-      const baseURL = "http://localhost:8080";
+      const baseURL = 'http://localhost:8080';
       axios
-      .create({
+        .create({
           baseURL,
-      })
-      .get('/api/sale/list')
-      .then((res) => {
-        this.sales = []
-        const now = res.data
-        
-        const today = moment(new Date()).format('YYYY-MM-DD')
-        
-        Object.keys(now).forEach(store => {
-          now[store].forEach(el => {
-            el.store_name = this.stores[store].name
-            if (el.sale_start_date <= today && today <= el.sale_end_date){
-              this.nowSales.push(el)
-            } else if (el.sale_start_date > today) {
-              this.preSales.push(el)
-            }
-          })
         })
-        if (this.preSales.length == 0 ) {
-          this.preSales.push(
-            {
-            sale_thumbnail:require("@/assets/SaleListSmall/nosale.jpg")
-            },
-            {
-            sale_thumbnail:require("@/assets/SaleListSmall/nosale.jpg")
-            },
-          {
-            sale_thumbnail:require("@/assets/SaleListSmall/nosale.jpg")
-          },
-          {
-            sale_thumbnail:require("@/assets/SaleListSmall/nosale.jpg")
-          },)
-        }
-      })
-      .catch((err) => {
-        console.log("세일 로드에 실패했습니다.", err);
-      });
-    },
-    more(sale){
-      this.dialog = true
-      let start = new Date(sale.sale_start_date)
-      let end = new Date(sale.sale_end_date)
-      this.focus = {
-        start: new Date(start.setDate(start.getDate() +1)),
-        end: new Date(end.setDate(end.getDate() +2)),
-        _def:{
-          extendedProps:{
-            bigImg:sale.sale_big_img,
-            saleDsc:sale.sale_dsc,
-            saleLink:sale.sale_link,
-            saleTitle:sale.sale_title,
-            storeName:sale.store_name,
-            thumbnail:sale.sale_thumbnail,
+        .get('/api/sale/list')
+        .then((res) => {
+          this.sales = [];
+          const now = res.data;
+
+          const today = moment(new Date()).format('YYYY-MM-DD');
+
+          Object.keys(now).forEach((store) => {
+            now[store].forEach((el) => {
+              el.store_name = this.stores[store].name;
+              if (el.sale_start_date <= today && today <= el.sale_end_date) {
+                this.nowSales.push(el);
+              } else if (el.sale_start_date > today) {
+                this.preSales.push(el);
+              }
+            });
+          });
+          if (this.preSales.length == 0) {
+            this.preSales.push(
+              {
+                sale_thumbnail: require('@/assets/SaleListSmall/nosale.jpg'),
+              },
+              {
+                sale_thumbnail: require('@/assets/SaleListSmall/nosale.jpg'),
+              },
+              {
+                sale_thumbnail: require('@/assets/SaleListSmall/nosale.jpg'),
+              },
+              {
+                sale_thumbnail: require('@/assets/SaleListSmall/nosale.jpg'),
+              }
+            );
           }
-        }
-      }
-      console.log('ggg', this.focus, start)
+        })
+        .catch((err) => {
+          console.log('세일 로드에 실패했습니다.', err);
+        });
+    },
+    more(sale) {
+      this.dialog = true;
+      let start = new Date(sale.sale_start_date);
+      let end = new Date(sale.sale_end_date);
+      this.focus = {
+        start: new Date(start.setDate(start.getDate() + 1)),
+        end: new Date(end.setDate(end.getDate() + 2)),
+        _def: {
+          extendedProps: {
+            bigImg: sale.sale_big_img,
+            saleDsc: sale.sale_dsc,
+            saleLink: sale.sale_link,
+            saleTitle: sale.sale_title,
+            storeName: sale.store_name,
+            thumbnail: sale.sale_thumbnail,
+          },
+        },
+      };
+      console.log('ggg', this.focus, start);
     },
     close(isDialog) {
       this.dialog = isDialog;
     },
-    }
-  }
+  },
+};
 </script>
 
 <style>
 .theme--dark.v-image {
-    color: black;
+  color: black;
 }
 .v-application--is-ltr .v-responsive__sizer ~ .v-responsive__content {
-    margin-left: 0%;
+  margin-left: 0%;
 }
 </style>
