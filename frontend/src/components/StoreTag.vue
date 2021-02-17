@@ -7,7 +7,7 @@
       width="60%"
       class="d-flex flex-column justify-center align-center mt-12 sm-8"
     >
-      <div class="mt-7">
+      <div id="desc" class="mt-7">
         관심 있는 매장을 찜하시면, 해당 매장과 관련된 세일 일정을 확인하실 수 있습니다.
       </div>
 
@@ -16,14 +16,14 @@
           <v-chip
             class="ma-2"
             outlined
-            :color="store.followed ? 'light-blue lighten-2' : 'grey lighten-1'"
-            :text-color="store.followed ? 'light-blue lighten-2' : 'grey lighten-1'"
+            :color="store.followed ? 'main' : 'grey lighten-1'"
+            :text-color="store.followed ? 'main' : 'grey lighten-1'"
             @click="follow(store)"
           >
             <!-- :disabled="clicked.includes(store.title)" -->
             {{ store.title }}
 
-            <v-icon color="light-blue lighten-2" right v-if="store.followed">mdi-heart</v-icon>
+            <v-icon color="main" right v-if="store.followed">mdi-heart</v-icon>
           </v-chip>
         </span>
       </div>
@@ -166,3 +166,18 @@ export default {
   },
 };
 </script>
+<style scoped>
+#desc {
+  font-family: 'NanumBarunGothic';
+}
+@font-face {
+  font-family: 'NanumBarunGothic';
+  font-style: normal;
+  font-weight: 1000;
+  src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.eot');
+  src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.eot?#iefix')
+      format('embedded-opentype'),
+    url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.woff') format('woff'),
+    url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.ttf') format('truetype');
+}
+</style>
