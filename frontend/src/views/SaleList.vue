@@ -400,9 +400,11 @@ export default {
     },
     more(sale){
       this.dialog = true
+      let start = new Date(sale.sale_start_date)
+      let end = new Date(sale.sale_end_date)
       this.focus = {
-        start:sale.sale_start_date,
-        end:sale.sale_end_date,
+        start: new Date(start.setDate(start.getDate() +1)),
+        end: new Date(end.setDate(end.getDate() +2)),
         _def:{
           extendedProps:{
             bigImg:sale.sale_big_img,
@@ -414,6 +416,7 @@ export default {
           }
         }
       }
+      console.log('ggg', this.focus, start)
     },
     close(isDialog) {
       this.dialog = isDialog;
