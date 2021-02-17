@@ -32,7 +32,7 @@ export default {
       dialog: false,
       focus: null,
       followingEvents: [],
-      stores:{
+      stores: {
         Oliveyoung: {
           name: '올리브영 🥑',
           color: '#BDEDD1',
@@ -75,9 +75,9 @@ export default {
           interactionPlugin, // needed for dateClick
         ],
         headerToolbar: {
-          left: 'prev,next today',
+          left: 'prev',
           center: 'title',
-          right: '',
+          right: 'next',
         },
         initialView: 'dayGridMonth',
 
@@ -87,60 +87,58 @@ export default {
         locale: 'ko',
         eventClick: this.showMore,
         eventsSet: this.handleEvents,
-
       },
       currentEvents: [],
     };
   },
   created() {
-    this.getSale()
-
+    this.getSale();
   },
   methods: {
     showMore(clickInfo) {
       this.dialog = true;
       this.focus = clickInfo.event;
     },
-    getSale(){
+    getSale() {
       // 팔로우 한 세일정보 가져오기
       const headers = {
-            "x-auth-token": localStorage.getItem("jwt"),
-        };
-      const baseURL = "http://localhost:8080";
+        'x-auth-token': localStorage.getItem('jwt'),
+      };
+      const baseURL = 'http://localhost:8080';
       axios
-      .create({
+        .create({
           baseURL,
           headers,
-      })
-      .get('/api/sale/token/list/follow')
-      .then((res) => {
-        this.calendarOptions.events = []
-        const now = res.data
-        Object.keys(now).forEach(store => {
-          now[store].forEach(el => {
-            let start = new Date(el.sale_start_date)
-            let end = new Date(el.sale_end_date)
-
-            this.calendarOptions.events.push({
-            title: this.stores[store].name + ' ' + ' '+ el.sale_title,
-            start: new Date(start.setDate(start.getDate() + 1)),
-            end: new Date(end.setDate(end.getDate() + 2)),
-            bigImg: el.sale_big_img,
-            thumbnail: el.sale_thumbnail,
-            saleLink: el.sale_link,
-            storeName: this.stores[store].name,
-            saleTitle: el.sale_title,
-            saleDsc: el.sale_dsc,
-            allDay: true,
-            color: this.stores[store].color,
-            textColor: '#50555C',
-            })
-          })
         })
-      })
-      .catch((err) => {
-        console.log("팔로우세일 로드에 실패했습니다.", err);
-      });
+        .get('/api/sale/token/list/follow')
+        .then((res) => {
+          this.calendarOptions.events = [];
+          const now = res.data;
+          Object.keys(now).forEach((store) => {
+            now[store].forEach((el) => {
+              let start = new Date(el.sale_start_date);
+              let end = new Date(el.sale_end_date);
+
+              this.calendarOptions.events.push({
+                title: this.stores[store].name + ' ' + ' ' + el.sale_title,
+                start: new Date(start.setDate(start.getDate() + 1)),
+                end: new Date(end.setDate(end.getDate() + 2)),
+                bigImg: el.sale_big_img,
+                thumbnail: el.sale_thumbnail,
+                saleLink: el.sale_link,
+                storeName: this.stores[store].name,
+                saleTitle: el.sale_title,
+                saleDsc: el.sale_dsc,
+                allDay: true,
+                color: this.stores[store].color,
+                textColor: '#50555C',
+              });
+            });
+          });
+        })
+        .catch((err) => {
+          console.log('팔로우세일 로드에 실패했습니다.', err);
+        });
     },
 
     close(isDialog) {
@@ -148,14 +146,14 @@ export default {
     },
   },
   watch: {
-    selected: function () {
-      this.getSale()
-    }
-  }
+    selected: function() {
+      this.getSale();
+    },
+  },
 };
 </script>
 
-<style lang="css">
+<style lang="css" scope>
 h2 {
   margin: 0;
   font-size: 16px;
@@ -176,12 +174,16 @@ b {
   margin-right: 3px;
 }
 
+.fc .fc-daygrid-more-link {
+  color: #01579b;
+}
+
 .demo-app {
   display: flex;
   min-width: 50%;
   min-height: 100%;
   min-width: 50%;
-  font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+  font-family: 'NanumBarunGothic';
   font-size: 14px;
 }
 
@@ -196,11 +198,16 @@ b {
   padding: 2em;
 }
 
+.fc .fc-button:hover {
+  background-color: transparent;
+  border: none;
+  color: #2c3e50;
+  cursor: pointer;
+}
 .demo-app-main {
   flex-grow: 1;
   padding: 3em;
 }
-
 .fc {
   /* the calendar root */
   max-width: 1100px;
@@ -208,15 +215,53 @@ b {
 }
 
 .fc .fc-toolbar-title {
-    font-size: 1.75em;
-    margin-right: 9rem;
+  font-size: 2em;
+  font-family: 'S-CoreDream-3Light';
+  color: #2c3e50;
 }
 
 .fc .fc-col-header-cell-cushion {
-  color: black;
+  color: #2c3e50;
+  font-family: 'NanumBarunGothic';
 }
 
 .fc .fc-daygrid-day-number {
-  color: black;
+  color: #2c3e50;
+  font-family: 'NanumBarunGothic';
+}
+.fc .fc-button-primary {
+  content: '';
+  background-color: transparent;
+  border-color: transparent;
+  color: #2c3e50;
+}
+.fc .fc-button:after {
+  content: '';
+  background-color: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+.fc .fc-icon {
+  background-color: transparent;
+  border-color: transparent;
+  color: #2c3e50;
+}
+
+@font-face {
+  font-family: 'S-CoreDream-3Light';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff')
+    format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'NanumBarunGothic';
+  font-style: normal;
+  font-weight: 1000;
+  src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.eot');
+  src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.eot?#iefix')
+      format('embedded-opentype'),
+    url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.woff') format('woff'),
+    url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.ttf') format('truetype');
 }
 </style>
