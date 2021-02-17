@@ -23,7 +23,7 @@
           <p>너무 많은 우리</p>
         </v-col>
         <v-col class="text-center" cols="4">
-          <img src="..\assets\Intro\shopping-animate.min.svg" style="" alt="" />
+          <img src="../assets/Intro/shopping-animate.min.svg" style="" alt="" />
         </v-col>
         <v-spacer></v-spacer>
       </v-row>
@@ -31,7 +31,7 @@
       <v-row data-aos="fade-left" data-aos-duration="3000" data-aos-delay="300">
         <v-spacer></v-spacer>
         <v-col class="text-center" cols="4">
-          <img src="..\assets\Intro\Cyber Monday-rafiki.svg" style="" alt="" />
+          <img src="../assets/Intro/Cyber Monday-rafiki.svg" style="" alt="" />
         </v-col>
         <v-col class="d-flex flex-column justify-center text-center" cols="4">
           <p>나에게 <strong>딱 맞는 세일</strong>은</p>
@@ -48,7 +48,7 @@
           <p>참 좋을텐데</p>
         </v-col>
         <v-col class="text-center" cols="4">
-          <img src="..\assets\Intro\Timeline-bro.svg" style="" alt="" />
+          <img src="../assets/Intro/Timeline-bro.svg" style="" alt="" />
         </v-col>
         <v-spacer></v-spacer>
       </v-row>
