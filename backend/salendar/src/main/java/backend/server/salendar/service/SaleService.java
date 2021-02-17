@@ -67,12 +67,6 @@ public class SaleService {
                                 if (sale.getSaleBigImg().strip().length() < 5) {
                                     sale.setSaleBigImg(sale.getSaleThumbnail());
                                 }
-                                if (sale.getSaleEndDate() == null) {
-                                    Calendar cal = Calendar.getInstance();
-                                    cal.setTime(sale.getSaleStartDate());
-                                    cal.add(Calendar.YEAR, 1);
-                                    sale.setSaleEndDate(cal.getTime());
-                                }
                                 saleRepository.save(sale);
                                 System.out.println(sale);
                                 return sale;
