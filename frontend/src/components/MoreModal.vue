@@ -16,29 +16,42 @@
             <v-card class="mx-auto" max-width="780" outlined>
               <v-list-item three-line>
                 <v-list-item-content>
-                  <div class="overline mb-4">
-                    <v-avatar class="ma-3" width="150">
+                  <v-alert></v-alert>
+                  <div class="overline mb-1 ">
+                    <v-avatar tile class="ma-3 align-center" width="150">
                       <v-img :src="logoPath"></v-img>
                     </v-avatar>
                   </div>
 
                   <template>
-                    <v-list-item-subtitle>
-                      {{ this.name }}
-                    </v-list-item-subtitle>
-                    <v-list-item-title class="headline mb-2">
-                      {{ this.data.saleTitle }}
-                    </v-list-item-title>
+                    <v-col class=" mt-7">
+                      <!-- <v-list-item-avatar tile size="150" color="grey"></v-list-item-avatar> -->
 
-                    <v-list-item-subtitle>
-                      {{ $moment(this.focus.start).format('YYYY-MM-DD') }} ~
-                      {{ $moment(this.focus.end.setDate(this.focus.end.getDate()-1)).format('YYYY-MM-DD') }}
-                    </v-list-item-subtitle>
+                      <v-list-item-subtitle class="mb-2">
+                        {{ this.name }}
+                      </v-list-item-subtitle>
+                      <v-list-item-title class="headline mb-2">
+                        {{ this.data.saleTitle }}
+                      </v-list-item-title>
+
+                      <v-list-item-subtitle>
+                        {{ $moment(this.focus.start).format('YYYY-MM-DD') }} ~
+                        {{
+                          $moment(this.focus.end.setDate(this.focus.end.getDate() - 1)).format(
+                            'YYYY-MM-DD'
+                          )
+                        }}
+                        <strong>{{ '(D' + dday + ')' }}</strong>
+                      </v-list-item-subtitle>
+                    </v-col>
                   </template>
                 </v-list-item-content>
+                <!-- <v-list-item-avatar tile size="150" color="grey">
+                  <v-img :src="logoPath"></v-img
+                ></v-list-item-avatar> -->
               </v-list-item>
 
-              <v-card-actions class="d-flex flex-column justify-center align-right mt-3">
+              <v-card-actions id="go" class="d-flex flex-column align-right mt-3">
                 <v-btn outlined rounded text :href="this.link" target="_blank">
                   세일 바로 가기
                 </v-btn>
@@ -81,6 +94,7 @@ export default {
       name: '',
       logoPath: '',
       data: Object,
+      dday: '',
       isDialog: false,
       link: '',
       path: {
@@ -104,6 +118,16 @@ export default {
     dialog: function() {
       this.data = this.focus._def.extendedProps;
       console.log(this.focus);
+      const d1 = this.$moment(this.focus.end).format('YYYY-MM-DD');
+      this.dday = this.$moment(d1).diff(this.$moment(), 'days');
+      if (this.dday <= 0) {
+        this.dday = '+' + (Math.abs(this.dday) + 1);
+      } else if (this.$moment(d1) == this.$moment()) {
+        this.dday = '-day';
+      } else {
+        this.dday = '-' + Math.abs(this.dday);
+      }
+      console.log(this.data);
       this.isDialog = this.dialog;
       this.name = this.data.storeName.substring(0, this.data.storeName.length - 3);
       this.link = this.data.saleLink;
@@ -121,5 +145,31 @@ export default {
   width: 100% !important;
   margin-bottom: -8px;
   /* height: auto !important; */
+}
+.headline {
+  font-family: 'NanumBarunGothic' !important;
+  font-weight: 500;
+}
+@font-face {
+  font-family: 'NanumBarunGothic';
+  font-style: normal;
+  font-weight: 1000;
+  src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebBold.eot');
+  src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebBold.eot?#iefix')
+      format('embedded-opentype'),
+    url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebBold.woff') format('woff'),
+    url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebBold.ttf') format('truetype');
+}
+#ll {
+  position: absolute;
+  align-self: 2;
+  top: 85px;
+  z-index: 2;
+}
+#go {
+  align-items: flex-end;
+  padding: 8px;
+  padding-right: 40px;
+  padding-bottom: 30px;
 }
 </style>
