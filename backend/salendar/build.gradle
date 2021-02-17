@@ -19,8 +19,6 @@ repositories {
 }
 
 dependencies {
-    compile name: 'mysql-connector-java-5.0.8-bin'
-    compile fileTree(dir: 'libs', includes: ['*.jar'])
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
