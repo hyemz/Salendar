@@ -199,10 +199,30 @@ b {
 }
 
 .fc .fc-button:hover {
+  background-color: rgb(248, 248, 248);
+  border: none;
+  cursor: pointer;
+  border-radius: 5em;
+}
+.fc .fc-button:focus {
   background-color: transparent;
   border: none;
   color: #2c3e50;
   cursor: pointer;
+  box-shadow: 0 0 0 0rem rgba(0, 0, 106, 0.5);
+}
+.fc .fc-button-primary:not(:disabled):active,
+.fc .fc-button-primary:not(:disabled).fc-button-active {
+  color: #2c3e50;
+  color: var(--fc-button-text-color, #2c3e50);
+  background-color: transparent;
+  background-color: var(--fc-button-active-bg-color, transparent);
+  border-color: transparent;
+  border-color: var(--fc-button-active-border-color, transparent);
+}
+.fc .fc-button-primary:not(:disabled):active:focus,
+.fc .fc-button-primary:not(:disabled).fc-button-active:focus {
+  box-shadow: 0 0 0 0rem rgba(0, 0, 106, 0.5);
 }
 .demo-app-main {
   flex-grow: 1;
