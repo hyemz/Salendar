@@ -1,20 +1,23 @@
 <template>
   <v-app id="main">
-    <Toolbar />
-
+    <!-- <Toolbar /> -->
+    <router-view name="header" />
     <v-main>
       <router-view />
     </v-main>
+    <router-view name="footer" />
   </v-app>
 </template>
 
 <script>
-import Toolbar from '@/components/Toolbar';
+// import Toolbar from '@/components/Toolbar';
+// import Footer from '@/components/Footer';
 export default {
   name: 'App',
 
   components: {
-    Toolbar,
+    // Toolbar,
+    // Footer,
   },
 
   data: () => ({
