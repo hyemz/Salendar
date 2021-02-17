@@ -350,6 +350,11 @@ public class Crawler {
         Elements eventLists = doc.select("#eventList > li");
 
         for (Element e : eventLists) {
+            Elements eventDate = e.select("a > span.descWrap > span");
+            int index = eventDate.text().indexOf("~");
+            if ((int) eventDate.text().substring(index + 2, index + 3).charAt(0) == 54620 | (int) eventDate.text().substring(index + 2, index + 3).charAt(0) == 51652) {
+                continue;
+            }
             Sale curSale = new Sale();
             curSale.setSaleTitle(e.select("a > span.descWrap > strong").text());
             curSale.setSaleDsc(e.select("a > span.descWrap > strong").text());
@@ -359,34 +364,18 @@ public class Crawler {
                 tempLink = "https://www.innisfree.com/" + tempLink;
             }
             curSale.setSaleLink(tempLink);
-            Elements eventDate = e.select("a > span.descWrap > span");
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-            int index = eventDate.text().indexOf("~");
             String eventStart = eventDate.text().substring(0, index - 1);
             String eventEnd;
 
-            if ((int) eventDate.text().substring(index + 2, index + 3).charAt(0) == 54620) {   //  한정수량 소진시 종료
-                Date eventStartDate = inputFormat.parse(eventStart);
-                curSale.setSaleStartDate(eventStartDate);
-                curSale.setSaleEndDate(null);
-            } else if ((int) eventDate.text().substring(index + 2, index + 3).charAt(0) == 51652) {
-                eventEnd = "2022-01-31";
+            eventEnd = eventDate.text().substring(index + 2, index + 12);
 
-                Date eventStartDate = inputFormat.parse(eventStart);
-                Date eventEndDate = inputFormat.parse(eventEnd);
+            Date eventStartDate = inputFormat.parse(eventStart);
+            Date eventEndDate = inputFormat.parse(eventEnd);
 
-                curSale.setSaleStartDate(eventStartDate);
-                curSale.setSaleEndDate(eventEndDate);
-            } else {
-                eventEnd = eventDate.text().substring(index + 2, index + 12);
-
-                Date eventStartDate = inputFormat.parse(eventStart);
-                Date eventEndDate = inputFormat.parse(eventEnd);
-
-                curSale.setSaleStartDate(eventStartDate);
-                curSale.setSaleEndDate(eventEndDate);
-            }
+            curSale.setSaleStartDate(eventStartDate);
+            curSale.setSaleEndDate(eventEndDate);
             if (saleFilter(curSale)) {
                 curSale.setSaleBigImg(Jsoup.parse(crawl(curSale.getSaleLink()))
                         .select("#contents > div.pdtViewTop > div.pdtSlider_area > div.swiper-container.pdtViewSlider.swiper-container-initialized.swiper-container-horizontal > ul > li.swiper-slide.swiper-slide-visible.swiper-slide-active > img").attr("src"));
