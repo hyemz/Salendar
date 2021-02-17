@@ -22,46 +22,31 @@
                   outlined="false"
                   style="margin-top:-150px"
                 >
-                  <h1 class="white--text">리뷰 게시판</h1>
+                  <h1 class="white--text">전체 게시판</h1>
                 </v-card>
               </v-card-title>
               <v-card-subtitle>
                 <v-row>
+                  <v-col cols="12" sm="4"></v-col>
+                  <v-col cols="12" sm="4"></v-col>
                   <v-col cols="12" sm="4">
-                    <v-btn
-                      v-if="isLogin"
-                      tile
-                      class="d-flex align-content-end"
-                      color="grey lighten-2"
-                      @click="create"
-                    >
-                      <v-icon left>
-                        mdi-pencil
-                      </v-icon>
-                      New
-                    </v-btn>
-                  </v-col>
-
-                  <v-col cols="12" sm="4">
-                  </v-col>
-
-                  <v-col cols="12" sm="4">
-                    
-                    <v-text-field
-                      label="Search"
-                      class=""
-                      color="main"
-                      clearable
-                      outlined
-                      prepend-inner-icon="mdi-magnify"
-                      append-icon="mdi-keyboard-return"
-                      v-model="search"
-                      sm="5"
-                      single-line
-                      hide-details
-                      height="10px"
-                      width="20px"
-                    ></v-text-field>
+                    <v-row justify="end" class="mt-2">
+                      <v-text-field
+                        label="Search"
+                        class=""
+                        color="main"
+                        clearable
+                        outlined
+                        prepend-inner-icon="mdi-magnify"
+                        append-icon="mdi-keyboard-return"
+                        v-model="search"
+                        sm="5"
+                        single-line
+                        hide-details
+                        height="10px"
+                        width="20px"
+                      ></v-text-field>
+                    </v-row>
                   </v-col>
                 </v-row>
               </v-card-subtitle>
@@ -116,16 +101,42 @@
                 data-table-header-sort-badge-min-width="300px"
               ></v-data-table>
 
-              <div class="text-center pt-2">
-              <v-pagination
-                v-model="page"
-                :length="pageCount"
-              ></v-pagination>
+
+
+              <div class="text-center pt-2 d-flex">
+                <v-row>
+                  <v-col cols="12" sm="2"></v-col>
+                  <v-col cols="12" sm="8">
+                    <v-pagination
+                      v-model="page"
+                      :length="pageCount"
+                    ></v-pagination>
+                  </v-col>
+                  <v-col cols="12" sm="2">
+                    <v-row justify="end">
+                      <v-btn
+                        v-if="isLogin"
+                        tile
+                        class="d-flex align-content-end justify-end mr-4 mt-4"
+                        color="grey lighten-2"
+                        @click="create"
+                      >
+                        <v-icon left>
+                          mdi-pencil
+                        </v-icon>
+                        New
+                      </v-btn>
+
+                    </v-row>
+
+                  </v-col>
+                </v-row>
+                
               </div>
           </div>
       </v-col>
 
-      <v-col cols="12" sm="1"></v-col>
+      <v-col cols="12" sm="2"></v-col>
 
     </v-row>
   </v-container>
