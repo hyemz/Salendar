@@ -1,12 +1,13 @@
 <template>
   <v-container class="d-flex justify-center">
-      <v-card
-        width="900px"
-      >
-        <div>
-          <v-card-title>
-            <h1 class="pt-2 pr-4">[{{items.boardType}}] {{items.boardTitle}}</h1>
-            <v-spacer></v-spacer>
+      <v-card width="900px" flat>
+        <v-card flat>
+          <br>
+          <br>
+          <h1>{{items.boardType}}</h1>
+          <v-row
+            justify="end"
+          >
             <v-btn 
               v-if="items.usrEmail == myEmail"
               class="mr-1 ml-4"
@@ -22,75 +23,72 @@
               color="grey lighten-2"
               >수정하기</v-btn>
             <v-btn 
-              class=""
+              class="mr-3"
               elevation="2"
               @click="backtoboard"
               color="grey lighten-2"
               >목록</v-btn>
-          </v-card-title>
+          </v-row>
           <br>
+          <hr>
+        </v-card>
 
-          <div class="pl-4 pr-4">
-            <hr>
-            <v-card
-              class="pl-3 pr-3 mb-8"
-              elevation="0"
-              max-width=""
+        <v-card flat>
+          <v-card 
+            color="grey lighten-4"
+            flat
             >
-            
-            <div style="font-size:16px">이름: {{items.usrEmail}}</div>
-            <div style="font-size:16px">등록일: {{items.createdDate}}</div>
-            <div style="font-size:16px">수정일: {{items.modifiedDate}}</div>
-            <div style="font-size:16px">조회수: {{items.hit}}</div>
-            </v-card>
-            <hr>
+            <br>
+            <v-row>
+              <v-col cols="12" sm="7">
+                <h1 class="pl-7 pt-2">{{items.boardTitle}}</h1>
+              </v-col>
+              <v-col cols="12" sm="1"></v-col>
+              <v-col cols="12" sm="4">
+                <div style="font-size:16px">작성자: {{items.usrEmail}}</div>
+                <div style="font-size:16px">등록일: {{items.createdDate}}</div>
+                <div style="font-size:16px">수정일: {{items.modifiedDate}}</div>
+                <div style="font-size:16px">조회수: {{items.hit}}</div>
+              </v-col>
+            </v-row>
+            <br>
+          </v-card>
 
-          </div>
+          <hr>
 
-          <div class="pl-4 pr-4 mb-8">
-            <v-card
-              class="pl-3 pr-3 mb-2"
-              elevation="0"
-            ><div style="font-size:17px">{{items.boardContents}}</div></v-card>
-          </div>
+          <v-card
+            class="pl-7 pr-7"
+            flat
+          >
+            <br>
+            <div style="font-size:20px">{{items.boardContents}}</div>
+            <br>
+          </v-card>
 
-          <div class="pl-4 pr-4 mb-8">
+          <hr>
+          <div class="pl-7 pr-7 grey lighten-4">
+            <br>
             <v-card
               max-height="400"
               max-width="400"
               class="mb-2"
-              elevation="0"
+              flat
             >
               <v-img
                 src="@/assets/productSample/product_image_sample.png"
-                max-height="400"
-                max-width="400"
                 contain
               >
-                <template v-slot:placeholder>
-                  <v-row
-                    class="fill-height ma-0"
-                    align="center"
-                    justify="center"
-                  >
-                    <v-progress-circular
-                      indeterminate
-                      color="grey lighten-5"
-                    ></v-progress-circular>
-                  </v-row>
-                </template>
               </v-img>
             </v-card>
-            <hr>
+            <br>
           </div>
 
-          <v-card-text
-          >
-          <h1>댓글 작성하기</h1>
-          </v-card-text>
+          <hr>
+          <br>
+          <br>
 
           <v-text-field
-            class="pl-4 pr-4 mb-8"
+            class="mb-8"
             label="댓글을 입력해 주세요!"
             append-icon="mdi-keyboard-return"
             hide-details="auto"
@@ -106,19 +104,31 @@
 
           <div v-for="(comment, idx) in comments" :key='idx'>
             <div class="pl-4 pr-4">
+                <hr>
               <v-card
-                class="pl-3 pr-3 mt-1 mb-1 justify-space-between"
-                elevation=""
-                outlined
+                v-if="idx%2==0"
+                class="pl-3 pr-3 grey lighten-4"
+                flat
               >
-                게시글 번호 : {{ comment.commentNo }} |
-                작성자 : {{ comment.usrEmail }} |
-                내용 : {{ comment.commentContents }} |
-                수정일 : {{ comment.modifiedDate }}
+                <p style="font-size:18px" class="pt-2 mb-2">{{ comment.usrEmail }}</p>
+                  
+                {{ comment.commentContents }}
+                <v-row justify="end">
+                  <div
+                    v-if="comment.modifiedDate==comment.createdDate"
+                    class="mr-2 mt-2">
+                    작성일 : {{ comment.createdDate }}
+                  </div>
+                  <div
+                    v-else
+                    class="mr-2 mt-2">
+                    수정일 : {{ comment.modifiedDate }}
+                  </div>
+
                   <v-btn 
                     v-if="comment.usrEmail == myEmail"
                     class="d-flex justify-end"
-                    color="red lighten-2"
+                    color="red lighten-3"
                     @click="commentdelete(comment.commentNo)"
                     >삭제</v-btn>
                   <v-dialog
@@ -129,8 +139,8 @@
                   >
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
-                        class="d-flex justify-end"
-                        color="primary"
+                        class="d-flex justify-end mr-2"
+                        color="primary lighten-2"
                         dark
                         v-bind="attrs"
                         v-on="on"
@@ -176,13 +186,105 @@
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
+                </v-row>
                 <div>
                 </div>
-                
+                <br>
               </v-card>
+
+              <v-card
+                v-else
+                class="pl-3 pr-3"
+                flat
+              >
+                <p style="font-size:18px" class="pt-2 mb-2">{{ comment.usrEmail }}</p>
+                  
+                {{ comment.commentContents }}
+                <v-row justify="end">
+                  <div
+                    v-if="comment.modifiedDate==comment.createdDate"
+                    class="mr-2 mt-2">
+                    작성일 : {{ comment.createdDate }}
+                  </div>
+                  <div
+                    v-else
+                    class="mr-2 mt-2">
+                    수정일 : {{ comment.modifiedDate }}
+                  </div>
+
+                  <v-btn 
+                    v-if="comment.usrEmail == myEmail"
+                    class="d-flex justify-end"
+                    color="sub"
+                    @click="commentdelete(comment.commentNo)"
+                    outlined
+                    >삭제</v-btn>
+                  <v-dialog
+                    v-if="comment.usrEmail == myEmail"
+                    v-model="dialog"
+                    persistent
+                    max-width="600px"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        class="d-flex justify-end mr-2"
+                        color="main"
+                        dark
+                        v-bind="attrs"
+                        v-on="on"
+                        outlined
+                      >
+                        수정
+                      </v-btn>
+                    </template>
+                    <v-card>
+                      <v-card-title>
+                        <span class="headline">댓글 수정하기</span>
+                      </v-card-title>
+                      <v-card-text>
+                        <v-container>
+                          <v-row>
+                            <v-col cols="12">
+                              <v-text-field
+                                label="comment"
+                                required
+                                v-model="commentmodify"
+                                @keypress.enter="commentupdate(comment.commentNo), dialog = false"
+                              ></v-text-field>
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                        <small>*indicates required field</small>
+                      </v-card-text>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          color="blue darken-1"
+                          text
+                          @click="dialog = false"
+                        >
+                          Close
+                        </v-btn>
+                        <v-btn
+                          color="blue darken-1"
+                          text
+                          @click="commentupdate(comment.commentNo), dialog = false"
+                        >
+                          Save
+                        </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                </v-row>
+                <div>
+                </div>
+                <br>
+              </v-card>
+
+              <hr>
             </div>
-          </div>    
-        </div>
+          </div> 
+        </v-card>
       </v-card>
 
   </v-container>
