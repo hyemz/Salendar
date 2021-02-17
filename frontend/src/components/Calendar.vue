@@ -1,6 +1,6 @@
 <template>
   <div class="demo-app">
-    <div class="demo-app-main">
+    <div class="demo-app-main mb-12 mt-12">
       <FullCalendar class="demo-app-calendar" :options="calendarOptions" />
       <MoreModal :dialog="dialog" :focus="focus" @close="close" />
     </div>
@@ -153,7 +153,7 @@ export default {
 };
 </script>
 
-<style lang="css" scope>
+<style lang="css">
 h2 {
   margin: 0;
   font-size: 16px;
@@ -235,7 +235,7 @@ b {
 }
 
 .fc .fc-toolbar-title {
-  font-size: 2em;
+  font-size: 2.3em;
   font-family: 'S-CoreDream-3Light';
   color: #2c3e50;
 }
