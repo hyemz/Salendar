@@ -1,7 +1,11 @@
 <template>
 
   <v-card class="overflow-hidden" flat>
-    <v-app-bar color="white">
+    <v-app-bar 
+  
+    color='transparent'
+    :scroll-threshold="colorOnScroll"
+    >
       <!-- <template v-slot:img="{ props }">
         <v-img
           v-bind="props"
@@ -87,6 +91,11 @@ import { mapState } from 'vuex';
 import axios from 'axios'
 
 export default {
+  name: 'main-header',
+  props: {
+    transparent: Boolean,
+    colorOnScroll: Number
+  },
   created() {
     this.token = localStorage.getItem('jwt');
     if(this.token) {
