@@ -14,8 +14,9 @@ import MyPage from '../views/mypage/MyPage.vue'
 import MyPost from '../views/mypage/MyPost.vue'
 import WishList from '../views/mypage/WishList.vue'
 import SaleList from '../views/SaleList.vue'
-import Toolbar from '@/components/Toolbar.vue';
-import Footer from '@/components/Footer.vue';
+import Toolbar from '@/components/Toolbar.vue'
+import Footer from '@/components/Footer.vue'
+import TeamIntro from '../views/TeamIntro.vue'
 
 
 Vue.use(VueRouter)
@@ -28,12 +29,20 @@ const routes = [
     component:  Intro ,
   },
   {
+    path: '/team',
+    name: 'TeamIntro',
+    components: { default: TeamIntro, header: Toolbar, footer: Footer  },
+    props: {
+      header: { colorOnScroll: 100 },
+      footer: { backgroundColor: 'black' }
+    }
+  },
+  {
     path: '/login',
     name: 'Login',
     components: { default: Login, header: Toolbar },
     props: {
       header: { colorOnScroll: 100 },
-      footer: { backgroundColor: 'black' }
     }
   },
   {

@@ -13,7 +13,7 @@
             </router-link>
           </li>
           <li>
-            <router-link to="/calendar">
+            <router-link to="/team">
               <v-icon color="grey">mdi-account-supervisor-circle</v-icon>TEAM
             </router-link>
           </li>
