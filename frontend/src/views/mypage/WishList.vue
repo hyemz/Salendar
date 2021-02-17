@@ -1,66 +1,75 @@
 <template>
-  <v-container fluid>
-    <v-card flat>
-      <!-- <v-btn @click="follow">팔로우</v-btn> -->
-      <!-- {{ $moment(this.saleData.Etude[0].sale_start_date).isAfter('2019-01-01') }} -->
-      <v-card class="mx-auto" max-width="1000" flat>
-        <v-col class="d-flex flex-column justify-center mt-12">
-          <h1>찜 목록</h1>
-        </v-col>
-        <v-row dense rows="12">
-          <div
-            v-for="(card, i) in cards"
-            :key="card.title"
-            :cols="card.flex"
-            class="d-flex flex-column justify-center align-center mt-2"
-          >
-            <v-col v-if="card.show">
-              <v-hover v-slot="{ hover }">
-                <v-card
-                  :elevation="hover ? 3 : 1"
-                  :class="{ 'on-hover': hover }"
-                  id="c"
-                  height="250"
-                  outlined
-                >
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-col cols="9">
-                      <v-badge
-                        :value="card.badge"
-                        color="deep-purple accent-4"
-                        content="세일중"
-                        left
-                        transition="slide-x-transition"
-                      >
-                      </v-badge>
-                    </v-col>
-                    <v-btn icon @click="unFollow(i)">
-                      <v-hover v-slot="{ hover }">
-                        <v-icon v-if="!hover">mdi-minus-circle</v-icon>
-                        <v-icon v-else-if="hover" color="deep-orange darken-3"
-                          >mdi-minus-circle</v-icon
-                        >
-                      </v-hover>
-                    </v-btn>
-                  </v-card-actions>
-
-                  <router-link to="/calendar" class="text-decoration-none"
-                    ><v-img
-                      id="test"
-                      :src="card.src"
-                      class="white--text d-flex flex-column justify-center"
-                      height="100"
+  <v-container class="mt-12">
+    <v-row no-gutters>
+      <v-col cols="12" sm="1"></v-col>
+      <v-col cols="12" sm="10">
+        <div class="mb-10">
+          <v-card flat class=" mt-12">
+            <div class="titlefont"><strong>찜</strong>한 매장 목록</div>
+          </v-card>
+          <v-divider class="mt-12 mb-9"></v-divider>
+        </div>
+        <v-card flat>
+          <!-- <v-btn @click="follow">팔로우</v-btn> -->
+          <!-- {{ $moment(this.saleData.Etude[0].sale_start_date).isAfter('2019-01-01') }} -->
+          <v-card class="mx-auto mb-12" max-width="1000" flat>
+            <v-col class="d-flex flex-column justify-center align-center mt-12"> </v-col>
+            <v-row dense rows="12">
+              <div
+                v-for="(card, i) in cards"
+                :key="card.title"
+                :cols="card.flex"
+                class="d-flex flex-column justify-center align-center mt-2"
+              >
+                <v-col v-if="card.show">
+                  <v-hover v-slot="{ hover }">
+                    <v-card
+                      :elevation="hover ? 3 : 1"
+                      :class="{ 'on-hover': hover }"
+                      id="c"
+                      height="250"
+                      outlined
                     >
-                    </v-img
-                  ></router-link>
-                </v-card>
-              </v-hover>
-            </v-col>
-          </div>
-        </v-row>
-      </v-card>
-    </v-card>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-col cols="9">
+                          <v-badge
+                            :value="card.badge"
+                            color="sub"
+                            content="세일중"
+                            left
+                            transition="slide-x-transition"
+                          >
+                          </v-badge>
+                        </v-col>
+                        <v-btn icon @click="unFollow(i)">
+                          <v-hover v-slot="{ hover }">
+                            <v-icon v-if="!hover">mdi-minus-circle</v-icon>
+                            <v-icon v-else-if="hover" color="deep-orange darken-3"
+                              >mdi-minus-circle</v-icon
+                            >
+                          </v-hover>
+                        </v-btn>
+                      </v-card-actions>
+
+                      <router-link to="/calendar" class="text-decoration-none"
+                        ><v-img
+                          id="test"
+                          :src="card.src"
+                          class="white--text d-flex flex-column justify-center"
+                          height="100"
+                        >
+                        </v-img
+                      ></router-link>
+                    </v-card>
+                  </v-hover>
+                </v-col>
+              </div>
+            </v-row>
+          </v-card>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 <script>
