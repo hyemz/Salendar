@@ -55,8 +55,8 @@ export default {
   text-align: center;
   position: relative;
   width: 100%;
-  padding-right: 70px;
-  padding-left: 100px;
+  padding-right: 10px;
+  padding-left: 20px;
   margin-right: auto;
   margin-left: auto;
 }
