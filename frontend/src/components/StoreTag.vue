@@ -4,26 +4,27 @@
       flat
       color="white"
       outlined
-      width="60%"
+      width="70%"
       class="d-flex flex-column justify-center align-center mt-12 sm-8"
     >
-      <div id="desc" class="mt-7">
+      <!-- <div id="desc" class="mt-7">
         관심 있는 매장을 찜하시면, 해당 매장과 관련된 세일 일정을 확인하실 수 있습니다.
-      </div>
+      </div> -->
 
-      <div class="text-center mt-8 mb-5 sm-4">
+      <div class="text-center mt-2 mb-5 sm-4">
         <span v-for="store in stores" :key="store.title">
           <v-chip
+            id="desc"
             class="ma-2"
             outlined
-            :color="store.followed ? 'main' : 'grey lighten-1'"
-            :text-color="store.followed ? 'main' : 'grey lighten-1'"
+            :color="store.followed ? 'sub' : 'grey lighten-1'"
+            :text-color="store.followed ? 'sub' : 'grey lighten-1'"
             @click="follow(store)"
           >
             <!-- :disabled="clicked.includes(store.title)" -->
             {{ store.title }}
 
-            <v-icon color="main" right v-if="store.followed">mdi-heart</v-icon>
+            <v-icon color="sub" right v-if="store.followed">mdi-heart</v-icon>
           </v-chip>
         </span>
       </div>
