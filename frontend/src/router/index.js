@@ -57,17 +57,29 @@ const routes = [
   {
     path: '/board/free',
     name: 'BoardFree',
-    component: BoardFree
+    components: { default: BoardFree, header: Toolbar, footer: Footer },
+    props: {
+      header: { colorOnScroll: 400 },
+      footer: { backgroundColor: 'black' }
+    }
   },
   {
     path: '/board/review',
     name: 'BoardReview',
-    component: BoardReview
+    components: { default: BoardReview, header: Toolbar, footer: Footer },
+    props: {
+      header: { colorOnScroll: 400 },
+      footer: { backgroundColor: 'black' }
+    }
   },
   {
     path: '/board/sale',
     name: 'BoardSale',
-    component: BoardSale
+    components: { default: BoardSale, header: Toolbar, footer: Footer },
+    props: {
+      header: { colorOnScroll: 400 },
+      footer: { backgroundColor: 'black' }
+    }
   },
   {
     path: '/calendar',

@@ -2,11 +2,11 @@
   <v-container 
     fluid
   >
-    <v-img
+    <v-card
       height="100px"
-      src="@/assets/Board/board_title.jpg"
+      color="main"
     >
-    </v-img>
+    </v-card>
     <v-row no-gutters>
 
       <v-col cols="12" sm="2"></v-col>
@@ -22,38 +22,54 @@
                   outlined="false"
                   style="margin-top:-150px"
                 >
-                  <h1>자유 게시판</h1>
+                  <h1 class="white--text">자유 게시판</h1>
                 </v-card>
-                <v-spacer></v-spacer>
-                <v-spacer></v-spacer>
-                <v-spacer></v-spacer>
-                <v-spacer></v-spacer>
-                <v-spacer></v-spacer>
-                <v-text-field
-                  sm="5"
-                  class="pr-2 pl-14"
-                  v-model="search"
-                  append-icon="mdi-magnify"
-                  label="Search"
-                  single-line
-                  hide-details
-                  outlined
-                  rounded
-                ></v-text-field>
-
-                <v-btn
-                  tile
-                  color="grey lighten-2"
-                  @click="create"
-                >
-                  <v-icon left>
-                    mdi-pencil
-                  </v-icon>
-                  New
-                </v-btn>
-
               </v-card-title>
-                <v-tabs>
+              <v-card-subtitle>
+                <v-row>
+                  <v-col cols="12" sm="4">
+                    <v-btn
+                      v-if="isLogin"
+                      tile
+                      class="d-flex align-content-end"
+                      color="grey lighten-2"
+                      @click="create"
+                    >
+                      <v-icon left>
+                        mdi-pencil
+                      </v-icon>
+                      New
+                    </v-btn>
+                  </v-col>
+
+                  <v-col cols="12" sm="4">
+                  </v-col>
+
+                  <v-col cols="12" sm="4">
+                    
+                    <v-text-field
+                      label="Search"
+                      class=""
+                      color="main"
+                      clearable
+                      outlined
+                      prepend-inner-icon="mdi-magnify"
+                      append-icon="mdi-keyboard-return"
+                      v-model="search"
+                      sm="5"
+                      single-line
+                      hide-details
+                      height="10px"
+                      width="20px"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-card-subtitle>
+
+                <v-tabs
+                  background-color="transparent"
+                  color="grey"
+                  >
                   <v-tab to="/board" class="ml-1 text-decoration-none font-weight-medium">
                     전체 게시판
                   </v-tab>
@@ -68,6 +84,7 @@
                   </v-tab>
                 </v-tabs>
               <v-data-table
+                v-if="isLogin"
                 calculate-widths
                 :headers="headers"
                 :items="contents"
@@ -80,6 +97,22 @@
                 sort-desc="true"
                 sort-by="modifiedDate"
                 @click:row="rowClick"
+                data-table-header-sort-badge-min-width="300px"
+              ></v-data-table>
+              <v-data-table
+                v-if="!isLogin"
+                calculate-widths
+                :headers="headers"
+                :items="contents"
+                :search="search"
+                class="pl-4 pr-4 elevation-1"
+                :page.sync="page"
+                :items-per-page="itemsPerPage"
+                hide-default-footer
+                @page-count="pageCount = $event"
+                sort-desc="true"
+                sort-by="modifiedDate"
+                @click:row="rowClickLoginMassage"
                 data-table-header-sort-badge-min-width="300px"
               ></v-data-table>
 
@@ -99,6 +132,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import axios from 'axios'
   export default {
     created() {
@@ -131,6 +165,35 @@ import axios from 'axios'
         contents: [
         
         ],
+      }
+    },
+    computed: {
+      ...mapState(['isLogin']),
+    },
+    watch: {
+      isLogin: function() {
+        this.token = localStorage.getItem('jwt');
+        if(this.token) {
+          const headers = {
+            "x-auth-token": localStorage.getItem('jwt'),
+          };
+          const baseURL = "http://localhost:8080";
+          axios
+          .create({
+              baseURL,
+              headers,
+          })
+          .get('/api/user/token/mypage')
+          .then((res)=>{
+            this.nickname = res.data.usrNick;
+            this.$store.dispatch('login', true);
+          })
+          .catch((err)=>{
+            console.log(err)
+            localStorage.removeItem('jwt');
+            this.$store.dispatch('login', false);
+          })
+        }
       }
     },
     methods: {
@@ -196,6 +259,12 @@ import axios from 'axios'
         this.$router.push({
           path: `/board/detail/${contents.boardNo}`
         })
+      },
+      rowClickLoginMassage () {
+        this.$router.push({
+          path: '/login'
+        })
+        alert("로그인 후 이용해 주세요!")
       },
     }
   }
