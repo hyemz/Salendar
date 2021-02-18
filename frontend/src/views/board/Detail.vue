@@ -1,12 +1,19 @@
 <template>
-  <v-container class="d-flex justify-center">
-      <v-card width="900px" flat>
+  <v-container class="">
+    <v-row no-gutters>
+
+      <v-col cols="12" sm="1"></v-col>
+
+      <v-col
+        cols="12"
+        sm="10"
+      >
+        <v-card flat height="96px"></v-card>
         <v-card flat>
-          <br>
-          <br>
-          <h1>{{items.boardType}}</h1>
+          <div class="titlefont" style="font-size:48px">{{items.boardType}}</div>
           <v-row
             justify="end"
+            class="mt-12 mb-9"
           >
             <v-btn 
               v-if="items.usrEmail == myEmail"
@@ -14,24 +21,27 @@
               elevation="2"
               @click="deletepost"
               color="red lighten-2"
+              outlined
               >삭제하기</v-btn>
             <v-btn 
               v-if="items.usrEmail == myEmail"
               class="mr-1 ml-4"
               elevation="2"
               @click="update"
-              color="grey lighten-2"
+              color="main"
+              outlined
               >수정하기</v-btn>
             <v-btn 
               class="mr-3"
               elevation="2"
               @click="backtoboard"
-              color="grey lighten-2"
+              color="sub"
+              outlined
               >목록</v-btn>
           </v-row>
-          <br>
-          <hr>
         </v-card>
+        <hr>
+        
 
         <v-card flat>
           <v-card 
@@ -87,8 +97,17 @@
           <br>
           <br>
 
+
+          <v-card-text
+          >
+          <h1>댓글</h1>
+          </v-card-text>
+          <hr>
+          <br>
+
           <v-text-field
-            class="mb-8"
+            color="main"
+            class="mb-8 pl-4 pr-4"
             label="댓글을 입력해 주세요!"
             append-icon="mdi-keyboard-return"
             hide-details="auto"
@@ -96,11 +115,6 @@
             v-model="commentinput"
             @keypress.enter="commentcreate"
             ></v-text-field>
-
-          <v-card-text
-          >
-          <h1>댓글</h1>
-          </v-card-text>
 
           <div v-for="(comment, idx) in comments" :key='idx'>
             <div class="pl-4 pr-4">
@@ -128,8 +142,9 @@
                   <v-btn 
                     v-if="comment.usrEmail == myEmail"
                     class="d-flex justify-end"
-                    color="red lighten-3"
+                    color="main"
                     @click="commentdelete(comment.commentNo)"
+                    outlined
                     >삭제</v-btn>
                   <v-dialog
                     v-if="comment.usrEmail == myEmail"
@@ -140,17 +155,19 @@
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
                         class="d-flex justify-end mr-2"
-                        color="primary lighten-2"
+                        color="sub"
                         dark
                         v-bind="attrs"
                         v-on="on"
+                        outlined
                       >
                         수정
                       </v-btn>
                     </template>
                     <v-card>
                       <v-card-title>
-                        <span class="headline">댓글 수정하기</span>
+                        <div class="titlefont" style="font-size:40px">새 글 <strong>작성</strong>하기</div>
+                        <span class="titlefont" style="font-size:24px">댓글 <strong>수정</strong>하기</span>
                       </v-card-title>
                       <v-card-text>
                         <v-container>
@@ -285,8 +302,10 @@
             </div>
           </div> 
         </v-card>
-      </v-card>
+      </v-col>
 
+      <v-col cols="12" sm="1"></v-col>
+    </v-row>
   </v-container>
 </template>
 
