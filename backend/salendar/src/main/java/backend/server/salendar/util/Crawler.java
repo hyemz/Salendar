@@ -425,6 +425,9 @@ public class Crawler {
             while (matcher.find()) {
                 String temp = matcher.group();
                 Matcher perMatcher = perPattern.matcher(temp);
+                System.out.println(temp);
+                System.out.println(perMatcher.find());
+                System.out.println(perMatcher.group());
                 if (perMatcher.find() && Double.parseDouble(perMatcher.group()) > per) {
                     per = Double.parseDouble(perMatcher.group());
                 }
@@ -433,6 +436,9 @@ public class Crawler {
             while (matcher2.find()) {
                 String temp = matcher2.group();
                  Matcher perMatcher = perPattern.matcher(temp);
+                System.out.println(temp);
+                System.out.println(perMatcher.find());
+                System.out.println(perMatcher.group());
                 if (perMatcher.find() && Double.parseDouble(perMatcher.group()) > per) {
                     per = Double.parseDouble(perMatcher.group());
                 }
