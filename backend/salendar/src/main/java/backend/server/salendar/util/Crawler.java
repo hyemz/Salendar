@@ -36,7 +36,7 @@ public class Crawler {
 
         //Properties 설정
         String WEB_DRIVER_ID = "webdriver.chrome.driver";
-        String WEB_DRIVER_PATH = "salendar/chromedriver.exe";
+        String WEB_DRIVER_PATH = "chromedriver.exe";
 
         System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
         ChromeOptions options = new ChromeOptions();
