@@ -9,9 +9,7 @@ import lombok.SneakyThrows;
 
 import javax.transaction.Transactional;
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class SaleService {
@@ -38,10 +36,10 @@ public class SaleService {
         Object obj = cls.newInstance();
 
         Stream<Store> stores = storeRepository.findAll().stream();
-        Pattern pattern = Pattern.compile("(?m)\\[(.*?)\\]");
-        Pattern braket = Pattern.compile("\\[ || \\]");
 
-        stores.forEach(store -> {
+        stores
+                .filter(store -> store.getStoreName() != "Innisfree")
+                .forEach(store -> {
             try {
                 System.out.println(store.getStoreName());
                 Method method = cls.getDeclaredMethod("crawl" + store.getStoreName(), noParam);
@@ -51,23 +49,11 @@ public class SaleService {
                         .forEach(sale -> {
                             saleRepository.findBySaleTitle(sale.getSaleTitle()).orElseGet(() -> {
                                 sale.setStore(store);
-                                if (pattern.matcher(sale.getSaleTitle()).find()) {
-                                    sale.setSaleTitle("");
-                                    String[] arr = sale.getSaleTitle().split("(?<=\\])|(?=\\[)");
-                                    Arrays.stream(arr).forEach(word -> {
-                                        if (!braket.matcher(word).find()) {
-                                            sale.setSaleTitle(sale.getSaleTitle() + " " + word);
-                                        }
-                                    });
+                                if (sale.getSaleTitle().contains("]")) {
+                                    sale.setSaleTitle(sale.getSaleTitle().substring(sale.getSaleTitle().indexOf("]")).strip());
                                 }
-                                if (pattern.matcher(sale.getSaleDsc()).find()) {
-                                    sale.setSaleDsc("");
-                                    String[] arr = sale.getSaleDsc().split("(?<=\\])|(?=\\[)");
-                                    Arrays.stream(arr).forEach(word -> {
-                                        if (!braket.matcher(word).find()) {
-                                            sale.setSaleDsc(sale.getSaleDsc() + " " + word);
-                                        }
-                                    });
+                                if (sale.getSaleDsc().contains("]")) {
+                                    sale.setSaleDsc(sale.getSaleDsc().substring(sale.getSaleDsc().indexOf("]")).strip());
                                 }
                                 if (sale.getSaleBigImg().strip().length() < 5) {
                                     sale.setSaleBigImg(sale.getSaleThumbnail());
