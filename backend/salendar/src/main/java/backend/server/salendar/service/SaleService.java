@@ -36,7 +36,7 @@ public class SaleService {
         Class cls = Class.forName("backend.server.salendar.util.Crawler");
         Object obj = cls.newInstance();
 
-        Stream<Store> stores = storeRepository.findAll().stream();\
+        Stream<Store> stores = storeRepository.findAll().stream();
 
         stores.forEach(store -> {
             try {
