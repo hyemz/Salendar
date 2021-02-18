@@ -8,15 +8,19 @@
         cols="12"
         sm="10"
       >
+        <v-card flat height="96px"></v-card>
         <div v-if="`${this.$route.params.boardNo}`=='undefined'">
-          <v-card-title>
-            <h1 class="pt-2">새 글 작성하기</h1>
-          </v-card-title>
-          <br>
-          <v-card>
+          <v-card flat>
+            <div class="titlefont" style="font-size:48px">새 글 <strong>작성</strong>하기</div>
+          </v-card>
+          <v-divider class="mt-12 mb-9"></v-divider>
 
-          <v-card-text
-          ><h2 style="color: grey">분류</h2>
+          <br>
+          <br>
+          <hr>
+          <v-card class="pt-3 pl-3 pr-3 pb-3" flat color="grey lighten-4">
+          <v-card-text>
+            <h2 style="color: grey">분류</h2>
           </v-card-text>
 
           <v-col
@@ -26,39 +30,46 @@
             >
             <v-select
             v-if="this.myEmail === 'master@master.com'"
+            color="main"
             :items="category"
             label="글의 분류를 선택하세요"
             outlined
             v-model="type"
+            background-color="white"
             ></v-select>
             <v-select
             v-else
+            color="main"
             :items="category2"
             label="글의 분류를 선택하세요"
             outlined
             v-model="type"
+            background-color="white"
             ></v-select>
           </v-col>
 
 
-          <v-card-text
-          ><h2 style="color: grey">제목</h2>
+          <v-card-text>
+            <h2 style="color: grey">제목</h2>
           </v-card-text>
           
           <v-text-field
+            color="main"
             class="pl-4 pr-4 mb-4"
             label="제목을 입력해 주십시오"
             :rules="titlerules"
             hide-details="auto"
             outlined
             v-model="title"
+            background-color="white"
             ></v-text-field>
 
-          <v-card-text
-          ><h2 style="color: grey">내용</h2>
+          <v-card-text>
+            <h2 style="color: grey">내용</h2>
           </v-card-text>
 
           <v-textarea
+            color="main"
             class="pl-4 pr-4 mb-4"
             label="내용을 입력해 주십시오"
             :rules="contentrules"
@@ -66,84 +77,99 @@
             outlined
             height=200
             v-model="content"
+            background-color="white"
             ></v-textarea>
 
-          <v-card-text
-          ><h2 style="color: grey">TAG</h2>
-          </v-card-text>
-
-          <v-text-field
-            class="pl-4 pr-4 mb-4"
-            label="태그를 입력해 주십시오"
-            outlined
-            ></v-text-field>
-
-          <v-card-text
-          ><h2 style="color: grey">파일첨부</h2>
+          <v-card-text>
+            <h2 style="color: grey">파일첨부</h2>
           </v-card-text>
 
           <v-file-input
             truncate-length="15"
+            accept="image/*"
             class="pl-5 pr-5 mb-4"
             ></v-file-input>
-          <v-btn 
-            class="mr-1 ml-4 mb-6"
-            elevation="2"
-            @click="create"
-            color="grey lighten-2"
-            >저장</v-btn>
-          <v-btn 
-            class="mb-6"
-            elevation="2"
-            @click="board"
-            color="grey lighten-2"
-            >목록</v-btn>
+          <v-row justify="end">
+            <v-btn 
+              class="mr-1 ml-4 mb-6 text-color"
+              elevation="2"
+              @click="create"
+              color="main"
+              dark
+              outlined
+              >저장</v-btn>
+            <v-btn 
+              class="mb-6 mr-8"
+              elevation="2"
+              @click="board"
+              color="sub"
+              outlined
+              >목록</v-btn>
+          </v-row>
           </v-card>
+          <hr>
         </div>
 
         <div v-else>
-          <v-card-title>
-            <h1 class="pt-2">글 수정하기</h1>
-          </v-card-title>
-          <br>
-          <v-card>
+          <v-card flat>
+            <div class="titlefont" style="font-size:48px">글 <strong>수정</strong>하기</div>
+          </v-card>
+          <v-divider class="mt-12 mb-9"></v-divider>
 
-          <v-card-text
-          >분류
+          <br>
+          <br>
+          <hr>
+          <v-card class="pt-3 pl-3 pr-3 pb-3" flat color="grey lighten-4">
+          <v-card-text>
+            <h2 style="color: grey">분류</h2>
           </v-card-text>
 
           <v-col
             class="pl-4"
             cols="12"
-            sm="3"
+            sm="4"
             >
             <v-select
+            v-if="this.myEmail === 'master@master.com'"
+            color="main"
             :items="category"
             label="글의 분류를 선택하세요"
             outlined
             v-model="itemss.boardType"
+            background-color="white"
+            ></v-select>
+            <v-select
+            v-else
+            color="main"
+            :items="category2"
+            label="글의 분류를 선택하세요"
+            outlined
+            v-model="itemss.boardType"
+            background-color="white"
             ></v-select>
           </v-col>
 
-
-          <v-card-text
-          >제목
+          <v-card-text>
+            <h2 style="color: grey">제목</h2>
           </v-card-text>
           
           <v-text-field
+            color="main"
             class="pl-4 pr-4 mb-4"
             label="제목을 입력해 주십시오"
             :rules="titlerules"
             hide-details="auto"
             outlined
             v-model="itemss.boardTitle"
+            background-color="white"
             ></v-text-field>
 
-          <v-card-text
-          >내용
+          <v-card-text>
+            <h2 style="color: grey">내용</h2>
           </v-card-text>
 
           <v-textarea
+            color="main"
             class="pl-4 pr-4 mb-4"
             label="내용을 입력해 주십시오"
             :rules="contentrules"
@@ -151,20 +177,11 @@
             outlined
             height=200
             v-model="itemss.boardContents"
+            background-color="white"
             ></v-textarea>
 
-          <v-card-text
-          >TAG
-          </v-card-text>
-
-          <v-text-field
-            class="pl-4 pr-4 mb-4"
-            label="태그를 입력해 주십시오"
-            outlined
-            ></v-text-field>
-
-          <v-card-text
-          >파일첨부
+          <v-card-text>
+            <h2 style="color: grey">파일첨부</h2>
           </v-card-text>
 
           <v-file-input
@@ -174,19 +191,25 @@
             v-model="file"
             ></v-file-input>
 
-          <v-btn 
-            class="mr-1 ml-4 mb-6"
-            elevation="2"
-            @click="update"
-            color="grey lighten-2"
-            >저장</v-btn>
-          <v-btn 
-            class="mb-6"
-            elevation="2"
-            @click="board"
-            color="grey lighten-2"
-            >목록</v-btn>
+          <v-row justify="end">
+            <v-btn 
+              class="mr-1 ml-4 mb-6 text-color"
+              elevation="2"
+              @click="update"
+              color="main"
+              dark
+              outlined
+              >수정</v-btn>
+            <v-btn 
+              class="mb-6 mr-8"
+              elevation="2"
+              @click="board"
+              color="sub"
+              outlined
+              >목록</v-btn>
+          </v-row>
           </v-card>
+          <hr>
         </div>
       </v-col>
 
