@@ -352,7 +352,7 @@ public class Crawler {
         }
 
         Document doc = Jsoup.parse(crawl(eventUrl));
-
+        System.out.println(doc.text());
         Elements eventLists = doc.select("#eventList > li");
 
         for (Element e : eventLists) {
