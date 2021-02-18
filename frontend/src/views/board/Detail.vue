@@ -342,7 +342,7 @@ export default {
     const headers = {
       "x-auth-token": localStorage.getItem("jwt"),
     };
-    const baseURL = "http://localhost:8080/";
+    const baseURL = "http://i4a301.p.ssafy.io:8080/";
     axios
       .create({
         baseURL,
@@ -376,7 +376,7 @@ export default {
     // 게시물에 대한 정보를 가져오는 것
     getItems () {
       axios
-        .get(`http://localhost:8080/api/boardList/${this.$route.params.boardNo}`)
+        .get(`http://i4a301.p.ssafy.io:8080/api/boardList/${this.$route.params.boardNo}`)
         .then((res) => {
           this.items = res.data
           console.log(res.data)
@@ -391,7 +391,7 @@ export default {
       const headers = {
         "x-auth-token": localStorage.getItem("jwt"),
       };
-      const baseURL = "http://localhost:8080/";
+      const baseURL = "http://i4a301.p.ssafy.io:8080/";
       axios
         .create({
           baseURL,
@@ -420,7 +420,7 @@ export default {
       const headers = {
         "x-auth-token": localStorage.getItem("jwt"),
       };
-      const baseURL = "http://localhost:8080/";
+      const baseURL = "http://i4a301.p.ssafy.io:8080/";
       axios
         .create({
           baseURL,
@@ -447,7 +447,7 @@ export default {
       const headers = {
         "x-auth-token": localStorage.getItem("jwt"),
       };
-      const baseURL = "http://localhost:8080/";
+      const baseURL = "http://i4a301.p.ssafy.io:8080/";
       axios
         .create({
           baseURL,
@@ -472,7 +472,7 @@ export default {
       const headers = {
         "x-auth-token": localStorage.getItem('jwt'),
       };
-      const baseURL = "http://localhost:8080/";
+      const baseURL = "http://i4a301.p.ssafy.io:8080/";
       axios
         .create({
           baseURL,
@@ -492,7 +492,7 @@ export default {
       const headers = {
         "x-auth-token": localStorage.getItem('jwt'),
       };
-      const baseURL = "http://localhost:8080/";
+      const baseURL = "http://i4a301.p.ssafy.io:8080/";
       axios
         .create({
           baseURL,
@@ -526,7 +526,7 @@ export default {
     //   const headers = {
     //     "x-auth-token": localStorage.getItem("jwt"),
     //   };
-    //   const baseURL = "http://localhost:8080";
+    //   const baseURL = "http://i4a301.p.ssafy.io:8080";
     //   axios
     //   .create({
     //     baseURL,
@@ -545,7 +545,7 @@ export default {
     //   const headers = {
     //     "x-auth-token": localStorage.getItem("jwt"),
     //   };
-    //   const baseURL = "http://localhost:8080";
+    //   const baseURL = "http://i4a301.p.ssafy.io:8080";
     //   axios
     //   .create({
     //     baseURL,

@@ -7,9 +7,7 @@ import backend.server.salendar.repository.BoardRepository;
 import backend.server.salendar.repository.StoreRepository;
 import backend.server.salendar.repository.UserRepository;
 import backend.server.salendar.security.JwtTokenProvider;
-import lombok.SneakyThrows;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.*;
@@ -42,39 +40,12 @@ public class UserService implements UserDetailsService {
     }
 
 
-    /**
-     * 전체 회원 조회
-     */
-    public List<User> findAll() {
-        List<User> users = new ArrayList<>();
-        userRepository.findAll().forEach(e -> users.add(e));
-        return users;
-    }
-
-
-    /*
-     * 단일 회원 조회
-     */
-    public Optional<User> findByUsrNo(Long usrNo) {
-        Optional<User> user = userRepository.findByUsrNo(usrNo);
-        return user;
-    }
-
-
     /*
      * 이메일로 회원 조회
      */
     public User loadUserByUsername(String usrEmail) {
-        return (User) userRepository.findByUsrEmail(usrEmail)
+        return userRepository.findByUsrEmail(usrEmail)
                 .orElse(null);
-    }
-
-
-    /*
-     * 회원 탈퇴
-     */
-    public void deleteByUsrNo(Long usrNo) {
-        userRepository.deleteByUsrNo(usrNo);
     }
 
 
@@ -85,20 +56,6 @@ public class UserService implements UserDetailsService {
         return loadUserByUsername(JwtTokenProvider.getUserNo(token));
     }
 
-
-    /*
-     * 회원 이미지 설정
-     * 얘는 DB에 저장하는 방법
-     */
-    @SneakyThrows
-    public Byte[] makeByteObjects(MultipartFile file) {
-        Byte[] byteObjects = new Byte[file.getBytes().length];
-        int i = 0;
-        for (byte b: file.getBytes()){
-            byteObjects[i++] = b;
-        }
-        return byteObjects;
-    }
 
 
     /*

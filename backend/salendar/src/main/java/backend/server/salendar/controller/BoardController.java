@@ -53,9 +53,7 @@ public class BoardController {
             Optional<Board> board = boardRepository.findById((boardNo));
             board.get().setHit(board.get().getHit()+1);
 
-            Board newBoard = boardRepository.save(board.get());
-
-            return newBoard;
+            return boardRepository.save(board.get());
 
         }catch (Exception e){
             return null;
@@ -80,9 +78,7 @@ public class BoardController {
         board.setModifiedDate(dateString);
         board.setHit(0L);
 
-        Board newBoard = boardRepository.save(board);
-
-        return newBoard;
+        return boardRepository.save(board);
     }
 
     //  게시물 수정
@@ -138,11 +134,9 @@ public class BoardController {
                  throw new Exception();
             }
 
-            Long boardNo = no;
-
             List<Comment> comments = commentRepository.findCommentsByBoard(board);
-            for(int i=0; i<comments.size(); i++){
-                commentRepository.deleteById(comments.get(i).getCommentNo());
+            for (Comment comment : comments) {
+                commentRepository.deleteById(comment.getCommentNo());
             }
 
 //            List<Like> likes = likeRepository.findLikesByBoard(board);
@@ -151,7 +145,7 @@ public class BoardController {
 //            }
 
 
-            boardRepository.deleteById(boardNo);
+            boardRepository.deleteById(no);
 
             return "Delete Success";
 

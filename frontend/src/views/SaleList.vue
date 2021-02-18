@@ -106,50 +106,7 @@
               </v-slide-group>
             </v-sheet>
           </div>
-          <v-row>
-            <!-- <v-col cols="12" sm="6">
-            <v-card outlined class="mb-6 mt-6">
-              <h3 class="ml-2 mt-1 mb-1">공지사항</h3>
-            </v-card>
-            <v-card outlined>
-              <h3 class="ml-2 mt-1 mb-1">공지사항 1</h3>
-            </v-card>
-            <v-card outlined>
-              <h3 class="ml-2 mt-1 mb-1">공지사항 2</h3>
-            </v-card>
-            <v-card outlined>
-              <h3 class="ml-2 mt-1 mb-1">공지사항 3</h3>
-            </v-card>
-            <v-card outlined>
-              <h3 class="ml-2 mt-1 mb-1">공지사항 4</h3>
-            </v-card>
-            <v-card outlined>
-              <h3 class="ml-2 mt-1 mb-1">공지사항 5</h3>
-            </v-card>
-
-          </v-col>
-          <v-col cols="12" sm="6">
-            <v-card outlined class="mb-6 mt-6">
-              <h3 class="ml-2 mt-1 mb-1">인기 게시글</h3>
-            </v-card>
-            <v-card outlined>
-              <h3 class="ml-2 mt-1 mb-1">인기 게시글 1</h3>
-            </v-card>
-            <v-card outlined>
-              <h3 class="ml-2 mt-1 mb-1">인기 게시글 2</h3>
-            </v-card>
-            <v-card outlined>
-              <h3 class="ml-2 mt-1 mb-1">인기 게시글 3</h3>
-            </v-card>
-            <v-card outlined>
-              <h3 class="ml-2 mt-1 mb-1">인기 게시글 4</h3>
-            </v-card>
-            <v-card outlined>
-              <h3 class="ml-2 mt-1 mb-1">인기 게시글 5</h3>
-            </v-card>
-
-          </v-col> -->
-          </v-row>
+          <v-row> </v-row>
         </v-col>
 
         <v-col cols="12" sm="1"></v-col>
@@ -222,6 +179,9 @@ export default {
         {
           src: require('@/assets/SaleList/04.png'),
         },
+        {
+          src: require('@/assets/SaleList/05.png'),
+        },
       ],
       cycle: true,
       model: null,
@@ -245,7 +205,7 @@ export default {
     },
     getSale() {
       // 세일정보 가져오기
-      const baseURL = 'http://localhost:8080';
+      const baseURL = 'http://i4a301.p.ssafy.io:8080';
       axios
         .create({
           baseURL,

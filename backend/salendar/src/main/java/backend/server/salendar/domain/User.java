@@ -1,16 +1,18 @@
 package backend.server.salendar.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity(name = "user")
@@ -63,17 +65,8 @@ public class User implements UserDetails {
     // 프로필 이미지
     @JsonProperty("usrImg")
     @Lob
-    private Byte[] usrImg;
+    private MultipartFile usrImg;
 
-    // User 모델 복사
-    public void CopyData(User param) {
-        this.usrNo = param.getUsrNo();
-        this.usrPwd = param.getUsrPwd();
-        this.usrNick = param.getUsrNick();
-        this.usrEmail = param.getUsrEmail();
-        this.usrImg = param.getUsrImg();
-//        this.usrFollowing = param.getUsrFollowing();
-    }
 
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @ElementCollection(fetch = FetchType.EAGER)

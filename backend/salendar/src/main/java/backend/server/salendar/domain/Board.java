@@ -1,11 +1,12 @@
 package backend.server.salendar.domain;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity(name = "board")
 @Getter
@@ -54,7 +55,7 @@ public class Board {
     // 게시글 좋아요
     @ManyToMany(mappedBy = "boardLike", fetch = FetchType.EAGER)
     //@JsonManagedReference(value = "board-like")
-    private List<User> boards = new ArrayList<User>();
+    private List<User> boards = new ArrayList<>();
 
     @Override
     public boolean equals(Object o){

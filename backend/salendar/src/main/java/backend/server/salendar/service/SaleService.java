@@ -7,7 +7,6 @@ import backend.server.salendar.repository.SaleRepository;
 import backend.server.salendar.repository.StoreRepository;
 import backend.server.salendar.repository.UserRepository;
 import lombok.SneakyThrows;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.transaction.Transactional;
 import java.lang.reflect.Method;
@@ -19,16 +18,13 @@ import java.util.stream.Stream;
 public class SaleService {
     private final StoreRepository storeRepository;
     private final SaleRepository saleRepository;
-    private final UserRepository userRepository;
 
-    public SaleService(StoreRepository storeRepository, SaleRepository saleRepository, UserRepository userRepository) {
+    public SaleService(StoreRepository storeRepository, SaleRepository saleRepository) {
         this.storeRepository = storeRepository;
         this.saleRepository = saleRepository;
-        this.userRepository = userRepository;
     }
 
     @SneakyThrows
-//    @Scheduled(cron = "0 30 6 * * *", zone = "Asia/Seoul")
     public void crawlAll() {
         List<Sale> cursales = saleRepository.findAll();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");

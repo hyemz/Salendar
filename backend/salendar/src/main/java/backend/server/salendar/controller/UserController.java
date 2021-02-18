@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -77,14 +76,7 @@ public class UserController {
         }
         return new ResponseEntity<>(response, status);
     }
-
-    // 모든 회원 조회
-    @ApiOperation(value = "회원 가입", notes = "회원가입")
-    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.findAll();
-        return new ResponseEntity<>(users, HttpStatus.OK);
-    }
+    
 
     // 토큰으로 회원조회
     @ApiOperation(value = "token으로 회원 정보 조회")
@@ -123,16 +115,16 @@ public class UserController {
     public ResponseEntity<String> setUserProfileImg(@ApiParam(value = "image file") @RequestParam("usrImg") MultipartFile file,
                                                     HttpServletRequest request) {
         try {
-            Byte[] usrImg = userService.makeByteObjects(file);
             User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
-            user.setUsrImg(usrImg);
+            user.setUsrImg(file);
             userRepository.save(user);
-            System.out.println(Arrays.toString(user.getUsrImg()));
+            System.out.println(user.getUsrImg());
             return new ResponseEntity<>("OK", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
         }
     }
+
 
 
     //    팔로우

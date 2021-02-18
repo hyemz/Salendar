@@ -18,9 +18,9 @@ import java.util.*;
 public class EmailService {
 
     private final UserRepository userRepository;
-    private SaleService saleService;
-    private JavaMailSender javaMailSender;
-    private TemplateEngine templateEngine;
+    private final SaleService saleService;
+    private final JavaMailSender javaMailSender;
+    private final TemplateEngine templateEngine;
 
     public EmailService(UserRepository userRepository, SaleService saleService, JavaMailSender javaMailSender, TemplateEngine templateEngine) {
         this.userRepository = userRepository;
@@ -53,11 +53,11 @@ public class EmailService {
 
         for (String storeName : salesMap.keySet()) {
             storeNames.add(storeName);
-            String salesDsc = "";
+            StringBuilder salesDsc = new StringBuilder();
             for (Sale sale : salesMap.get(storeName)) {
-                salesDsc += sale.getSaleTitle() + (salesMap.get(storeName).indexOf(sale) != salesMap.get(storeName).size() - 1 ? ", " : "");
+                salesDsc.append(sale.getSaleTitle()).append(salesMap.get(storeName).indexOf(sale) != salesMap.get(storeName).size() - 1 ? ", " : "");
             }
-            saleDscs.add(salesDsc);
+            saleDscs.add(salesDsc.toString());
 
             sales.add(salesMap.get(storeName).get(0));
         }
@@ -74,7 +74,7 @@ public class EmailService {
     @Scheduled(cron = "0 0 9 1 * *", zone = "Asia/Seoul")
     public void mailAlertSale() {
         List<User> users = userRepository.findAll();
-        users.stream()
+        users
                 .forEach(user -> {
                     if (user.getUsrAlarm()) {
                         sendMail(user);
