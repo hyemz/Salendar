@@ -169,7 +169,9 @@
 
           <v-file-input
             truncate-length="15"
+            accept="image/*"
             class="pl-5 pr-5 mb-4"
+            v-model="file"
             ></v-file-input>
 
           <v-btn 
@@ -261,12 +263,33 @@ export default {
     },
     // 글 생성 함수
     create () {
+
+      // if (this.file) {
+      //   var fd = new FormData()
+      //   fd.append('usrImg', this.file)
+      //   console.log(fd)
+        
+      //   axios.post( , fd{
+      //     headers: {
+      //       'Content-Type': 'multipart/form-data'
+      //     }
+      //   })
+      //   .then(res => {
+      //     console.log(res.data)
+      //     var imgUrl = res.data.url
+      //   })
+      //   .catch( err => {
+      //     console.log(err)
+      //   })
+      // }
+
       // template에서 입력되 내용을 묶음
       var BoardCreateForm = {
         // 앞의 이름은 백앤드의 이름 && 뒤의 이름은 template에서 설정한 이름
         boardContents: this.content,
         boardTitle: this.title,
         boardType: this.type,
+        // imgUrl: imgUrl
       };
       // 사용자 인증을 입력된 내용과 함께 보내기 위한 코드
       const headers = {
@@ -323,6 +346,8 @@ export default {
         boardContents: this.itemss.boardContents,
         boardTitle: this.itemss.boardTitle,
         boardType: this.itemss.boardType,
+        // imgUrl: imgUrl
+
       };
       // 사용자 인증을 수정된 내용과 함께 보내기 위한 코드
       const headers = {

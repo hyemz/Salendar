@@ -1,8 +1,8 @@
 package backend.server.salendar.controller;
 
-import backend.server.salendar.security.JwtTokenProvider;
 import backend.server.salendar.domain.User;
 import backend.server.salendar.repository.UserRepository;
+import backend.server.salendar.security.JwtTokenProvider;
 import backend.server.salendar.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,17 +13,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.URISyntaxException;
 import java.util.*;
 
 
 @Api(tags = {"1. User"})
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin("http://localhost:8081")
 @RequestMapping("/api/user")
 public class UserController {
     // 기본형
@@ -49,9 +49,9 @@ public class UserController {
                     .roles(Collections.singletonList(user.get("usrEmail").endsWith("@admin.com") ? "ROLE_ADMIN" : "ROLE_USER"))
                     .usrAlarm(Boolean.valueOf(user.get("usrAlarm")))
                     .build());
-            return new ResponseEntity<String>(user.get("usrNick"), HttpStatus.OK);
+            return new ResponseEntity<>(user.get("usrNick"), HttpStatus.OK);
         } catch (IllegalStateException e) {
-            return new ResponseEntity<String>(e.toString(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -62,9 +62,9 @@ public class UserController {
     public ResponseEntity<Map<String, Object>> login
     (@ApiParam(value = "usrEmail, usrPwd", required = true) @RequestBody Map<String, String> user) {
         Map<String, Object> response = new HashMap<>();
-        HttpStatus status = null;
+        HttpStatus status;
         try {
-            User member = (User) userRepository.findByUsrEmail(user.get("usrEmail"))
+            User member = userRepository.findByUsrEmail(user.get("usrEmail"))
                     .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 이메일 입니다."));
             if (!passwordEncoder.matches(user.get("usrPwd"), member.getPassword())) {
                 throw new IllegalArgumentException("잘못된 비밀번호입니다.");
@@ -75,7 +75,7 @@ public class UserController {
             response.put("message", e.toString());
             status = HttpStatus.NOT_ACCEPTABLE;
         }
-        return new ResponseEntity<Map<String, Object>>(response, status);
+        return new ResponseEntity<>(response, status);
     }
 
     // 모든 회원 조회
@@ -83,35 +83,17 @@ public class UserController {
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.findAll();
-        return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     // 토큰으로 회원조회
     @ApiOperation(value = "token으로 회원 정보 조회")
     @GetMapping(value = "/token/mypage")
     public ResponseEntity<User> getUser(HttpServletRequest request) {
-        Optional<User> user = Optional.ofNullable(userService.findByToken(jwtTokenProvider.resolveToken(request)));
-        if (user.isPresent()) {
-            return new ResponseEntity<>(user.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(user.get(), HttpStatus.NOT_FOUND);
-        }
-    }
-
-
-    // 회원번호로 한명의 회원 조회
-    @GetMapping(value = "/{usrNo}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<User> getMember(@PathVariable("usrNo") Long usrNo) {
-        Optional<User> user = userService.findByUsrNo(usrNo);
-        return new ResponseEntity<User>(user.get(), HttpStatus.OK);
-    }
-
-
-    // 회원번호로 회원 삭제
-    @DeleteMapping(value = "/{usrNo}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Void> deleteMember(@PathVariable("usrNo") Long usrNo) {
-        userService.deleteByUsrNo(usrNo);
-        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+        Optional<User> user = Optional.ofNullable(userService.findByToken(JwtTokenProvider.resolveToken(request)));
+        return user
+                .map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
 
@@ -129,43 +111,34 @@ public class UserController {
             curUser.setUsrAlarm(Boolean.valueOf(user.get("userAlarm")));
             userRepository.save(curUser);
         } catch (IllegalStateException e) {
-            return new ResponseEntity<String>(e.toString(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<String>(user.get("usrNick"), HttpStatus.OK);
+        return new ResponseEntity<>(user.get("usrNick"), HttpStatus.OK);
     }
 
-    // 프로필 이미지 설정 -> 이건 DB에 들어가는 용
-//    @ApiOperation(value = "프로필 이미지 설정", notes = "Img file, token")
-//    @PutMapping(value = "/token/profileImg")
-//    public ResponseEntity<String> setUserProfileImg(@ApiParam(value = "image file") @RequestParam("img") MultipartFile file,
-//                                                    HttpServletRequest request) {
-//        try {
-//            userService.saveUserImage(JwtTokenProvider.resolveToken(request), file);
-//            return new ResponseEntity<>("OK", HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
-//        }
-//    }
 
-    // 이게 우리가 정한 방법
-    @ApiOperation(value = "프로필 이미지 설정", notes = "Img file Url, token")
+//     프로필 이미지 설정 -> 이건 DB에 들어가는 용
+    @ApiOperation(value = "프로필 이미지 설정", notes = "Img file, token")
     @PutMapping(value = "/token/profileImg")
-    public ResponseEntity<String> setUserProfileImgUrl
-    (@ApiParam(value = "image file Url") @RequestParam("imgUrl") String Url,
-     HttpServletRequest request) {
+    public ResponseEntity<String> setUserProfileImg(@ApiParam(value = "image file") @RequestParam("usrImg") MultipartFile file,
+                                                    HttpServletRequest request) {
         try {
-            userService.saveUserImageUrl(JwtTokenProvider.resolveToken(request), Url);
+            Byte[] usrImg = userService.makeByteObjects(file);
+            User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
+            user.setUsrImg(usrImg);
+            userRepository.save(user);
+            System.out.println(Arrays.toString(user.getUsrImg()));
             return new ResponseEntity<>("OK", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
         }
     }
 
+
     //    팔로우
     @ApiOperation(value = "매장 팔로우", notes = "token, storeName")
     @PostMapping(value = "/token/follow/{storeName}")
-    public ResponseEntity<String> Follow(@PathVariable("storeName") String storeName, HttpServletRequest request) throws
-            URISyntaxException {
+    public ResponseEntity<String> Follow(@PathVariable("storeName") String storeName, HttpServletRequest request) {
         try {
             userService.Follow(JwtTokenProvider.resolveToken(request), storeName);
         } catch (Exception e) {
@@ -177,8 +150,7 @@ public class UserController {
     //    언팔로우
     @ApiOperation(value = "매장 언팔로우", notes = "token, storeName")
     @PostMapping(value = "/token/unfollow/{storeName}")
-    public ResponseEntity<String> unFollow(@PathVariable("storeName") String storeName, HttpServletRequest request) throws
-            URISyntaxException {
+    public ResponseEntity<String> unFollow(@PathVariable("storeName") String storeName, HttpServletRequest request) {
         try {
             userService.unFollow(JwtTokenProvider.resolveToken(request), storeName);
         } catch (Exception e) {
