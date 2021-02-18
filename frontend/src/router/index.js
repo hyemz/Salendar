@@ -11,7 +11,6 @@ import Create from '../views/board/Create.vue'
 import Calendar from '../views/CalendarPage.vue'
 import Detail from '../views/board/Detail.vue'
 import MyPage from '../views/mypage/MyPage.vue'
-import MyPost from '../views/mypage/MyPost.vue'
 import WishList from '../views/mypage/WishList.vue'
 import SaleList from '../views/SaleList.vue'
 import Toolbar from '@/components/Toolbar.vue'
@@ -122,14 +121,6 @@ const routes = [
     path: '/mypage',
     name: 'MyPage',
     components: { default: MyPage, header: Toolbar, footer: Footer },
-    props: {
-      header: { colorOnScroll: 100 },
-    }
-  },
-  {
-    path: '/mypage/mypost',
-    name: 'MyPost',
-    components: { default: MyPost, header: Toolbar, footer: Footer },
     props: {
       header: { colorOnScroll: 100 },
     }
