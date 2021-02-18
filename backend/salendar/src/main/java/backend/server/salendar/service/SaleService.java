@@ -40,33 +40,33 @@ public class SaleService {
         stores
                 .filter(store -> !"Innisfree".equals(store.getStoreName()))
                 .forEach(store -> {
-            try {
-                System.out.println(store.getStoreName());
-                Method method = cls.getDeclaredMethod("crawl" + store.getStoreName(), noParam);
-                List<Sale> sales = (List<Sale>) method.invoke(obj, null);
-                System.out.println("Store: " + store.getStoreName() + ", size: " + sales.size());
-                sales
-                        .forEach(sale -> {
-                            saleRepository.findBySaleTitle(sale.getSaleTitle()).orElseGet(() -> {
-                                sale.setStore(store);
-                                if (sale.getSaleTitle().contains("]")) {
-                                    sale.setSaleTitle(sale.getSaleTitle().substring(sale.getSaleTitle().indexOf("]")).strip());
-                                }
-                                if (sale.getSaleDsc().contains("]")) {
-                                    sale.setSaleDsc(sale.getSaleDsc().substring(sale.getSaleDsc().indexOf("]")).strip());
-                                }
-                                if (sale.getSaleBigImg().strip().length() < 5) {
-                                    sale.setSaleBigImg(sale.getSaleThumbnail());
-                                }
-                                saleRepository.save(sale);
-                                System.out.println(sale);
-                                return sale;
-                            });
-                        });
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+                    try {
+                        System.out.println(store.getStoreName());
+                        Method method = cls.getDeclaredMethod("crawl" + store.getStoreName(), noParam);
+                        List<Sale> sales = (List<Sale>) method.invoke(obj, null);
+                        System.out.println("Store: " + store.getStoreName() + ", size: " + sales.size());
+                        sales
+                                .forEach(sale -> {
+                                    saleRepository.findBySaleTitle(sale.getSaleTitle()).orElseGet(() -> {
+                                        sale.setStore(store);
+                                        if (sale.getSaleTitle().contains("]")) {
+                                            sale.setSaleTitle(sale.getSaleTitle().substring(sale.getSaleTitle().indexOf("]") + 1).strip());
+                                        }
+                                        if (sale.getSaleDsc().contains("]")) {
+                                            sale.setSaleDsc(sale.getSaleDsc().substring(sale.getSaleDsc().indexOf("]") + 1).strip());
+                                        }
+                                        if (sale.getSaleBigImg().strip().length() < 5) {
+                                            sale.setSaleBigImg(sale.getSaleThumbnail());
+                                        }
+                                        saleRepository.save(sale);
+                                        System.out.println(sale);
+                                        return sale;
+                                    });
+                                });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
     }
 
     @Transactional
