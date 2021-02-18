@@ -11,7 +11,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.transaction.Transactional;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class SaleService {
@@ -26,13 +28,24 @@ public class SaleService {
     }
 
     @SneakyThrows
-    @Scheduled(cron = "0 30 6 * * *", zone = "Asia/Seoul")
+//    @Scheduled(cron = "0 30 6 * * *", zone = "Asia/Seoul")
     public void crawlAll() {
+        List<Sale> cursales = saleRepository.findAll();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date today = Calendar.getInstance(TimeZone.getTimeZone("Asia/Seoul")).getTime();
+        for (Sale sale : cursales) {
+            if (Math.abs((sale.getSaleEndDate().getTime() - today.getTime()) / (24 * 60 * 60 * 1000)) > 365) {
+                saleRepository.delete(sale);
+            }
+        }
+
         Class[] noParam = {};
         Class cls = Class.forName("backend.server.salendar.util.Crawler");
         Object obj = cls.newInstance();
 
         Stream<Store> stores = storeRepository.findAll().stream();
+
+        Pattern pattern = Pattern.compile("(?m)^(\\[(.*?)\\])");
 
         stores.forEach(store -> {
             try {
@@ -43,22 +56,24 @@ public class SaleService {
                         .forEach(sale -> {
                             saleRepository.findBySaleTitle(sale.getSaleTitle()).orElseGet(() -> {
                                 sale.setStore(store);
+                                if (pattern.matcher(sale.getSaleTitle()).find()) {
+                                    String newTitle = pattern.matcher(sale.getSaleTitle()).group();
+                                    sale.setSaleTitle(newTitle);
+                                }
+                                if (pattern.matcher(sale.getSaleDsc()).find()) {
+                                    String newDsc = pattern.matcher(sale.getSaleDsc()).group();
+                                    sale.setSaleDsc(newDsc);
+                                }
                                 if (sale.getSaleBigImg().strip().length() < 5) {
                                     sale.setSaleBigImg(sale.getSaleThumbnail());
                                 }
-                                if (sale.getSaleEndDate() == null) {
-                                    Calendar cal = Calendar.getInstance();
-                                    cal.setTime(sale.getSaleStartDate());
-                                    cal.add(Calendar.YEAR, 1);
-                                    sale.setSaleEndDate(cal.getTime());
-                                }
                                 saleRepository.save(sale);
+                                System.out.println(sale);
                                 return sale;
                             });
                         });
             } catch (Exception e) {
                 e.printStackTrace();
-                System.out.println(e.toString());
             }
         });
     }

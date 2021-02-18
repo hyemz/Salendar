@@ -1,8 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Intro from '../views/Intro.vue'
 import Login from '../views/user/Login.vue'
 import Signup from '../views/user/Signup.vue'
 import Board from '../views/board/Board.vue'
+import BoardFree from '../views/board/BoardFree.vue'
+import BoardReview from '../views/board/BoardReview.vue'
+import BoardSale from '../views/board/BoardSale.vue'
 import Create from '../views/board/Create.vue'
 import Calendar from '../views/CalendarPage.vue'
 import Detail from '../views/board/Detail.vue'
@@ -10,6 +14,9 @@ import MyPage from '../views/mypage/MyPage.vue'
 import MyPost from '../views/mypage/MyPost.vue'
 import WishList from '../views/mypage/WishList.vue'
 import SaleList from '../views/SaleList.vue'
+import Toolbar from '@/components/Toolbar.vue'
+import Footer from '@/components/Footer.vue'
+import TeamIntro from '../views/TeamIntro.vue'
 
 
 Vue.use(VueRouter)
@@ -17,55 +24,128 @@ Vue.use(VueRouter)
 const routes = [
 
   {
+    path: '/',
+    name: 'Intro',
+    component:  Intro ,
+  },
+  {
+    path: '/team',
+    name: 'TeamIntro',
+    components: { default: TeamIntro, header: Toolbar, footer: Footer  },
+    props: {
+      header: { colorOnScroll: 100 },
+      footer: { backgroundColor: 'black' }
+    }
+  },
+  {
     path: '/login',
     name: 'Login',
-    component: Login
+    components: { default: Login, header: Toolbar },
+    props: {
+      header: { colorOnScroll: 100 },
+    }
   },
   {
     path: '/signup',
     name: 'Signup',
-    component: Signup
+    components: { default: Signup, header: Toolbar },
+    props: {
+      header: { colorOnScroll: 400 },
+    }
   },
   // 경로 수정
   {
     path: '/board',
     name: 'Board',
-    component: Board
+    components: { default: Board, header: Toolbar, footer: Footer },
+    props: {
+      header: { colorOnScroll: 400 },
+      footer: { backgroundColor: 'black' }
+    }
+  },
+  {
+    path: '/board/free',
+    name: 'BoardFree',
+    components: { default: BoardFree, header: Toolbar, footer: Footer },
+    props: {
+      header: { colorOnScroll: 400 },
+      footer: { backgroundColor: 'black' }
+    }
+  },
+  {
+    path: '/board/review',
+    name: 'BoardReview',
+    components: { default: BoardReview, header: Toolbar, footer: Footer },
+    props: {
+      header: { colorOnScroll: 400 },
+      footer: { backgroundColor: 'black' }
+    }
+  },
+  {
+    path: '/board/sale',
+    name: 'BoardSale',
+    components: { default: BoardSale, header: Toolbar, footer: Footer },
+    props: {
+      header: { colorOnScroll: 400 },
+      footer: { backgroundColor: 'black' }
+    }
   },
   {
     path: '/calendar',
     name: 'Calendar',
-    component: Calendar
+    components: { default: Calendar, header: Toolbar, footer: Footer },
+    props: {
+      header: { colorOnScroll: 400 },
+      footer: { backgroundColor: 'black' }
+    }
   },
   {
     path: '/board/create/:boardNo?',
     name: 'Create',
-    component: Create
+    components: { default: Create, header: Toolbar, footer: Footer },
+    props: {
+      header: { colorOnScroll: 400 },
+    }
   },
   {
     path: '/board/detail/:boardNo',
     name: 'Detail',
-    component: Detail
+    components: { default: Detail, header: Toolbar, footer: Footer },
+    props: {
+      header: { colorOnScroll: 400 },
+    }
   },
   {
     path: '/mypage',
     name: 'MyPage',
-    component: MyPage
+    components: { default: MyPage, header: Toolbar, footer: Footer },
+    props: {
+      header: { colorOnScroll: 400 },
+    }
   },
   {
     path: '/mypage/mypost',
     name: 'MyPost',
-    component: MyPost
+    components: { default: MyPost, header: Toolbar, footer: Footer },
+    props: {
+      header: { colorOnScroll: 400 },
+    }
   },
   {
     path: '/mypage/wishlist',
     name: 'WishList',
-    component: WishList
+    components: { default: WishList, header: Toolbar, footer: Footer },
+    props: {
+      header: { colorOnScroll: 400 },
+    }
   },
   {
     path: '/salelist',
     name: 'SaleList',
-    component: SaleList
+    components: { default: SaleList, header: Toolbar, footer: Footer },
+    props: {
+      header: { colorOnScroll: 400 },
+    }
   },
 
 ]

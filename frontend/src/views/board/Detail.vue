@@ -1,215 +1,292 @@
 <template>
-  <v-container class="">
-    <v-row no-gutters>
-
-      <v-col cols="12" sm="1"></v-col>
-
-      <v-col
-        cols="12"
-        sm="10"
-      >
-          <div>
-              <v-card-title>
-                <h1 class="pt-2 pr-4">[{{items.boardType}}] {{items.boardTitle}}</h1>
-                <v-spacer></v-spacer>
-                <v-btn 
-                  v-if="items.usrEmail == myEmail"
-                  class="mr-1 ml-4"
-                  elevation="2"
-                  @click="deletepost"
-                  color="red lighten-2"
-                  >삭제하기</v-btn>
-                <v-btn 
-                  v-if="items.usrEmail == myEmail"
-                  class="mr-1 ml-4"
-                  elevation="2"
-                  @click="update"
-                  color="grey lighten-2"
-                  >수정하기</v-btn>
-                <v-btn 
-                  class=""
-                  elevation="2"
-                  @click="backtoboard"
-                  color="grey lighten-2"
-                  >목록</v-btn>
-              </v-card-title>
-            <v-card class="mt-2">
-              <br>
-              <v-card-text
-              >
-              <h1>분류</h1>
-              </v-card-text>
-
-              <div class="pl-4 pr-4">
-                <v-card
-                  class="pl-3 pr-3 mb-4"
-                  elevation=""
-                  outlined
-                  max-width="110"
-                >{{items.boardType}}</v-card>
-
-              </div>
-
-              <v-card-text
-              >
-              <h1>내용</h1>
-              </v-card-text>
-
-              <div class="pl-4 pr-4 mb-4">
-                <v-card
-                  class="pl-3 pr-3"
-                  elevation=""
-                  outlined
-                >{{items.boardContents}}</v-card>
-              </div>
-
-              <v-card-text
-              >
-              <h1>사진</h1>
-              </v-card-text>
-
-              <div class="pl-4 pr-4 mb-4">
-                <v-card
-                  max-height="400"
-                  max-width="400"
-                >
-                  <v-img
-                    :src="boardImg"
-                    max-height="400"
-                    max-width="400"
-                    contain
-                  >
-                    <template v-slot:placeholder>
-                      <v-row
-                        class="fill-height ma-0"
-                        align="center"
-                        justify="center"
-                      >
-                        <v-progress-circular
-                          indeterminate
-                          color="grey lighten-5"
-                        ></v-progress-circular>
-                      </v-row>
-                    </template>
-                  </v-img>
-                </v-card>
-              </div>
-
-              <v-card-text
-              >
-              <h1>댓글 작성하기</h1>
-              </v-card-text>
-
-              <v-text-field
-                class="pl-4 pr-4 mb-4"
-                label="댓글을 입력해 주세요!"
-                hide-details="auto"
-                outlined
-                v-model="commentinput"
-                @keypress.enter="commentcreate"
-                ></v-text-field>
-              <v-btn
+  <v-container class="d-flex justify-center">
+      <v-card width="900px" flat>
+        <v-card flat>
+          <br>
+          <br>
+          <h1>{{items.boardType}}</h1>
+          <v-row
+            justify="end"
+          >
+            <v-btn 
+              v-if="items.usrEmail == myEmail"
+              class="mr-1 ml-4"
               elevation="2"
-              @click="commentcreate"
+              @click="deletepost"
+              color="red lighten-2"
+              >삭제하기</v-btn>
+            <v-btn 
+              v-if="items.usrEmail == myEmail"
+              class="mr-1 ml-4"
+              elevation="2"
+              @click="update"
               color="grey lighten-2"
-              >입력</v-btn>
+              >수정하기</v-btn>
+            <v-btn 
+              class="mr-3"
+              elevation="2"
+              @click="backtoboard"
+              color="grey lighten-2"
+              >목록</v-btn>
+          </v-row>
+          <br>
+          <hr>
+        </v-card>
 
-              <v-card-text
+        <v-card flat>
+          <v-card 
+            color="grey lighten-4"
+            flat
+            >
+            <br>
+            <v-row>
+              <v-col cols="12" sm="7">
+                <h1 class="pl-7 pt-2">{{items.boardTitle}}</h1>
+              </v-col>
+              <v-col cols="12" sm="1"></v-col>
+              <v-col cols="12" sm="4">
+                <div style="font-size:16px">작성자: {{items.usrEmail}}</div>
+                <div style="font-size:16px">등록일: {{items.createdDate}}</div>
+                <div style="font-size:16px">수정일: {{items.modifiedDate}}</div>
+                <div style="font-size:16px">조회수: {{items.hit}}</div>
+              </v-col>
+            </v-row>
+            <br>
+          </v-card>
+
+          <hr>
+
+          <v-card
+            class="pl-7 pr-7"
+            flat
+          >
+            <br>
+            <div style="font-size:20px">{{items.boardContents}}</div>
+            <br>
+          </v-card>
+
+          <hr>
+          <div class="pl-7 pr-7 grey lighten-4">
+            <br>
+            <v-card
+              max-height="400"
+              max-width="400"
+              class="mb-2"
+              flat
+            >
+              <v-img
+                src="@/assets/productSample/product_image_sample.png"
+                contain
               >
-              <h1>댓글</h1>
-              </v-card-text>
-
-              <div v-for="(comment, idx) in comments" :key='idx'>
-                <div class="pl-4 pr-4">
-                  <v-card
-                    class="pl-3 pr-3 mt-1 mb-1 justify-space-between"
-                    elevation=""
-                    outlined
-                  >
-                    게시글 번호 : {{ comment.commentNo }}
-                    작성자 : {{ comment.usrEmail }}
-                    내용 : {{ comment.commentContents }}
-                    작성시간 : {{ comment.createdDate }}
-                    <v-btn 
-                      v-if="comment.usrEmail == myEmail"
-                      class="justify"
-                      color="red lighten-2"
-                      @click="commentupdate(comment.commentNo)"
-                      >수정</v-btn>
-                    <v-btn 
-                      v-if="comment.usrEmail == myEmail"
-                      class="justify"
-                      color="red lighten-2"
-                      @click="commentdelete(comment.commentNo)"
-                      >삭제</v-btn>
-                    <div>
-                      <v-row justify="center">
-                        <v-dialog
-                          v-model="dialog"
-                          persistent
-                          max-width="600px"
-                        >
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-btn
-                              color="primary"
-                              dark
-                              v-bind="attrs"
-                              v-on="on"
-                            >
-                              수정
-                            </v-btn>
-                          </template>
-                          <v-card>
-                            <v-card-title>
-                              <span class="headline">댓글 수정하기</span>
-                            </v-card-title>
-                            <v-card-text>
-                              <v-container>
-                                <v-row>
-                                  <v-col cols="12">
-                                    <v-text-field
-                                      label="comment"
-                                      required
-                                      v-model="comment.commentContents"
-                                    ></v-text-field>
-                                  </v-col>
-                                </v-row>
-                              </v-container>
-                              <small>*indicates required field</small>
-                            </v-card-text>
-                            <v-card-actions>
-                              <v-spacer></v-spacer>
-                              <v-btn
-                                color="blue darken-1"
-                                text
-                                @click="dialog = false"
-                              >
-                                Close
-                              </v-btn>
-                              <v-btn
-                                color="blue darken-1"
-                                text
-                                @click="[dialog = false, commentupdate(comment)]"
-                              >
-                                Save
-                              </v-btn>
-                            </v-card-actions>
-                          </v-card>
-                        </v-dialog>
-                      </v-row>
-                    </div>
-                    
-                  </v-card>
-                </div>
-
-
-              </div>
-            </v-card>         
+              </v-img>
+            </v-card>
+            <br>
           </div>
-      </v-col>
 
-      <v-col cols="12" sm="1"></v-col>
-    </v-row>
+          <hr>
+          <br>
+          <br>
+
+          <v-text-field
+            class="mb-8"
+            label="댓글을 입력해 주세요!"
+            append-icon="mdi-keyboard-return"
+            hide-details="auto"
+            outlined
+            v-model="commentinput"
+            @keypress.enter="commentcreate"
+            ></v-text-field>
+
+          <v-card-text
+          >
+          <h1>댓글</h1>
+          </v-card-text>
+
+          <div v-for="(comment, idx) in comments" :key='idx'>
+            <div class="pl-4 pr-4">
+                <hr>
+              <v-card
+                v-if="idx%2==0"
+                class="pl-3 pr-3 grey lighten-4"
+                flat
+              >
+                <p style="font-size:18px" class="pt-2 mb-2">{{ comment.usrEmail }}</p>
+                  
+                {{ comment.commentContents }}
+                <v-row justify="end">
+                  <div
+                    v-if="comment.modifiedDate==comment.createdDate"
+                    class="mr-2 mt-2">
+                    작성일 : {{ comment.createdDate }}
+                  </div>
+                  <div
+                    v-else
+                    class="mr-2 mt-2">
+                    수정일 : {{ comment.modifiedDate }}
+                  </div>
+
+                  <v-btn 
+                    v-if="comment.usrEmail == myEmail"
+                    class="d-flex justify-end"
+                    color="red lighten-3"
+                    @click="commentdelete(comment.commentNo)"
+                    >삭제</v-btn>
+                  <v-dialog
+                    v-if="comment.usrEmail == myEmail"
+                    v-model="dialog"
+                    persistent
+                    max-width="600px"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        class="d-flex justify-end mr-2"
+                        color="primary lighten-2"
+                        dark
+                        v-bind="attrs"
+                        v-on="on"
+                      >
+                        수정
+                      </v-btn>
+                    </template>
+                    <v-card>
+                      <v-card-title>
+                        <span class="headline">댓글 수정하기</span>
+                      </v-card-title>
+                      <v-card-text>
+                        <v-container>
+                          <v-row>
+                            <v-col cols="12">
+                              <v-text-field
+                                label="comment"
+                                required
+                                v-model="commentmodify"
+                                @keypress.enter="commentupdate(comment.commentNo), dialog = false"
+                              ></v-text-field>
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                        <small>*indicates required field</small>
+                      </v-card-text>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          color="blue darken-1"
+                          text
+                          @click="dialog = false"
+                        >
+                          Close
+                        </v-btn>
+                        <v-btn
+                          color="blue darken-1"
+                          text
+                          @click="commentupdate(comment.commentNo), dialog = false"
+                        >
+                          Save
+                        </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                </v-row>
+                <div>
+                </div>
+                <br>
+              </v-card>
+
+              <v-card
+                v-else
+                class="pl-3 pr-3"
+                flat
+              >
+                <p style="font-size:18px" class="pt-2 mb-2">{{ comment.usrEmail }}</p>
+                  
+                {{ comment.commentContents }}
+                <v-row justify="end">
+                  <div
+                    v-if="comment.modifiedDate==comment.createdDate"
+                    class="mr-2 mt-2">
+                    작성일 : {{ comment.createdDate }}
+                  </div>
+                  <div
+                    v-else
+                    class="mr-2 mt-2">
+                    수정일 : {{ comment.modifiedDate }}
+                  </div>
+
+                  <v-btn 
+                    v-if="comment.usrEmail == myEmail"
+                    class="d-flex justify-end"
+                    color="sub"
+                    @click="commentdelete(comment.commentNo)"
+                    outlined
+                    >삭제</v-btn>
+                  <v-dialog
+                    v-if="comment.usrEmail == myEmail"
+                    v-model="dialog"
+                    persistent
+                    max-width="600px"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        class="d-flex justify-end mr-2"
+                        color="main"
+                        dark
+                        v-bind="attrs"
+                        v-on="on"
+                        outlined
+                      >
+                        수정
+                      </v-btn>
+                    </template>
+                    <v-card>
+                      <v-card-title>
+                        <span class="headline">댓글 수정하기</span>
+                      </v-card-title>
+                      <v-card-text>
+                        <v-container>
+                          <v-row>
+                            <v-col cols="12">
+                              <v-text-field
+                                label="comment"
+                                required
+                                v-model="commentmodify"
+                                @keypress.enter="commentupdate(comment.commentNo), dialog = false"
+                              ></v-text-field>
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                        <small>*indicates required field</small>
+                      </v-card-text>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          color="blue darken-1"
+                          text
+                          @click="dialog = false"
+                        >
+                          Close
+                        </v-btn>
+                        <v-btn
+                          color="blue darken-1"
+                          text
+                          @click="commentupdate(comment.commentNo), dialog = false"
+                        >
+                          Save
+                        </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                </v-row>
+                <div>
+                </div>
+                <br>
+              </v-card>
+
+              <hr>
+            </div>
+          </div> 
+        </v-card>
+      </v-card>
+
   </v-container>
 </template>
 
@@ -224,11 +301,22 @@ export default {
       comment: '',
       comments: [],
       commentinput: '',
-      boardImg:'@/assets/productSample/product_image_sample.png'
+      commentmodify: '',
     };
   },
+  // computed: {
+  //   ...mapState(['like']),
+  // },
+  // watch: {
+  //   liked: function () {
+  //     this.liked = []
+  //     for (const )
+  //   },
+  // },
 
   created () {
+    // this.$store.dispatch('updateLike', true)
+    // this.$emit()
     this.getItems()
     this.getcomments()
     // 프로필 가져오기
@@ -249,10 +337,23 @@ export default {
       })
       .catch((err) => {
         console.log(err);
+      })
+    axios
+    .create({
+      baseURL,
+      headers,
+    })
+      .get('api/user/token/followings')
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
       });
   },
 
   methods: {
+    // 전체 게시글 불러오기
     // 게시물에 대한 정보를 가져오는 것
     getItems () {
       axios
@@ -266,7 +367,7 @@ export default {
         })
 
     },
-    // 댓글 리스트 불러오기
+    // 전체 댓글 리스트 불러오기
     getcomments () {
       const headers = {
         "x-auth-token": localStorage.getItem("jwt"),
@@ -345,9 +446,9 @@ export default {
         });
         alert("댓글 작성이 완료되었습니다.")
     },
-    commentupdate (comment) {
+    commentupdate (commentNo) {
       var CommentModifyForm = {
-        commentContents: this.comment.commentContents,
+        commentContents: this.commentmodify,
       }
       const headers = {
         "x-auth-token": localStorage.getItem('jwt'),
@@ -358,9 +459,10 @@ export default {
           baseURL,
           headers,
         })
-        .get(`api/boardList/token/${this.$route.params.boardNo}/comment/${comment.commentNo}`, CommentModifyForm)
+        .put(`api/boardList/token/${this.$route.params.boardNo}/comment/${commentNo}`, CommentModifyForm)
         .then((res) => {
           console.log(res);
+          this.getcomments()
         })
         .catch((err) => {
           console.log(err);
@@ -380,6 +482,7 @@ export default {
         .delete(`api/boardList/token/${this.$route.params.boardNo}/comment/${commentNo}`)
         .then((res) => {
           console.log(res);
+          this.commentmodify = ''
           this.getcomments()
         })
         .catch((err) => {
@@ -387,6 +490,57 @@ export default {
         });
         alert("댓글이 삭제되었습니다.")
     },
+    // liked (items) {
+    //   console.log(items)
+    //   if (items.boardNo) {
+    //     alert( items.boardTitle + "게시글의 좋아요를 취소했습니다.")
+    //     items.followed = false
+    //     this.unLike(items.boardNo)
+    //     this.liked = false
+    //   } else {
+    //     alert( item.title + "게시글의 좋아요를 눌렀습니다.")
+    //     item.followed = true
+    //     this.Like(items.boardNo)
+    //   }
+    // },
+    // Like() {
+    //   const headers = {
+    //     "x-auth-token": localStorage.getItem("jwt"),
+    //   };
+    //   const baseURL = "http://localhost:8080";
+    //   axios
+    //   .create({
+    //     baseURL,
+    //     headers,
+    //   })
+    //   .post(`/api/user/token/like/${this.$route.params.boardNo}`)
+    //   .then((res) => {
+    //     console.log(res);
+    //     this.$store.dispatch('updateLike', true)
+    //   })
+    //   .catch((err) => {
+    //     console.log("좋아요에 실패하였습니다.", err);
+    //   });
+    // },
+    // unLike() {
+    //   const headers = {
+    //     "x-auth-token": localStorage.getItem("jwt"),
+    //   };
+    //   const baseURL = "http://localhost:8080";
+    //   axios
+    //   .create({
+    //     baseURL,
+    //     headers,
+    //   })
+    //   .post(`/api/user/token/unlike/${this.$route.params.boardNo}`)
+    //   .then((res) => {
+    //     console.log(res);
+    //     this.$store.dispatch('updateLike', true)
+    //   })
+    //   .catch((err) => {
+    //     console.log("좋아요 해제에 실패하였습니다.", err)
+    //   });
+    // }
 
     }
   }

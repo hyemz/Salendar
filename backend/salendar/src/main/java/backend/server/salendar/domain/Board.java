@@ -1,12 +1,11 @@
 package backend.server.salendar.domain;
 
-import lombok.*;
-
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Objects;
+import java.util.*;
 
 @Entity(name = "board")
 @Getter
@@ -22,81 +21,40 @@ public class Board {
     @Column(name = "board_no")
     private Long boardNo;
 
+    @JsonProperty("usrEmail")
     private String usrEmail;
+
+    @JsonProperty("usrNick")
+    private String usrNick;
+
+    @JsonProperty("boardTitle")
     private String boardTitle;
+
+    @JsonProperty("boardContents")
     private String boardContents;
+
+    @JsonProperty("createdDate")
     private String createdDate;
+
+    @JsonProperty("modifiedDate")
     private String modifiedDate;
+
+    @JsonProperty("boardType")
     private String boardType;
+
+    @JsonProperty("imgUrl")
     private String imgUrl;
 
-    @Builder
-    public Board(String usrEmail, String boardTitle, String boardContents,
-                 String createdDate, String modifiedDate, String boardType, String imgUrl) {
-        this.usrEmail = usrEmail;
-        this.boardTitle = boardTitle;
-        this.boardContents = boardContents;
-        this.createdDate = createdDate;
-        this.modifiedDate = modifiedDate;
-        this.boardType = boardType;
-        this.imgUrl = imgUrl;
-    }
+    @JsonProperty("hit")
+    private Long hit;
 
-    public String getUsrEmail() {
-        return usrEmail;
-    }
+    @JsonProperty("likeCnt")
+    private int likeCnt;
 
-    public void setUsrEmail(String usrEmail) {
-        this.usrEmail = usrEmail;
-    }
-
-    public String getBoardTitle() {
-        return boardTitle;
-    }
-
-    public void setBoardTitle(String boardTitle) {
-        this.boardTitle = boardTitle;
-    }
-
-    public String getBoardContents() {
-        return boardContents;
-    }
-
-    public void setBoardContents(String boardContents) {
-        this.boardContents = boardContents;
-    }
-
-    public String getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(String createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getModifiedDate() {
-        return modifiedDate;
-    }
-
-    public void setModifiedDate(String modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
-
-    public String getBoardType() {
-        return boardType;
-    }
-
-    public void setBoardType(String boardType) {
-        this.boardType = boardType;
-    }
-
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
+    // 게시글 좋아요
+    @ManyToMany(mappedBy = "boardLike", fetch = FetchType.EAGER)
+    //@JsonManagedReference(value = "board-like")
+    private List<User> boards = new ArrayList<User>();
 
     @Override
     public boolean equals(Object o){
@@ -105,14 +63,18 @@ public class Board {
         Board board = (Board)  o;
         return Objects.equals(boardNo, board.boardNo) &&
                 Objects.equals(usrEmail, board.usrEmail) &&
+                Objects.equals(usrNick, board.usrNick) &&
                 Objects.equals(boardTitle, board.boardTitle) &&
                 Objects.equals(boardContents, board.boardContents) &&
                 Objects.equals(createdDate, board.createdDate) &&
                 Objects.equals(modifiedDate, board.modifiedDate) &&
                 Objects.equals(boardType, board.boardType) &&
-                Objects.equals(imgUrl, board.imgUrl);
+                Objects.equals(imgUrl, board.imgUrl) &&
+                Objects.equals(hit, board.hit) &&
+                Objects.equals(likeCnt, board.likeCnt);
+//        &&
+//                Objects.equals(board_like, board.board_like);
     }
-
 }
 
 

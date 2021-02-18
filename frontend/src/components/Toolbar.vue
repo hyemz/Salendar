@@ -1,7 +1,11 @@
 <template>
 
   <v-card class="overflow-hidden" flat>
-    <v-app-bar color="white">
+    <v-app-bar 
+  
+    color='transparent'
+    :scroll-threshold="colorOnScroll"
+    >
       <!-- <template v-slot:img="{ props }">
         <v-img
           v-bind="props"
@@ -12,7 +16,7 @@
         <v-toolbar-title 
           color="#6A76AB"
           class="white--text text-decoration-none font-weight-medium" 
-          ><router-link to="/calendar" class="text-decoration-none font-weight-medium"
+          ><router-link to="/" class="text-decoration-none font-weight-medium"
             ><v-img contain src="@/assets/logo.png" width=160></v-img></router-link
           ></v-toolbar-title
         >
@@ -87,6 +91,11 @@ import { mapState } from 'vuex';
 import axios from 'axios'
 
 export default {
+  name: 'main-header',
+  props: {
+    transparent: Boolean,
+    colorOnScroll: Number
+  },
   created() {
     this.token = localStorage.getItem('jwt');
     if(this.token) {

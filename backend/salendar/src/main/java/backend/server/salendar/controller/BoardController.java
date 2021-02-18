@@ -7,22 +7,17 @@ import backend.server.salendar.repository.BoardRepository;
 import backend.server.salendar.repository.CommentRepository;
 import backend.server.salendar.security.JwtTokenProvider;
 import backend.server.salendar.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
-import org.springframework.beans.NullValueInNestedPathException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.HandlerMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Api(tags = {"3. Board"})
@@ -40,6 +35,9 @@ public class BoardController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     //  게시물 리스트
     @GetMapping("/")
     public List<Board> getBoardList() {
@@ -53,8 +51,11 @@ public class BoardController {
         try {
             Long boardNo = Long.parseLong(no);
             Optional<Board> board = boardRepository.findById((boardNo));
+            board.get().setHit(board.get().getHit()+1);
 
-            return board.get();
+            Board newBoard = boardRepository.save(board.get());
+
+            return newBoard;
 
         }catch (Exception e){
             return null;
@@ -63,12 +64,13 @@ public class BoardController {
     }
 
     //  게시물 생성
-    @PutMapping("/token/createboard")
+    @PutMapping(value = "/token/createboard", produces="application/json")
     public Board createBoard(@RequestBody Board board,
                              HttpServletRequest request){
 
         User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
         board.setUsrEmail(user.getUsrEmail());
+        board.setUsrNick(user.getUsrNick());
 
         //  현재시각 가져오기
         Date date = new Date();
@@ -76,6 +78,7 @@ public class BoardController {
         String dateString = format.format(date);
         board.setCreatedDate(dateString);
         board.setModifiedDate(dateString);
+        board.setHit(0L);
 
         Board newBoard = boardRepository.save(board);
 
@@ -142,6 +145,11 @@ public class BoardController {
                 commentRepository.deleteById(comments.get(i).getCommentNo());
             }
 
+//            List<Like> likes = likeRepository.findLikesByBoard(board);
+//            for(int i=0; i<likes.size(); i++){
+//                likeRepository.deleteById(likes.get(i).getId());
+//            }
+
 
             boardRepository.deleteById(boardNo);
 
@@ -151,4 +159,32 @@ public class BoardController {
             return "Delete Fail";
         }
     }
+
+
+//    @PostMapping(value = "/token/{boardNo}/like", produces = "application/json")
+//    @ResponseBody
+//    public String likePost(@PathVariable("boardNo") Long no, HttpServletRequest request) throws JsonProcessingException {
+//
+//        User loginUser = userService.findByToken(JwtTokenProvider.resolveToken(request));
+//
+//        String isLike;
+//        String loginEmail = loginUser.getUsrEmail();
+//        if(loginEmail == null){
+//            isLike = "ERROR: login to like/dislike board";
+//        }
+//        else{
+//            User user = userService.loadUserByUsername(loginEmail);
+//            Board board = boardRepository.findById(no).get();
+//
+//            int r = boardService.likePost(board, user);
+//            if(r == 1){
+//                isLike = "like";
+//            }
+//            else{
+//                isLike = "dislike";
+//            }
+//        }
+//
+//        return objectMapper.writeValueAsString(isLike);
+//    }
 }
