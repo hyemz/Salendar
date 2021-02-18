@@ -23,59 +23,11 @@ public class Comment {
     private String createdDate;
     private String modifiedDate;
 
-    private String usrEmail;
+    private String usrNick;
 
     @ManyToOne
     @JoinColumn(name = "board_no")
     private Board board;
-
-    public Long getCommentNo() {
-        return commentNo;
-    }
-
-    public void setCommentNo(Long commentNo) {
-        this.commentNo = commentNo;
-    }
-
-   public String getCommentContents() {
-        return commentContents;
-    }
-
-    public void setCommentContents(String commentContents) {
-        this.commentContents = commentContents;
-    }
-
-    public String getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(String createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getModifiedDate() {
-        return modifiedDate;
-    }
-
-    public void setModifiedDate(String modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
-
-    public String getUsrEmail() {
-        return usrEmail;
-    }
-
-    public void setUsrEmail(String usrEmail) {
-        this.usrEmail = usrEmail;
-    }
-
-    public Board getBoard() {
-        return board;
-    }
-
-    public void setBoard(Board board) {
-        this.board = board;
-    }
 
     @Override
     public boolean equals(Object o){
@@ -83,7 +35,7 @@ public class Comment {
         if(o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment)  o;
         return Objects.equals(commentNo, comment.commentNo) &&
-                Objects.equals(usrEmail, comment.usrEmail) &&
+                Objects.equals(usrNick, comment.usrNick) &&
                 Objects.equals(commentContents, comment.commentContents) &&
                 Objects.equals(createdDate, comment.createdDate) &&
                 Objects.equals(modifiedDate, comment.modifiedDate);

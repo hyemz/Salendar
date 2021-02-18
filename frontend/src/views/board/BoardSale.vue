@@ -137,50 +137,52 @@
 
 <script>
 import { mapState } from 'vuex';
-import axios from 'axios';
-export default {
-  created() {
-    // 공지사항만 가져오기
-    this.getnotifications();
-    // 공지사항 제외 게시판 글 가져오기
-    this.getboards();
-  },
-  data() {
-    return {
-      search: '',
-      page: 1,
-      pageCount: 0,
-      itemsPerPage: 10,
-      headers: [
-        {
-          width: '90',
-          text: '게시글 번호',
-          align: 'center',
-          sortable: false,
-          value: 'modifiedDate',
-        },
-        // 내용에 sortable: false를 추가하면 제목을 클릭 시 sort 되는 것을 제거
-        { width: '60', text: '분류', value: 'boardType', align: 'start', sortable: false },
-        { text: '제목', value: 'boardTitle', align: 'start', sortable: false },
-        { width: '150', text: '작성자', value: 'usrNick', align: 'start', sortable: false },
-        { width: '120', text: '등록일', value: 'createdDate', align: 'center', sortable: false },
-        { width: '90', text: '조회수', value: 'hit', align: 'center', sortable: false },
-      ],
-      contents: [],
-    };
-  },
-  computed: {
-    ...mapState(['isLogin']),
-  },
-  watch: {
-    isLogin: function() {
-      this.token = localStorage.getItem('jwt');
-      if (this.token) {
-        const headers = {
-          'x-auth-token': localStorage.getItem('jwt'),
-        };
-        const baseURL = 'http://localhost:8080';
-        axios
+import axios from 'axios'
+  export default {
+    created() {
+      // 공지사항만 가져오기
+      this.getnotifications()
+      // 공지사항 제외 게시판 글 가져오기
+      this.getboards()
+    },
+    data () {
+      return {
+        search: '',
+        page: 1,
+        pageCount: 0,
+        itemsPerPage: 10,
+        headers: [
+          {
+            width: '90',
+            text: '게시글 번호',
+            align: 'center',
+            sortable: false,
+            value: 'modifiedDate',
+          },
+          // 내용에 sortable: false를 추가하면 제목을 클릭 시 sort 되는 것을 제거
+          { width: '60', text: '분류', value: 'boardType', align: 'start', sortable: false,},
+          { text: '제목', value: 'boardTitle', align: 'start', sortable: false,},
+          { width: '150', text: '작성자', value: 'usrEmail', align: 'start', sortable: false,},
+          { width: '120', text: '등록일', value: 'createdDate', align: 'center', sortable: false,},
+          { width: '90', text: '조회수', value: 'hit', align: 'center', sortable: false,},
+        ],
+        contents: [
+        
+        ],
+      }
+    },
+    computed: {
+      ...mapState(['isLogin']),
+    },
+    watch: {
+      isLogin: function() {
+        this.token = localStorage.getItem('jwt');
+        if(this.token) {
+          const headers = {
+            "x-auth-token": localStorage.getItem('jwt'),
+          };
+          const baseURL = "http://i4a301.p.ssafy.io:8080";
+          axios
           .create({
             baseURL,
             headers,
@@ -205,49 +207,46 @@ export default {
       var month = ('0' + (1 + date.getMonth())).slice(-2);
       var day = ('0' + date.getDate()).slice(-2);
 
-      return year + '-' + month + '-' + day;
-    },
-    getnotifications() {
-      axios
-        .get('http://localhost:8080/api/boardList/')
-        .then((res) => {
-          // console.log(res.data[1].boardType)
-          for (var i = 0; i < res.data.length; i++) {
-            if (res.data[i].boardType === '공지사항') {
-              res.data[i].createdDate =
-                res.data[i].createdDate.slice(2, 4) +
-                '/' +
-                res.data[i].createdDate.slice(5, 7) +
-                '/' +
-                res.data[i].createdDate.slice(8, 10);
-              res.data[i].modifiedDate = res.data[i].boardType;
-              res.data[i].boardType = '공지';
-              this.contents.push(res.data[i]);
-              // console.log(this.contents, i)
+        return year + "-" + month + "-" + day;
+      },
+      getnotifications () {
+        axios
+          .get("http://i4a301.p.ssafy.io:8080/api/boardList/")
+          .then((res) => {
+            // console.log(res.data[1].boardType)
+            for (var i = 0; i < res.data.length; i++) {
+              if (res.data[i].boardType === "공지사항") {
+                res.data[i].createdDate = res.data[i].createdDate.slice(2, 4) + "/" + res.data[i].createdDate.slice(5, 7) + "/" + res.data[i].createdDate.slice(8, 10)
+                res.data[i].modifiedDate = res.data[i].boardType
+                res.data[i].boardType = "공지"
+                this.contents.push(res.data[i])
+                // console.log(this.contents, i)
+              }
             }
-          }
-          // console.log(this.contents)
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    getboards() {
-      axios
-        .get('http://localhost:8080/api/boardList/')
-        .then((res) => {
-          var count = 0;
-          for (var i = 0; i < res.data.length; i++) {
-            if (res.data[i].boardType === '세일 제보 게시판') {
-              if (res.data[i].createdDate.slice(undefined, 10) == this.getToday()) {
-                res.data[i].createdDate = res.data[i].createdDate.slice(10);
-              } else {
-                res.data[i].createdDate =
-                  res.data[i].createdDate.slice(2, 4) +
-                  '/' +
-                  res.data[i].createdDate.slice(5, 7) +
-                  '/' +
-                  res.data[i].createdDate.slice(8, 10);
+            // console.log(this.contents)
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      },
+      getboards () {
+        axios
+          .get("http://i4a301.p.ssafy.io:8080/api/boardList/")
+          .then((res) => {
+            var count = 0
+            for (var i = 0; i < res.data.length; i++) {
+              if (res.data[i].boardType === "세일 제보 게시판") {
+                if (res.data[i].createdDate.slice(undefined, 10) == this.getToday()) {
+                  res.data[i].createdDate = res.data[i].createdDate.slice(10)
+                } else {
+                  res.data[i].createdDate = res.data[i].createdDate.slice(2, 4) + "/" + res.data[i].createdDate.slice(5, 7) + "/" + res.data[i].createdDate.slice(8, 10)
+                }
+                res.data[i].boardType = "제보"
+                count += 1
+                res.data[i].modifiedDate = count
+
+                this.contents.push(res.data[i])
+                console.log(this.contents)
               }
               res.data[i].boardType = '제보';
               count += 1;

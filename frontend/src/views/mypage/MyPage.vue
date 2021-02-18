@@ -130,8 +130,7 @@ export default {
       changePwd: false,
       canChangePwd: false,
       myEmail: "",
-      myImg:
-        "https://cdn.pixabay.com/photo/2020/07/12/07/47/bee-5396362_1280.jpg",
+      myImg: "",
       nickname: "",
       fakenickname: "",
       accessPwd: "",
@@ -166,7 +165,7 @@ export default {
     const headers = {
       "x-auth-token": localStorage.getItem("jwt"),
     };
-    const baseURL = "http://localhost:8080";
+    const baseURL = "http://i4a301.p.ssafy.io:8080";
     axios
       .create({
         baseURL,
@@ -179,6 +178,12 @@ export default {
         this.nickname = res.data.usrNick;
         this.fakenickname = res.data.usrNick;
         this.alarm = res.data.usrAlarm;
+        if (res.data.usrImg) {
+          this.myImg = 'data:image/png;base64,'+ res.data.usrImg;
+        } else {
+          this.myImg =
+            "https://cdn.pixabay.com/photo/2020/07/12/07/47/bee-5396362_1280.jpg";
+        }
       })
       .catch((err) => {
         console.log("정보를 불러오는 것을 실패했습니다.", err);
@@ -208,11 +213,9 @@ export default {
         "x-auth-token": localStorage.getItem("jwt"),
         "Content-Type": "multipart/form-data",
       };
-      const baseURL = "http://localhost:8080";
+      const baseURL = "http://i4a301.p.ssafy.io:8080";
       var fd = new FormData();
       fd.append("usrImg", this.file);
-      console.log(fd);
-      console.log("여기");
 
       axios
         .create({
@@ -251,7 +254,7 @@ export default {
       const headers = {
         "x-auth-token": localStorage.getItem("jwt"),
       };
-      const baseURL = "http://localhost:8080";
+      const baseURL = "http://i4a301.p.ssafy.io:8080";
       axios
         .create({
           baseURL,
@@ -272,7 +275,7 @@ export default {
       const headers = {
         "x-auth-token": localStorage.getItem("jwt"),
       };
-      const baseURL = "http://localhost:8080";
+      const baseURL = "http://i4a301.p.ssafy.io:8080";
       axios
         .create({
           baseURL,

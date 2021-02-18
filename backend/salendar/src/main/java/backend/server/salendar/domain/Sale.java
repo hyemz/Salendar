@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 
 
@@ -76,16 +74,4 @@ public class Sale {
     @JsonBackReference
     @JoinColumn(name = "store_no")
     private Store store;
-
-    // Sale 모델 복사
-    public void CopyData(Sale param) {
-        this.saleNo = param.getSaleNo();
-        this.saleLink = param.getSaleLink();
-        this.saleBigImg = param.getSaleBigImg();
-        this.saleThumbnail = param.getSaleThumbnail();
-        this.saleTitle = param.getSaleTitle();
-        this.saleStartDate = param.getSaleStartDate();
-        this.saleEndDate = param.getSaleEndDate();
-        this.saleDsc = param.getSaleDsc();
-    }
 }

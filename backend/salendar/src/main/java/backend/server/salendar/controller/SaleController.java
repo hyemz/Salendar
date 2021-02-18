@@ -48,6 +48,14 @@ public class SaleController {
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
+//    세일 업데이트 스케쥴러
+    @Scheduled(cron = "0 30 6 * * *", zone = "Asia/Seoul")
+    public void updateSaleDBAuto() {
+        try {
+            saleService.crawlAll();
+        } catch (Exception ignored) {
+        }
+    }
 
     //    세일 전체 리스트
     @Transactional

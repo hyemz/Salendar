@@ -6,22 +6,25 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
-import javax.net.ssl.*;
-import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Crawler {
 
@@ -385,17 +388,6 @@ public class Crawler {
         return result;
     }
 
-    public static void main(String[] args) throws KeyManagementException, NoSuchAlgorithmException, IOException {
-//        System.out.println(crawlOliveyoung());
-//        System.out.println(crawlAritaum());
-//        System.out.println(crawlMissha());
-//        System.out.println(crawlEtude());
-//        System.out.println(crawlLalavla());
-//        System.out.println(crawlThefaceshop());
-//        System.out.println(crawlTonymoly());
-//        System.out.println(crawlInnisfree());
-    }
-
 
     @SneakyThrows
     public static Boolean saleFilter(Sale sale) {
@@ -424,17 +416,25 @@ public class Crawler {
 
         List<Pattern> patterns2 = Arrays.asList(Pattern.compile("(?m)\\d*%"), Pattern.compile("(?m)\\d*.\\d*%"));
         for (Pattern pattern : patterns2) {
-            Optional<Double> per = Optional.empty();
+            Double per = null;
             Matcher matcher = pattern.matcher(sale.getSaleTitle());
             while (matcher.find()) {
-                if (per.isPresent() && Double.parseDouble(matcher.group()) < per.get()) {
-                    per = Optional.of(Double.parseDouble(matcher.group()));
+                if (per != null) {
+                    if (Double.parseDouble(matcher.group()) < per) {
+                        per = Double.parseDouble(matcher.group());
+                    }
+                } else {
+                    per = Double.parseDouble(matcher.group());
                 }
             }
             Matcher matcher2 = pattern.matcher(sale.getSaleDsc());
             while (matcher2.find()) {
-                if (per.isPresent() && Double.parseDouble(matcher2.group()) < per.get()) {
-                    per = Optional.of(Double.parseDouble(matcher2.group()));
+                if (per != null) {
+                    if (Double.parseDouble(matcher2.group()) < per) {
+                        per = Double.parseDouble(matcher2.group());
+                    }
+                } else {
+                    per = Double.parseDouble(matcher2.group());
                 }
             }
         }
@@ -446,12 +446,12 @@ public class Crawler {
         TrustManager[] trustAllCerts = new TrustManager[]{
                 new X509TrustManager() {
                     @Override
-                    public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                    public void checkClientTrusted(X509Certificate[] chain, String authType) {
 
                     }
 
                     @Override
-                    public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                    public void checkServerTrusted(X509Certificate[] chain, String authType) {
 
                     }
 
@@ -464,12 +464,7 @@ public class Crawler {
 
         SSLContext sc = SSLContext.getInstance("SSL");
         sc.init(null, trustAllCerts, new SecureRandom());
-        HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-            @Override
-            public boolean verify(String hostname, SSLSession session) {
-                return true;
-            }
-        });
+        HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
 
         HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
 

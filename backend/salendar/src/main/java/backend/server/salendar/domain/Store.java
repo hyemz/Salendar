@@ -3,10 +3,8 @@ package backend.server.salendar.domain;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +31,7 @@ public class Store {
     @JsonProperty("store_sales")
     @OneToMany(mappedBy = "store")
     @JsonManagedReference
-    private List<Sale> storeSales = new ArrayList<Sale>();
+    private List<Sale> storeSales = new ArrayList<>();
 
     // 로고
     @JsonProperty("store_logo")
@@ -42,13 +40,5 @@ public class Store {
     //    팔로워
     @ManyToMany(mappedBy = "usrFollowing")
     //@JsonManagedReference(value = "user-following")
-    private List<User> users = new ArrayList<User>();
-
-    // Store 모델 복사
-    public void CopyData(Store param) {
-        this.storeNo = param.getStoreNo();
-        this.storeName = param.getStoreName();
-        this.storeSales = param.getStoreSales();
-        this.storeLogo = param.getStoreLogo();
-    }
+    private List<User> users = new ArrayList<>();
 }

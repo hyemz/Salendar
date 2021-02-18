@@ -11,13 +11,11 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.HandlerMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Api(tags = {"4. Comment"})
@@ -53,7 +51,7 @@ public class CommentController {
 
         Optional<Board> boardItem = boardRepository.findById(no);
         comment.setBoard((boardItem.get()));
-        comment.setUsrEmail(user.getUsrEmail());
+        comment.setUsrNick(user.getUsrNick());
 
         //  현재시각 가져오기
         Date date = new Date();
@@ -77,10 +75,10 @@ public class CommentController {
         try {
             User user = userService.findByToken(JwtTokenProvider.resolveToken(request));// 로그인한 사용자
             Comment com = commentRepository.findById(commentNo).get();// 수정할 댓글
-            String commentWriter = com.getUsrEmail();// 수정할 댓글의 작성자
+            String commentWriter = com.getUsrNick();// 수정할 댓글의 작성자
 
             //  댓글 수정 권한 확인 (로그인한 사용자와 수정할 댓글의 작성자가 같은지 여부 확인)
-            if(!commentWriter.equals(user.getUsrEmail())){  //  댓글 수정 권한 없ㅇ음
+            if(!commentWriter.equals(user.getUsrNick())){  //  댓글 수정 권한 없ㅇ음
                 return null;
             }
 
@@ -89,7 +87,7 @@ public class CommentController {
             Comment newComment = commentRepository.findById(commentNo).get();
             newComment.setBoard((boardItem.get()));
             newComment.setCommentContents(comment.getCommentContents());
-            newComment.setUsrEmail(user.getUsrEmail());
+            newComment.setUsrNick(user.getUsrNick());
 
             // 댓글 작성시각 업데이트 하기
             Date date = new Date();
@@ -116,9 +114,9 @@ public class CommentController {
             User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
 
             Comment com = commentRepository.findById(commentNo).get();
-            String commentWriter = com.getUsrEmail();
+            String commentWriter = com.getUsrNick();
 
-            if(!commentWriter.equals(user.getUsrEmail())){
+            if(!commentWriter.equals(user.getUsrNick())){
                 return "Comment Delete Fail";
             }
 

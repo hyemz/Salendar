@@ -226,7 +226,7 @@ export default {
   created() {
     // 디테일 페이지의 내용을 불러오기 위한 코드
     axios
-      .get(`http://localhost:8080/api/boardList/${this.$route.params.boardNo}`)
+      .get(`http://i4a301.p.ssafy.io:8080/api/boardList/${this.$route.params.boardNo}`)
       .then((res) => {
         this.itemss = res.data
         console.log(res.data)
@@ -237,7 +237,7 @@ export default {
     const headers = {
       "x-auth-token": localStorage.getItem('jwt'),
     };
-    const baseURL = "http://localhost:8080/";
+    const baseURL = "http://i4a301.p.ssafy.io:8080/";
     axios
       .create({
         baseURL,
@@ -295,7 +295,7 @@ export default {
       const headers = {
         "x-auth-token": localStorage.getItem("jwt"),
       };
-      const baseURL = "http://localhost:8080/";
+      const baseURL = "http://i4a301.p.ssafy.io:8080/";
       // 제목과 내용의 길이에 따라서 작성이 되고/안되고 설정해주는 것 ((((진행 중))))
       if(this.titlerules && this.contentrules){
         axios
@@ -353,14 +353,14 @@ export default {
       const headers = {
         "x-auth-token": localStorage.getItem("jwt"),
       };
-      const baseURL = "http://localhost:8080/";
+      const baseURL = "http://i4a301.p.ssafy.io:8080/";
       axios
         .create({
           baseURL,
           headers,
         })
         // 해당 게시글을 수정하는 요청을 수정된 내용의 묶음과 함께 보냄
-        .post(`http://localhost:8080/api/boardList/token/${this.$route.params.boardNo}`, BoardModifyForm)
+        .post(`http://i4a301.p.ssafy.io:8080/api/boardList/token/${this.$route.params.boardNo}`, BoardModifyForm)
         .then((res) => {
           console.log(res);
           // 수정을 완료하면 해당 게시글의 디테일 페이지로 이동
