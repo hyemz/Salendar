@@ -33,6 +33,6 @@ public class SpringConfig {
 
     @Bean
     public SaleService saleService() {
-        return new SaleService(storeRepository, saleRepository, userRepository);
+        return new SaleService(storeRepository, saleRepository);
     }
 }
