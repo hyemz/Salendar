@@ -12,9 +12,9 @@
           gradient="to top right, rgba(100,115,201,.7), rgba(25,32,72,.7)"
         ></v-img>
       </template> -->
-      <v-col>
+      <v-col >
         <v-toolbar-title 
-          color="#6A76AB"
+          color="sub"
           class="white--text text-decoration-none font-weight-medium" 
           ><router-link to="/" class="text-decoration-none font-weight-medium"
             ><v-img contain src="@/assets/logo.png" width=160></v-img></router-link
@@ -26,7 +26,7 @@
       <v-spacer></v-spacer>
       <!-- <span id="title">야야야</span> -->
       <template>
-        <v-tabs align-with-title>
+        <v-tabs align-with-title hide-slider>
           <v-tab to="/salelist" class="ml-1 text-decoration-none font-weight-medium"
             >메인페이지</v-tab
           >
