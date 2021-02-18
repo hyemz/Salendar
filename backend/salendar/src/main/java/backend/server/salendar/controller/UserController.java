@@ -116,11 +116,8 @@ public class UserController {
                                                     HttpServletRequest request) {
         try {
             User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
-            System.out.println(1);
             user.setUsrImg(file.getBytes());
-            System.out.println(2);
             userRepository.save(user);
-            System.out.println(user.getUsrImg());
             return new ResponseEntity<>("OK", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
