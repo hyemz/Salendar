@@ -1,10 +1,8 @@
 package backend.server.salendar.controller;
 
-import backend.server.salendar.service.CookieService;
-import backend.server.salendar.service.JwtService;
 import backend.server.salendar.domain.User;
 import backend.server.salendar.repository.UserRepository;
-import backend.server.salendar.service.RedisService;
+import backend.server.salendar.security.JwtTokenProvider;
 import backend.server.salendar.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,20 +13,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.net.URISyntaxException;
 import java.util.*;
 
 
 @Api(tags = {"1. User"})
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin("http://localhost:8081")
 @RequestMapping("/api/user")
 public class UserController {
     // 기본형
@@ -36,7 +31,7 @@ public class UserController {
     UserService userService;
 
     private final UserRepository userRepository;
-    private final JwtService jwtService;
+    private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
 
 
@@ -51,12 +46,12 @@ public class UserController {
                     .usrEmail(user.get("usrEmail"))
                     .usrPwd(passwordEncoder.encode(user.get("usrPwd")))
                     .usrNick(user.get("usrNick"))
-                    .roles(Collections.singletonList("ROLE_USER"))
+                    .roles(Collections.singletonList(user.get("usrEmail").endsWith("@admin.com") ? "ROLE_ADMIN" : "ROLE_USER"))
                     .usrAlarm(Boolean.valueOf(user.get("usrAlarm")))
                     .build());
-            return new ResponseEntity<String>(user.get("usrNick"), HttpStatus.OK);
+            return new ResponseEntity<>(user.get("usrNick"), HttpStatus.OK);
         } catch (IllegalStateException e) {
-            return new ResponseEntity<String>(e.toString(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -64,36 +59,23 @@ public class UserController {
     // 로그인
     @ApiOperation(value = "로그인", notes = "로그인")
     @PostMapping("/login")
-    public ResponseEntity<String> login(@ApiParam(value = "usrEmail, usrPwd", required = true) @RequestBody Map<String, String> user,
-                                        HttpServletRequest req,
-                                        HttpServletResponse res) {
+    public ResponseEntity<Map<String, Object>> login
+    (@ApiParam(value = "usrEmail, usrPwd", required = true) @RequestBody Map<String, String> user) {
+        Map<String, Object> response = new HashMap<>();
+        HttpStatus status;
         try {
-            User member = (User) userRepository.findByUsrEmail(user.get("usrEmail"))
+            User member = userRepository.findByUsrEmail(user.get("usrEmail"))
                     .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 이메일 입니다."));
             if (!passwordEncoder.matches(user.get("usrPwd"), member.getPassword())) {
                 throw new IllegalArgumentException("잘못된 비밀번호입니다.");
             }
-            final String token = JwtService.createToken(member.getUsrEmail(), member.getRoles());
-            final String refreshJwt = JwtService.createRefreshToken(member.getUsrEmail(), member.getRoles());
-            Cookie accessToken = CookieService.createCookie(JwtService.ACCESS_TOKEN_NAME, token);
-            Cookie refreshToken = CookieService.createCookie(JwtService.REFRESH_TOKEN_NAME, refreshJwt);
-            RedisService.setDataExpire(refreshJwt, member.getUsrEmail(), JwtService.REFRESH_TOKEN_VALIDATION_SECOND);
-
-            res.addCookie(accessToken);
-            res.addCookie(refreshToken);
+            response.put("token", jwtTokenProvider.createToken(member.getUsername(), member.getRoles()));
+            status = HttpStatus.OK;
         } catch (Exception e) {
-            return new ResponseEntity<>(e.toString(), HttpStatus.NOT_ACCEPTABLE);
+            response.put("message", e.toString());
+            status = HttpStatus.NOT_ACCEPTABLE;
         }
-        return new ResponseEntity<>(user.get("usrEmail"), HttpStatus.OK);
-    }
-
-
-    // 로그아웃
-    @ApiOperation(value = "로그아웃")
-    @GetMapping("/logout")
-    public void logout(HttpServletRequest req) {
-        User user = userService.findByToken(CookieService.getCookie(req, JwtService.ACCESS_TOKEN_NAME).getValue());
-        RedisService.deleteData(CookieService.getCookie(req, JwtService.REFRESH_TOKEN_NAME).getValue());
+        return new ResponseEntity<>(response, status);
     }
 
     // 모든 회원 조회
@@ -101,35 +83,17 @@ public class UserController {
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.findAll();
-        return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     // 토큰으로 회원조회
     @ApiOperation(value = "token으로 회원 정보 조회")
     @GetMapping(value = "/token/mypage")
     public ResponseEntity<User> getUser(HttpServletRequest request) {
-        Optional<User> user = Optional.ofNullable(userService.findByToken(jwtService.resolveToken(request)));
-        if (user.isPresent()) {
-            return new ResponseEntity<>(user.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(user.get(), HttpStatus.NOT_FOUND);
-        }
-    }
-
-
-    // 회원번호로 한명의 회원 조회
-    @GetMapping(value = "/{usrNo}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<User> getMember(@PathVariable("usrNo") Long usrNo) {
-        Optional<User> user = userService.findByUsrNo(usrNo);
-        return new ResponseEntity<User>(user.get(), HttpStatus.OK);
-    }
-
-
-    // 회원번호로 회원 삭제
-    @DeleteMapping(value = "/{usrNo}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Void> deleteMember(@PathVariable("usrNo") Long usrNo) {
-        userService.deleteByUsrNo(usrNo);
-        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+        Optional<User> user = Optional.ofNullable(userService.findByToken(JwtTokenProvider.resolveToken(request)));
+        return user
+                .map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
 
@@ -137,7 +101,7 @@ public class UserController {
     @ApiOperation(value = "회원 정보 변경", notes = "token 필요")
     @PutMapping(value = "/token/update", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> updateMember(@RequestBody Map<String, String> user, HttpServletRequest request) {
-        User curUser = userService.findByToken(JwtService.resolveToken(request));
+        User curUser = userService.findByToken(JwtTokenProvider.resolveToken(request));
         try {
             if (!user.get("usrNick").equals(curUser.getUsrNick())) {
                 userService.validateDuplicateUserNick(user.get("usrNick"));
@@ -147,10 +111,11 @@ public class UserController {
             curUser.setUsrAlarm(Boolean.valueOf(user.get("userAlarm")));
             userRepository.save(curUser);
         } catch (IllegalStateException e) {
-            return new ResponseEntity<String>(e.toString(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<String>(user.get("usrNick"), HttpStatus.OK);
+        return new ResponseEntity<>(user.get("usrNick"), HttpStatus.OK);
     }
+
 
 //     프로필 이미지 설정 -> 이건 DB에 들어가는 용
     @ApiOperation(value = "프로필 이미지 설정", notes = "Img file, token")
@@ -158,7 +123,11 @@ public class UserController {
     public ResponseEntity<String> setUserProfileImg(@ApiParam(value = "image file") @RequestParam("usrImg") MultipartFile file,
                                                     HttpServletRequest request) {
         try {
-            userService.saveUserImage(JwtService.resolveToken(request), file);
+            Byte[] usrImg = userService.makeByteObjects(file);
+            User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
+            user.setUsrImg(usrImg);
+            userRepository.save(user);
+            System.out.println(Arrays.toString(user.getUsrImg()));
             return new ResponseEntity<>("OK", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
@@ -169,10 +138,9 @@ public class UserController {
     //    팔로우
     @ApiOperation(value = "매장 팔로우", notes = "token, storeName")
     @PostMapping(value = "/token/follow/{storeName}")
-    public ResponseEntity<String> Follow(@PathVariable("storeName") String storeName, HttpServletRequest request) throws
-            URISyntaxException {
+    public ResponseEntity<String> Follow(@PathVariable("storeName") String storeName, HttpServletRequest request) {
         try {
-            userService.Follow(JwtService.resolveToken(request), storeName);
+            userService.Follow(JwtTokenProvider.resolveToken(request), storeName);
         } catch (Exception e) {
             return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
         }
@@ -182,10 +150,9 @@ public class UserController {
     //    언팔로우
     @ApiOperation(value = "매장 언팔로우", notes = "token, storeName")
     @PostMapping(value = "/token/unfollow/{storeName}")
-    public ResponseEntity<String> unFollow(@PathVariable("storeName") String storeName, HttpServletRequest request) throws
-            URISyntaxException {
+    public ResponseEntity<String> unFollow(@PathVariable("storeName") String storeName, HttpServletRequest request) {
         try {
-            userService.unFollow(JwtService.resolveToken(request), storeName);
+            userService.unFollow(JwtTokenProvider.resolveToken(request), storeName);
         } catch (Exception e) {
             return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
         }
@@ -197,7 +164,7 @@ public class UserController {
     @GetMapping(value = "/token/followings")
     public ResponseEntity<Map<String, Boolean>> userFollowings(HttpServletRequest request) {
         try {
-            return new ResponseEntity<>(userService.usrFollowings(JwtService.resolveToken(request)), HttpStatus.OK);
+            return new ResponseEntity<>(userService.usrFollowings(JwtTokenProvider.resolveToken(request)), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
@@ -207,7 +174,7 @@ public class UserController {
     @ApiOperation(value = "비밀번호 일치 여부")
     @PostMapping(value = "/token/pwdConfirm")
     public HttpStatus pwdConfirm(HttpServletRequest request, @RequestBody String pwd) {
-        User user = userService.findByToken(JwtService.resolveToken(request));
+        User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
         if (!passwordEncoder.matches(pwd.substring(0, pwd.length() - 1), user.getPassword())) {
             return HttpStatus.NOT_ACCEPTABLE;
         }

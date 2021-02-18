@@ -5,17 +5,19 @@ import backend.server.salendar.domain.Comment;
 import backend.server.salendar.domain.User;
 import backend.server.salendar.repository.BoardRepository;
 import backend.server.salendar.repository.CommentRepository;
-import backend.server.salendar.service.JwtService;
+import backend.server.salendar.security.JwtTokenProvider;
 import backend.server.salendar.service.UserService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.HandlerMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Api(tags = {"4. Comment"})
@@ -48,7 +50,7 @@ public class CommentController {
                                  @RequestBody Comment comment,
                                  HttpServletRequest request){
 
-        User user = userService.findByToken(JwtService.resolveToken(request));
+        User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
 
         Optional<Board> boardItem = boardRepository.findById(no);
         comment.setBoard((boardItem.get()));
@@ -74,7 +76,7 @@ public class CommentController {
                                  HttpServletRequest request){
 
         try {
-            User user = userService.findByToken(JwtService.resolveToken(request));
+            User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
             Comment com = commentRepository.findById(commentNo).get();
             String commentWriter = com.getUsrEmail();
 
@@ -110,7 +112,7 @@ public class CommentController {
                                 HttpServletRequest request){
 
         try {
-            User user = userService.findByToken(JwtService.resolveToken(request));
+            User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
 
             Comment com = commentRepository.findById(commentNo).get();
             String commentWriter = com.getUsrEmail();

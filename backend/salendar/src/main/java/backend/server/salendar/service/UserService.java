@@ -4,6 +4,7 @@ import backend.server.salendar.domain.Store;
 import backend.server.salendar.domain.User;
 import backend.server.salendar.repository.StoreRepository;
 import backend.server.salendar.repository.UserRepository;
+import backend.server.salendar.security.JwtTokenProvider;
 import lombok.SneakyThrows;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.multipart.MultipartFile;
@@ -77,7 +78,7 @@ public class UserService implements UserDetailsService {
      * Token으로 회원찾기
      */
     public User findByToken(String token) {
-        return loadUserByUsername(JwtService.getUserNo(token));
+        return loadUserByUsername(JwtTokenProvider.getUserNo(token));
     }
 
 
@@ -86,15 +87,13 @@ public class UserService implements UserDetailsService {
      * 얘는 DB에 저장하는 방법
      */
     @SneakyThrows
-    public void saveUserImage(String token, MultipartFile file) {
-        User user = findByToken(token);
+    public Byte[] makeByteObjects(MultipartFile file) {
         Byte[] byteObjects = new Byte[file.getBytes().length];
         int i = 0;
         for (byte b: file.getBytes()){
             byteObjects[i++] = b;
         }
-        user.setUsrImg(byteObjects);
-        userRepository.save(user);
+        return byteObjects;
     }
 
 

@@ -57,7 +57,7 @@ public class User implements UserDetails {
 
 
     // 프로필 이미지
-    @JsonProperty("usrImgUrl")
+    @JsonProperty("usrImg")
     @Lob
     private Byte[] usrImg;
 

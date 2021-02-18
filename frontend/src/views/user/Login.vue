@@ -99,6 +99,7 @@ export default {
         .post('http://localhost:8080/api/user/login', LoginForm)
         .then((res) => {
           console.log(res);
+          localStorage.setItem('jwt', res.data.token);
           this.$store.dispatch('login', true);
           this.$store.dispatch('updateFollowing', true)
           this.$router.push('/salelist');
