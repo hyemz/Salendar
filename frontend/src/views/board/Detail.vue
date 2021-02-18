@@ -18,24 +18,24 @@
             <v-btn 
               v-if="items.usrEmail == myEmail"
               class="mr-1 ml-4"
-              elevation="2"
+              elevation="0"
               @click="deletepost"
-              color="red lighten-2"
+              color="red"
               outlined
               >삭제하기</v-btn>
             <v-btn 
               v-if="items.usrEmail == myEmail"
               class="mr-1 ml-4"
-              elevation="2"
+              elevation="0"
               @click="update"
-              color="main"
+              color="sub"
               outlined
               >수정하기</v-btn>
             <v-btn 
               class="mr-3"
-              elevation="2"
+              elevation="0"
               @click="backtoboard"
-              color="sub"
+              color="main"
               outlined
               >목록</v-btn>
           </v-row>
@@ -55,9 +55,9 @@
               </v-col>
               <v-col cols="12" sm="1"></v-col>
               <v-col cols="12" sm="4">
-                <div style="font-size:16px">작성자: {{items.usrEmail}}</div>
-                <div style="font-size:16px">등록일: {{items.createdDate}}</div>
-                <div style="font-size:16px">수정일: {{items.modifiedDate}}</div>
+                <div style="font-size:16px">작성자: {{items.usrNick}}</div>
+                <div style="font-size:16px">작성시간: {{items.createdDate}}</div>
+                <div style="font-size:16px">수정시간: {{items.modifiedDate}}</div>
                 <div style="font-size:16px">조회수: {{items.hit}}</div>
               </v-col>
             </v-row>
@@ -124,27 +124,33 @@
                 class="pl-3 pr-3 grey lighten-4"
                 flat
               >
-                <p style="font-size:18px" class="pt-2 mb-2">{{ comment.usrEmail }}</p>
-                  
-                {{ comment.commentContents }}
-                <v-row justify="end">
+                <v-row justify="between" class="mt-3">
+                  <p style="font-size:18px" class="mt-2 mb-2 ml-2">{{ comment.usrEmail }}</p>
+                  <v-spacer></v-spacer>
                   <div
                     v-if="comment.modifiedDate==comment.createdDate"
                     class="mr-2 mt-2">
-                    작성일 : {{ comment.createdDate }}
+                    {{ comment.createdDate }}
                   </div>
                   <div
                     v-else
                     class="mr-2 mt-2">
-                    수정일 : {{ comment.modifiedDate }}
+                    (수정됨) {{ comment.modifiedDate }}
                   </div>
 
+                </v-row>
+                
+                <v-row class="mt-3">
+
+                  <div class="mt-4 ml-2" style="font-size:17px">{{ comment.commentContents }}</div>
+                  <v-spacer></v-spacer>
                   <v-btn 
                     v-if="comment.usrEmail == myEmail"
-                    class="d-flex justify-end"
-                    color="main"
+                    class="mt-2"
+                    justify="end"
+                    color="red"
                     @click="commentdelete(comment.commentNo)"
-                    outlined
+                    text
                     >삭제</v-btn>
                   <v-dialog
                     v-if="comment.usrEmail == myEmail"
@@ -154,27 +160,36 @@
                   >
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
-                        class="d-flex justify-end mr-2"
+                        class="mr-2 mt-2"
                         color="sub"
                         dark
                         v-bind="attrs"
                         v-on="on"
-                        outlined
+                        text
                       >
                         수정
                       </v-btn>
                     </template>
                     <v-card>
                       <v-card-title>
-                        <div class="titlefont" style="font-size:40px">새 글 <strong>작성</strong>하기</div>
                         <span class="titlefont" style="font-size:24px">댓글 <strong>수정</strong>하기</span>
+                        <v-row justify="end">
+                          <v-btn
+                            color=""
+                            text
+                            @click="dialog = false"
+                          >
+                            <v-icon>mdi-close</v-icon>
+                            
+                          </v-btn>
+                        </v-row>
                       </v-card-title>
                       <v-card-text>
                         <v-container>
                           <v-row>
                             <v-col cols="12">
                               <v-text-field
-                                label="comment"
+                                label="댓글 수정"
                                 required
                                 v-model="commentmodify"
                                 @keypress.enter="commentupdate(comment.commentNo), dialog = false"
@@ -182,23 +197,15 @@
                             </v-col>
                           </v-row>
                         </v-container>
-                        <small>*indicates required field</small>
                       </v-card-text>
                       <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn
                           color="blue darken-1"
                           text
-                          @click="dialog = false"
-                        >
-                          Close
-                        </v-btn>
-                        <v-btn
-                          color="blue darken-1"
-                          text
                           @click="commentupdate(comment.commentNo), dialog = false"
                         >
-                          Save
+                          저장
                         </v-btn>
                       </v-card-actions>
                     </v-card>
@@ -214,27 +221,33 @@
                 class="pl-3 pr-3"
                 flat
               >
-                <p style="font-size:18px" class="pt-2 mb-2">{{ comment.usrEmail }}</p>
-                  
-                {{ comment.commentContents }}
-                <v-row justify="end">
+                <v-row justify="between" class="mt-3">
+                  <p style="font-size:18px" class="mt-2 mb-2 ml-2">{{ comment.usrEmail }}</p>
+                  <v-spacer></v-spacer>
                   <div
                     v-if="comment.modifiedDate==comment.createdDate"
                     class="mr-2 mt-2">
-                    작성일 : {{ comment.createdDate }}
+                    {{ comment.createdDate }}
                   </div>
                   <div
                     v-else
                     class="mr-2 mt-2">
-                    수정일 : {{ comment.modifiedDate }}
+                    (수정됨) {{ comment.modifiedDate }}
                   </div>
 
+                </v-row>
+                
+                <v-row class="mt-3">
+
+                  <div class="mt-4 ml-2" style="font-size:17px">{{ comment.commentContents }}</div>
+                  <v-spacer></v-spacer>
                   <v-btn 
                     v-if="comment.usrEmail == myEmail"
-                    class="d-flex justify-end"
-                    color="sub"
+                    class="mt-2"
+                    justify="end"
+                    color="red"
                     @click="commentdelete(comment.commentNo)"
-                    outlined
+                    text
                     >삭제</v-btn>
                   <v-dialog
                     v-if="comment.usrEmail == myEmail"
@@ -244,26 +257,36 @@
                   >
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
-                        class="d-flex justify-end mr-2"
-                        color="main"
+                        class="mr-2 mt-2"
+                        color="sub"
                         dark
                         v-bind="attrs"
                         v-on="on"
-                        outlined
+                        text
                       >
                         수정
                       </v-btn>
                     </template>
                     <v-card>
                       <v-card-title>
-                        <span class="headline">댓글 수정하기</span>
+                        <span class="titlefont" style="font-size:24px">댓글 <strong>수정</strong>하기</span>
+                        <v-row justify="end">
+                          <v-btn
+                            color=""
+                            text
+                            @click="dialog = false"
+                          >
+                            <v-icon>mdi-close</v-icon>
+                            
+                          </v-btn>
+                        </v-row>
                       </v-card-title>
                       <v-card-text>
                         <v-container>
                           <v-row>
                             <v-col cols="12">
                               <v-text-field
-                                label="comment"
+                                label="댓글 수정"
                                 required
                                 v-model="commentmodify"
                                 @keypress.enter="commentupdate(comment.commentNo), dialog = false"
@@ -271,23 +294,15 @@
                             </v-col>
                           </v-row>
                         </v-container>
-                        <small>*indicates required field</small>
                       </v-card-text>
                       <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn
                           color="blue darken-1"
                           text
-                          @click="dialog = false"
-                        >
-                          Close
-                        </v-btn>
-                        <v-btn
-                          color="blue darken-1"
-                          text
                           @click="commentupdate(comment.commentNo), dialog = false"
                         >
-                          Save
+                          저장
                         </v-btn>
                       </v-card-actions>
                     </v-card>
