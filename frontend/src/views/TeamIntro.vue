@@ -5,7 +5,7 @@
       <v-col cols="12" sm="10">
         <div class="mb-12">
           <v-card flat class="mt-12">
-            <div class="titlefont"><strong>'S A L E N D A R'</strong> 를 만든 사람들 😇</div>
+            <div class="titlefont"><strong>'S A L E N D A R'</strong> 를 만든 사람들</div>
           </v-card>
           <v-divider class="mt-12 mb-9"></v-divider>
         </div>
@@ -73,7 +73,7 @@ export default {
         {
           name: '현성섭 🏔',
           position: 'Frontend',
-          img: require('@/assets/Team/hue.png'),
+          img: require('@/assets/Team/hyun.png'),
           content: '안녕하세요.',
           color: '#00ACC1',
         },

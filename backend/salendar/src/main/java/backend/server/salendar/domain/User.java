@@ -61,10 +61,9 @@ public class User implements UserDetails {
     private List<Board> boardLike = new ArrayList<Board>();
 
     // 프로필 이미지
-    @JsonProperty("usrImgUrl")
-//    @Lob DB에 저장하는 용도
-//    private Byte[] usrImg;
-    private String usrImgUrl;
+    @JsonProperty("usrImg")
+    @Lob
+    private Byte[] usrImg;
 
     // User 모델 복사
     public void CopyData(User param) {
@@ -72,7 +71,7 @@ public class User implements UserDetails {
         this.usrPwd = param.getUsrPwd();
         this.usrNick = param.getUsrNick();
         this.usrEmail = param.getUsrEmail();
-        this.usrImgUrl = param.getUsrImgUrl();
+        this.usrImg = param.getUsrImg();
 //        this.usrFollowing = param.getUsrFollowing();
     }
 
