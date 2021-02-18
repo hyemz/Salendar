@@ -38,7 +38,7 @@ public class SaleService {
         Object obj = cls.newInstance();
 
         Stream<Store> stores = storeRepository.findAll().stream();
-        Pattern pattern = Pattern.compile("(?m)^(\\[(.*?)\\])");
+        Pattern pattern = Pattern.compile("(?m)[^(\\[(.*?)\\])]");
 
         stores.forEach(store -> {
             try {
