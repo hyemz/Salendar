@@ -38,7 +38,7 @@ public class Crawler {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("headless");
         options.addArguments("no-sandbox");
-        options.addArguments("disable-dev-shm-usage");	
+        options.addArguments("disable-dev-shm-usage");
         String WEB_DRIVER_ID = "webdriver.chrome.driver";
         String WEB_DRIVER_PATH = "chromedriver";
 
@@ -55,11 +55,7 @@ public class Crawler {
     public static List<Sale> crawlOliveyoung() {
         List<Sale> result = new ArrayList<>();
         String eventUrl = "https://www.oliveyoung.co.kr/store/main/getEventList.do";
-
-        if (eventUrl.indexOf("https://") >= 0) {
-            Crawler.setSSL();
-        }
-
+        Crawler.setSSL();
         Document doc = Jsoup.parse(crawl(eventUrl));
 
         Elements eventLists = doc.select("#Container > div > div.event_tab_cont > ul.event_thumb_list > li");
@@ -98,10 +94,7 @@ public class Crawler {
     public static List<Sale> crawlAritaum() {
         List<Sale> result = new ArrayList<>();
         String eventUrl = "https://www.aritaum.com/event/ev/event_ev_event_list.do";
-
-        if (eventUrl.indexOf("https://") >= 0) {
-            Crawler.setSSL();
-        }
+        Crawler.setSSL();
         Document doc = Jsoup.parse(crawl(eventUrl));
 
         Elements eventLists = doc.select("#container > div > div.side_content > div > div > ul > li");
@@ -139,11 +132,7 @@ public class Crawler {
     public static List<Sale> crawlMissha() {
         List<Sale> result = new ArrayList<>();
         String eventUrl = "https://www.mynunc.com/marketing/event/main";
-
-        if (eventUrl.indexOf("https://") >= 0) {
-            Crawler.setSSL();
-        }
-
+        Crawler.setSSL();
         Document doc = Jsoup.parse(crawl(eventUrl));
 
         Elements eventLists = doc.select("#event-list > li");
@@ -181,10 +170,7 @@ public class Crawler {
     public static List<Sale> crawlEtude() {
         List<Sale> result = new ArrayList<>();
         String eventUrl = "https://www.etude.com/kr/ko/display/event?displayMenuId=event";
-        if (eventUrl.indexOf("https://") >= 0) {
-            Crawler.setSSL();
-        }
-
+        Crawler.setSSL();
         Document doc = Jsoup.parse(crawl(eventUrl));
 
         Elements eventLists = doc.select("#ap_container > div.ap_contents.event_main.event_progress > div > div.tab_cont.space > ul > li");
@@ -222,11 +208,7 @@ public class Crawler {
     public static List<Sale> crawlLalavla() {
         List<Sale> result = new ArrayList<>();
         String eventUrl = "http://lalavla.gsretail.com/lalavla/ko/customer-engagement/event/current-events";
-
-        if (eventUrl.indexOf("https://") >= 0) {
-            Crawler.setSSL();
-        }
-
+        Crawler.setSSL();
         Document doc = Jsoup.parse(crawl(eventUrl));
 
         Elements eventLists = doc.select("#contents > div.cnt > div > div > div > table > tbody > tr");
@@ -262,11 +244,7 @@ public class Crawler {
     public static List<Sale> crawlThefaceshop() {
         List<Sale> result = new ArrayList<>();
         String eventUrl = "https://www.naturecollection.com/mall/event/event.jsp";
-
-        if (eventUrl.indexOf("https://") >= 0) {
-            Crawler.setSSL();
-        }
-
+        Crawler.setSSL();
         Document doc = Jsoup.parse(crawl(eventUrl));
 
         Elements eventLists = doc.select("body > div.RootDiv > div.MallDiv > section > div > div.ComEventList_wrap > ul > li");
@@ -304,11 +282,7 @@ public class Crawler {
     public static List<Sale> crawlTonymoly() {
         List<Sale> result = new ArrayList<>();
         String eventUrl = "https://tonystreet.com/event/event_event_list.do";
-
-        if (eventUrl.indexOf("https://") >= 0) {
-            Crawler.setSSL();
-        }
-
+        Crawler.setSSL();
         Document doc = Jsoup.parse(crawl(eventUrl));
 
         Elements eventLists = doc.select("body > div.wrapper > div.container > div > section > div > div > ul > li");
@@ -346,21 +320,15 @@ public class Crawler {
     public static List<Sale> crawlInnisfree() {
         List<Sale> result = new ArrayList<>();
         String eventUrl = "https://www.innisfree.com/kr/ko/Event.do";
-
-        if (eventUrl.indexOf("https://") >= 0) {
-            Crawler.setSSL();
-        }
-
+        System.out.println(1);
+        Crawler.setSSL();
+        System.out.println(2);
         Document doc = Jsoup.parse(crawl(eventUrl));
-
+        System.out.println(3);
+        System.out.println(doc.text());
         Elements eventLists = doc.select("#eventList > li");
 
         for (Element e : eventLists) {
-            Elements eventDate = e.select("a > span.descWrap > span");
-            int index = eventDate.text().indexOf("~");
-            if ((int) eventDate.text().substring(index + 2, index + 3).charAt(0) == 54620 | (int) eventDate.text().substring(index + 2, index + 3).charAt(0) == 51652) {
-                continue;
-            }
             Sale curSale = new Sale();
             curSale.setSaleTitle(e.select("a > span.descWrap > strong").text());
             curSale.setSaleDsc(e.select("a > span.descWrap > strong").text());
@@ -370,13 +338,16 @@ public class Crawler {
                 tempLink = "https://www.innisfree.com/" + tempLink;
             }
             curSale.setSaleLink(tempLink);
+
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+            Elements eventDate = e.select("a > span.descWrap > span");
+            int index = eventDate.text().indexOf("~");
             String eventStart = eventDate.text().substring(0, index - 1);
-            String eventEnd;
-
-            eventEnd = eventDate.text().substring(index + 2, index + 12);
-
+            if ((int) eventDate.text().substring(index + 2, index + 3).charAt(0) == 54620 || (int) eventDate.text().substring(index + 2, index + 3).charAt(0) == 51652) {
+                continue;
+            }
+            String eventEnd = eventDate.text().substring(index + 2, index + 12);
             Date eventStartDate = inputFormat.parse(eventStart);
             Date eventEndDate = inputFormat.parse(eventEnd);
 
@@ -405,7 +376,7 @@ public class Crawler {
         }
 
 //      불필요 단어 + 과도한 % 필터링
-        List<String> donIncludeWords = Arrays.asList("카드", "출석", "출첵", "LIVE", "쿠폰", "사은품", "증정", "배송", "제휴", "멤버쉽", "포장", "적립");
+        List<String> donIncludeWords = Arrays.asList("카드", "출석", "출첵", "LIVE", "쿠폰", "사은품", "증정", "배송", "제휴", "멤버쉽", "포장", "적립", "체험");
         List<Pattern> patterns = new ArrayList<>();
         for (String word : donIncludeWords) {
             patterns.add(Pattern.compile("(?m)" + word));
@@ -417,24 +388,24 @@ public class Crawler {
             }
         }
 
-	List<Pattern> patterns2 = Arrays.asList(Pattern.compile("(?m)\\d*%"), Pattern.compile("(?m)\\d*.\\d*%"));
+        List<Pattern> patterns2 = Arrays.asList(Pattern.compile("(?m)\\d*%"), Pattern.compile("(?m)\\d*.\\d*%"));
         for (Pattern pattern : patterns2) {
             double per = (double) 0;
             Matcher matcher = pattern.matcher(sale.getSaleTitle());
             while (matcher.find()) {
                 String temp = matcher.group();
-                if (Double.parseDouble(temp.substring(0, temp.length() - 1)) > per) {
-                    per = Double.parseDouble(matcher.group());
+                if (Double.parseDouble(temp.substring(0, 2)) > per) {
+                    per = Double.parseDouble(temp.substring(0, 2));
                 }
             }
             Matcher matcher2 = pattern.matcher(sale.getSaleDsc());
             while (matcher2.find()) {
-                String temp = matcher.group();
-                if (Double.parseDouble(temp.substring(0, temp.length() - 1)) < per) {
-                    per = Double.parseDouble(matcher2.group());
+                String temp = matcher2.group();
+                if (Double.parseDouble(temp.substring(0, 2)) > per) {
+                    per = Double.parseDouble(temp.substring(0, 2));
                 }
             }
-            if (per > 90){
+            if (per > 90) {
                 return false;
             }
         }

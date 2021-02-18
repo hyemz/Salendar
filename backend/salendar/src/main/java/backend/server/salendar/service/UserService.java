@@ -123,13 +123,9 @@ public class UserService implements UserDetailsService {
             response.put(store.getStoreName(), false);
         }
         List<Store> Followings = findByToken(token).getUsrFollowing();
-        System.out.println(Followings.size());
         for (Store store : Followings) {
             response.replace(store.getStoreName(), true);
         }
-        for (Map.Entry<String, Boolean> entry : response.entrySet()){
-            System.out.println(entry.getKey() + " " + entry.getValue());
-        }
-            return response;
+        return response;
     }
 }
