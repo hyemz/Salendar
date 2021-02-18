@@ -45,8 +45,11 @@ public class Crawler {
         System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
         options.setCapability("ignoreProtectedModeSettings", true);
         driver = new ChromeDriver(options);
+        System.out.println("?");
         driver.get(url);
+        System.out.println("??");
         String result = driver.getPageSource();
+        System.out.println("???");
         driver.close();
         return result;
     }
