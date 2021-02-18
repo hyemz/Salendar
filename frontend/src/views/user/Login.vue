@@ -123,7 +123,7 @@ export default {
         usrPwd: this.password,
       };
       axios
-        .post('http://localhost:8080/api/user/login', LoginForm)
+        .post('http://i4a3014.p.ssafy.io/api/user/login', LoginForm)
         .then((res) => {
           console.log(res);
           localStorage.setItem('jwt', res.data.token);
