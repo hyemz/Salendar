@@ -19,7 +19,7 @@
                 :cols="card.flex"
                 class="d-flex flex-column justify-center align-center mt-2"
               >
-                <v-col v-if="card.show" v-on="counting(false)">
+                <v-col v-if="card.show">
                   <v-hover v-slot="{ hover }">
                     <v-card
                       :elevation="hover ? 3 : 1"
@@ -62,11 +62,11 @@
                     </v-card>
                   </v-hover>
                 </v-col>
-                <v-col v-else-if="!card.show" v-on="counting(true)"></v-col>
+                <!-- <v-col v-if="!card.show" v-on="counting(true)"></v-col> -->
               </div>
-              <router-link to="/calendar"
+              <!-- <router-link to="/calendar"
                 ><v-img v-if="this.isNone" :src="imgPath" max-width="1000px"></v-img
-              ></router-link>
+              ></router-link> -->
             </v-row>
           </v-card>
         </v-card>
