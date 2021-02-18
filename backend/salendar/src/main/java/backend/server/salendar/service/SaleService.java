@@ -38,7 +38,7 @@ public class SaleService {
         Stream<Store> stores = storeRepository.findAll().stream();
 
         stores
-                .filter(store -> store.getStoreName() != "Innisfree")
+                .filter(store -> !"Innisfree".equals(store.getStoreName()))
                 .forEach(store -> {
             try {
                 System.out.println(store.getStoreName());
