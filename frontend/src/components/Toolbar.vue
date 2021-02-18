@@ -46,7 +46,7 @@
         </v-btn>
       </template>
       <template v-if="isLogin">
-        <v-btn text color="white" disabled class="w" v-if="isLogin">{{ nickname }}님 환영합니다.</v-btn>
+        <v-btn text color="white" disabled id="w" v-if="isLogin">{{ nickname }}님 환영합니다 💙</v-btn>
         <!-- <v-btn text color="white" @click.native="logout" v-if="isLogin">
           <router-link :to="{ name: 'Login' }" color="red" class="text-decoration-none"
             >로그아웃</router-link
@@ -54,11 +54,15 @@
         </v-btn> -->
       </template>
       <template v-if="isLogin">
-        <v-btn icon>
-          <v-icon>mdi-bell</v-icon>
-        </v-btn>
-
-        <v-menu bottom left>
+         <v-tooltip bottom>
+      <template v-slot:activator="{ on, attrs }">
+      <router-link to="/team" class="text-decoration-none"><v-btn icon v-bind="attrs"
+          v-on="on">
+          <v-icon>mdi-emoticon-cool-outline</v-icon>
+        </v-btn></router-link></template>
+           <span>팀 소개 페이지</span>
+    </v-tooltip>
+        <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
             <v-btn icon v-bind="attrs" v-on="on">
               <v-icon>mdi-chevron-down</v-icon>
@@ -67,11 +71,11 @@
 
           <v-list>
             <v-list-item>
-              <v-list-item-title><router-link to =/mypage class="text-decoration-none">마이페이지</router-link></v-list-item-title>
+              <v-list-item-title><router-link to =/mypage class="text-decoration-none main--text">마이페이지</router-link></v-list-item-title>
               </v-list-item>
              <v-list-item>
            <template v-if="isLogin">
-           <v-list-item-title><router-link to =/login @click.native="logout" class="text-decoration-none">로그아웃</router-link></v-list-item-title>
+           <v-list-item-title><router-link to =/login @click.native="logout" class="text-decoration-none error--text">로그아웃</router-link></v-list-item-title>
            </template>
             </v-list-item>
           </v-list>
@@ -104,7 +108,7 @@ export default {
       const headers = {
           "x-auth-token": localStorage.getItem("jwt"),
       };
-      const baseURL = "http://i4a301.p.ssafy.io:8080";
+      const baseURL = 'http://localhost:8080';
       axios
       .create({
           baseURL,
@@ -133,7 +137,7 @@ export default {
       const headers = {
           "x-auth-token": localStorage.getItem("jwt"),
       };
-      const baseURL = "http://i4a301.p.ssafy.io:8080";
+      const baseURL = 'http://localhost:8080';
       axios
       .create({
           baseURL,
@@ -180,5 +184,8 @@ export default {
 <style scoped>
 .mm {
   margin-right: 12px;
+}
+#w.theme--light.v-btn.v-btn--disabled {
+    color: rgb(85, 85, 85) !important;
 }
 </style>
