@@ -38,7 +38,7 @@ public class Crawler {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("headless");
         options.addArguments("no-sandbox");
-        options.addArguments("disable-dev-shm-usage");	
+        options.addArguments("disable-dev-shm-usage");
         String WEB_DRIVER_ID = "webdriver.chrome.driver";
         String WEB_DRIVER_PATH = "chromedriver";
 
@@ -356,11 +356,6 @@ public class Crawler {
         Elements eventLists = doc.select("#eventList > li");
 
         for (Element e : eventLists) {
-            Elements eventDate = e.select("a > span.descWrap > span");
-            int index = eventDate.text().indexOf("~");
-            if ((int) eventDate.text().substring(index + 2, index + 3).charAt(0) == 54620 | (int) eventDate.text().substring(index + 2, index + 3).charAt(0) == 51652) {
-                continue;
-            }
             Sale curSale = new Sale();
             curSale.setSaleTitle(e.select("a > span.descWrap > strong").text());
             curSale.setSaleDsc(e.select("a > span.descWrap > strong").text());
@@ -370,13 +365,16 @@ public class Crawler {
                 tempLink = "https://www.innisfree.com/" + tempLink;
             }
             curSale.setSaleLink(tempLink);
+
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+            Elements eventDate = e.select("a > span.descWrap > span");
+            int index = eventDate.text().indexOf("~");
             String eventStart = eventDate.text().substring(0, index - 1);
-            String eventEnd;
-
-            eventEnd = eventDate.text().substring(index + 2, index + 12);
-
+            if ((int) eventDate.text().substring(index + 2, index + 3).charAt(0) == 54620 || (int) eventDate.text().substring(index + 2, index + 3).charAt(0) == 51652) {
+                continue;
+            }
+            String eventEnd = eventDate.text().substring(index + 2, index + 12);
             Date eventStartDate = inputFormat.parse(eventStart);
             Date eventEndDate = inputFormat.parse(eventEnd);
 
@@ -417,7 +415,7 @@ public class Crawler {
             }
         }
 
-	List<Pattern> patterns2 = Arrays.asList(Pattern.compile("(?m)\\d*%"), Pattern.compile("(?m)\\d*.\\d*%"));
+        List<Pattern> patterns2 = Arrays.asList(Pattern.compile("(?m)\\d*%"), Pattern.compile("(?m)\\d*.\\d*%"));
         for (Pattern pattern : patterns2) {
             double per = (double) 0;
             Matcher matcher = pattern.matcher(sale.getSaleTitle());
@@ -434,7 +432,7 @@ public class Crawler {
                     per = Double.parseDouble(matcher2.group());
                 }
             }
-            if (per > 90){
+            if (per > 90) {
                 return false;
             }
         }
