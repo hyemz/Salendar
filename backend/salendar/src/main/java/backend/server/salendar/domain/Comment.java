@@ -29,54 +29,6 @@ public class Comment {
     @JoinColumn(name = "board_no")
     private Board board;
 
-    public Long getCommentNo() {
-        return commentNo;
-    }
-
-    public void setCommentNo(Long commentNo) {
-        this.commentNo = commentNo;
-    }
-
-   public String getCommentContents() {
-        return commentContents;
-    }
-
-    public void setCommentContents(String commentContents) {
-        this.commentContents = commentContents;
-    }
-
-    public String getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(String createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getModifiedDate() {
-        return modifiedDate;
-    }
-
-    public void setModifiedDate(String modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
-
-    public String getUsrNick() {
-        return usrNick;
-    }
-
-    public void setUsrNick(String usrNick) {
-        this.usrNick = usrNick;
-    }
-
-    public Board getBoard() {
-        return board;
-    }
-
-    public void setBoard(Board board) {
-        this.board = board;
-    }
-
     @Override
     public boolean equals(Object o){
         if(this == o)   return true;
