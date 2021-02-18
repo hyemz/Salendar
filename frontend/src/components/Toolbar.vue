@@ -5,6 +5,7 @@
     flat
     fixed
     :scroll-threshold="colorOnScroll"
+   style="text-shadow:initial"
     >
       <v-col >
         <v-toolbar-title 

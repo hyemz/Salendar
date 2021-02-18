@@ -1,7 +1,7 @@
 <template>
-  <div class="d-flex flex-column justify-center align-center mt-12">
+  <div class="d-flex flex-column justify-center align-center mt-12 mb-12" id="loginmargin">
     <v-img :src="this.src" width="250px"></v-img>
-    <div class="d-flex justify-center align-center mt-12">
+    <div class="d-flex justify-center align-center mt-10">
       <v-form>
         <v-text-field
           color="main text-center"
@@ -74,9 +74,6 @@ export default {
       show: false,
       isSubmit: false,
       component: this,
-      // rule: {
-      //   passowrd: !this.error.password || 'Max 25 characters',
-      // },
     };
   },
   created() {
@@ -100,7 +97,7 @@ export default {
       this.checkForm();
     },
   },
-  // 미완성
+
   methods: {
     checkForm() {
       if (this.email.length >= 0 && !EV.validate(this.email)) this.error.email = true;
@@ -117,7 +114,6 @@ export default {
       this.isSubmit = isSubmit;
     },
     login() {
-      // alert("로그인 이다아아")
       var LoginForm = {
         usrEmail: this.email,
         usrPwd: this.password,
@@ -125,7 +121,6 @@ export default {
       axios
         .post('http://i4a301.p.ssafy.io:8080/api/user/login', LoginForm)
         .then((res) => {
-          console.log(res);
           localStorage.setItem('jwt', res.data.token);
           this.$store.dispatch('login', true);
           this.$store.dispatch('updateFollowing', true);
@@ -152,5 +147,8 @@ export default {
   position: relative;
   transition: inherit;
   transition-property: opacity;
+}
+#loginmargin.mt-12 {
+  margin-top: 150px !important;
 }
 </style>

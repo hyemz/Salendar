@@ -1,7 +1,7 @@
 <template>
-  <div class="d-flex flex-column justify-center align-center mt-12">
+  <div class="d-flex flex-column justify-center align-center mt-12 mb-12" id="signupmargin">
     <v-img :src="this.src" width="200px"></v-img>
-    <div class="d-flex justify-center mt-8">
+    <div class="d-flex justify-center align-center mt-10">
       <v-form>
         <v-text-field
           label="이메일을 입력해주세요"
@@ -104,9 +104,6 @@ export default {
       show: false,
       isSubmit: false,
       component: this,
-      // rule: {
-      //   passowrd: !this.error.password || 'Max 25 characters',
-      // },
     };
   },
   created() {
@@ -203,5 +200,8 @@ export default {
 .v-input--selection-controls {
   margin-top: 0px !important;
   padding-top: 0px !important;
+}
+#signupmargin.mt-12 {
+  margin-top: 150px !important;
 }
 </style>
