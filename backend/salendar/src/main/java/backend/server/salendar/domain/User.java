@@ -64,7 +64,8 @@ public class User implements UserDetails {
 
     // 프로필 이미지
     @JsonProperty("usrImg")
-    private MultipartFile usrImg;
+    @Lob
+    private byte[] usrImg;
 
 
     @Cascade(org.hibernate.annotations.CascadeType.ALL)

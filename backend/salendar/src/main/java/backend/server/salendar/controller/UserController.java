@@ -117,7 +117,7 @@ public class UserController {
         try {
             User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
             System.out.println(1);
-            user.setUsrImg(file);
+            user.setUsrImg(file.getBytes());
             System.out.println(2);
             userRepository.save(user);
             System.out.println(user.getUsrImg());
