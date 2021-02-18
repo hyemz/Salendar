@@ -371,7 +371,9 @@ public class Crawler {
             Elements eventDate = e.select("a > span.descWrap > span");
             int index = eventDate.text().indexOf("~");
             String eventStart = eventDate.text().substring(0, index - 1);
+            System.out.println(eventDate.text());
             if ((int) eventDate.text().substring(index + 2, index + 3).charAt(0) == 54620 || (int) eventDate.text().substring(index + 2, index + 3).charAt(0) == 51652) {
+                System.out.println("넘겨");
                 continue;
             }
             String eventEnd = eventDate.text().substring(index + 2, index + 12);
