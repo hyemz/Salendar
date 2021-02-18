@@ -35,11 +35,14 @@ public class Crawler {
         WebDriver driver;
 
         //Properties 설정
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("headless");
+        options.addArguments("no-sandbox");
+        options.addArguments("disable-dev-shm-usage");	
         String WEB_DRIVER_ID = "webdriver.chrome.driver";
-        String WEB_DRIVER_PATH = "chromedriver.exe";
+        String WEB_DRIVER_PATH = "chromedriver";
 
         System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
-        ChromeOptions options = new ChromeOptions();
         options.setCapability("ignoreProtectedModeSettings", true);
         driver = new ChromeDriver(options);
         driver.get(url);
@@ -290,7 +293,7 @@ public class Crawler {
 
             if (saleFilter(curSale)) {
                 curSale.setSaleBigImg(Jsoup.parse(crawl(curSale.getSaleLink()))
-                        .select("body > div.RootDiv > div.MallDiv > section > div > table > tbody > tr:nth-child(2) > td > div.pt20.editArea > onfocus=\"this.blur()\" > p > img:nth-child(1)").attr("src"));
+                        .select("body > div.RootDiv > div.MallDiv > section > div > table > tbody > tr:nth-child(2) > td > div.pt20.editArea > p:nth-child(2) > img").attr("src"));
                 result.add(curSale);
             }
         }
@@ -414,28 +417,25 @@ public class Crawler {
             }
         }
 
-        List<Pattern> patterns2 = Arrays.asList(Pattern.compile("(?m)\\d*%"), Pattern.compile("(?m)\\d*.\\d*%"));
+	List<Pattern> patterns2 = Arrays.asList(Pattern.compile("(?m)\\d*%"), Pattern.compile("(?m)\\d*.\\d*%"));
         for (Pattern pattern : patterns2) {
-            Double per = null;
+            double per = (double) 0;
             Matcher matcher = pattern.matcher(sale.getSaleTitle());
             while (matcher.find()) {
-                if (per != null) {
-                    if (Double.parseDouble(matcher.group()) < per) {
-                        per = Double.parseDouble(matcher.group());
-                    }
-                } else {
+                String temp = matcher.group();
+                if (Double.parseDouble(temp.substring(0, temp.length() - 1)) > per) {
                     per = Double.parseDouble(matcher.group());
                 }
             }
             Matcher matcher2 = pattern.matcher(sale.getSaleDsc());
             while (matcher2.find()) {
-                if (per != null) {
-                    if (Double.parseDouble(matcher2.group()) < per) {
-                        per = Double.parseDouble(matcher2.group());
-                    }
-                } else {
+                String temp = matcher.group();
+                if (Double.parseDouble(temp.substring(0, temp.length() - 1)) < per) {
                     per = Double.parseDouble(matcher2.group());
                 }
+            }
+            if (per > 90){
+                return false;
             }
         }
         return true;
