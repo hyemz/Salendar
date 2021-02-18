@@ -405,7 +405,7 @@ public class Crawler {
         }
 
 //      불필요 단어 + 과도한 % 필터링
-        List<String> donIncludeWords = Arrays.asList("카드", "출석", "출첵", "LIVE", "쿠폰", "사은품", "증정", "배송", "제휴", "멤버쉽", "포장", "적립");
+        List<String> donIncludeWords = Arrays.asList("카드", "출석", "출첵", "LIVE", "쿠폰", "사은품", "증정", "배송", "제휴", "멤버쉽", "포장", "적립", "체험");
         List<Pattern> patterns = new ArrayList<>();
         for (String word : donIncludeWords) {
             patterns.add(Pattern.compile("(?m)" + word));
@@ -423,14 +423,14 @@ public class Crawler {
             Matcher matcher = pattern.matcher(sale.getSaleTitle());
             while (matcher.find()) {
                 String temp = matcher.group();
-                if (Double.parseDouble(temp.substring(0, temp.length() - 1)) > per) {
+                if (Double.parseDouble(temp.substring(0, temp.length() - 2)) > per) {
                     per = Double.parseDouble(matcher.group());
                 }
             }
             Matcher matcher2 = pattern.matcher(sale.getSaleDsc());
             while (matcher2.find()) {
                 String temp = matcher.group();
-                if (Double.parseDouble(temp.substring(0, temp.length() - 1)) < per) {
+                if (Double.parseDouble(temp.substring(0, temp.length() - 2)) < per) {
                     per = Double.parseDouble(matcher2.group());
                 }
             }
