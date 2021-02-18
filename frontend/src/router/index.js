@@ -26,7 +26,10 @@ const routes = [
   {
     path: '/',
     name: 'Intro',
-    component:  Intro ,
+    components: { default: Intro, header: Toolbar},
+    props: {
+      header: { colorOnScroll: 1000 },
+    }
   },
   {
     path: '/team',
@@ -59,7 +62,7 @@ const routes = [
     name: 'Board',
     components: { default: Board, header: Toolbar, footer: Footer },
     props: {
-      header: { colorOnScroll: 400 },
+      header: { colorOnScroll: 100 },
       footer: { backgroundColor: 'black' }
     }
   },
@@ -68,7 +71,7 @@ const routes = [
     name: 'BoardFree',
     components: { default: BoardFree, header: Toolbar, footer: Footer },
     props: {
-      header: { colorOnScroll: 400 },
+      header: { colorOnScroll: 100 },
       footer: { backgroundColor: 'black' }
     }
   },
@@ -77,7 +80,7 @@ const routes = [
     name: 'BoardReview',
     components: { default: BoardReview, header: Toolbar, footer: Footer },
     props: {
-      header: { colorOnScroll: 400 },
+      header: { colorOnScroll: 100 },
       footer: { backgroundColor: 'black' }
     }
   },
@@ -86,7 +89,7 @@ const routes = [
     name: 'BoardSale',
     components: { default: BoardSale, header: Toolbar, footer: Footer },
     props: {
-      header: { colorOnScroll: 400 },
+      header: { colorOnScroll: 100 },
       footer: { backgroundColor: 'black' }
     }
   },
@@ -95,7 +98,7 @@ const routes = [
     name: 'Calendar',
     components: { default: Calendar, header: Toolbar, footer: Footer },
     props: {
-      header: { colorOnScroll: 400 },
+      header: { colorOnScroll: 100 },
       footer: { backgroundColor: 'black' }
     }
   },
@@ -104,7 +107,7 @@ const routes = [
     name: 'Create',
     components: { default: Create, header: Toolbar, footer: Footer },
     props: {
-      header: { colorOnScroll: 400 },
+      header: { colorOnScroll: 100 },
     }
   },
   {
@@ -112,7 +115,7 @@ const routes = [
     name: 'Detail',
     components: { default: Detail, header: Toolbar, footer: Footer },
     props: {
-      header: { colorOnScroll: 400 },
+      header: { colorOnScroll: 100 },
     }
   },
   {
@@ -120,7 +123,7 @@ const routes = [
     name: 'MyPage',
     components: { default: MyPage, header: Toolbar, footer: Footer },
     props: {
-      header: { colorOnScroll: 400 },
+      header: { colorOnScroll: 100 },
     }
   },
   {
@@ -128,7 +131,7 @@ const routes = [
     name: 'MyPost',
     components: { default: MyPost, header: Toolbar, footer: Footer },
     props: {
-      header: { colorOnScroll: 400 },
+      header: { colorOnScroll: 100 },
     }
   },
   {
@@ -136,7 +139,7 @@ const routes = [
     name: 'WishList',
     components: { default: WishList, header: Toolbar, footer: Footer },
     props: {
-      header: { colorOnScroll: 400 },
+      header: { colorOnScroll: 100 },
     }
   },
   {
@@ -144,7 +147,7 @@ const routes = [
     name: 'SaleList',
     components: { default: SaleList, header: Toolbar, footer: Footer },
     props: {
-      header: { colorOnScroll: 400 },
+      header: { colorOnScroll: 100},
     }
   },
 

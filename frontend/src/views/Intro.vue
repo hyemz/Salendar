@@ -7,8 +7,6 @@
         class="container d-flex flex-column justify-center align-center mx-auto"
       >
         <img src="../assets/logo.png" alt="" style="width:500px" />
-        <!-- <h2>설레이는 세일 캘린더</h2>
-        <h1>'설렌다'</h1> -->
       </div>
     </div>
 
