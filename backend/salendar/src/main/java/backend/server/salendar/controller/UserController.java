@@ -76,7 +76,7 @@ public class UserController {
         }
         return new ResponseEntity<>(response, status);
     }
-    
+
 
     // 토큰으로 회원조회
     @ApiOperation(value = "token으로 회원 정보 조회")

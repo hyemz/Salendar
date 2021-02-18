@@ -5,7 +5,6 @@ import backend.server.salendar.domain.Store;
 import backend.server.salendar.domain.User;
 import backend.server.salendar.repository.SaleRepository;
 import backend.server.salendar.repository.StoreRepository;
-import backend.server.salendar.repository.UserRepository;
 import lombok.SneakyThrows;
 
 import javax.transaction.Transactional;
@@ -27,7 +26,6 @@ public class SaleService {
     @SneakyThrows
     public void crawlAll() {
         List<Sale> cursales = saleRepository.findAll();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date today = Calendar.getInstance(TimeZone.getTimeZone("Asia/Seoul")).getTime();
         for (Sale sale : cursales) {
             if (Math.abs((sale.getSaleEndDate().getTime() - today.getTime()) / (24 * 60 * 60 * 1000)) > 365) {
@@ -40,11 +38,11 @@ public class SaleService {
         Object obj = cls.newInstance();
 
         Stream<Store> stores = storeRepository.findAll().stream();
-
         Pattern pattern = Pattern.compile("(?m)^(\\[(.*?)\\])");
 
         stores.forEach(store -> {
             try {
+                System.out.println(store.getStoreName());
                 Method method = cls.getDeclaredMethod("crawl" + store.getStoreName(), noParam);
                 List<Sale> sales = (List<Sale>) method.invoke(obj, null);
                 System.out.println("Store: " + store.getStoreName() + ", size: " + sales.size());
