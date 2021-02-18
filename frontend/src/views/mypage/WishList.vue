@@ -19,7 +19,7 @@
                 :cols="card.flex"
                 class="d-flex flex-column justify-center align-center mt-2"
               >
-                <v-col v-if="card.show">
+                <v-col v-if="card.show" v-on="counting(false)">
                   <v-hover v-slot="{ hover }">
                     <v-card
                       :elevation="hover ? 3 : 1"
@@ -62,7 +62,11 @@
                     </v-card>
                   </v-hover>
                 </v-col>
+                <v-col v-else-if="!card.show" v-on="counting(true)"></v-col>
               </div>
+              <router-link to="/calendar"
+                ><v-img v-if="this.isNone" :src="imgPath" max-width="1000px"></v-img
+              ></router-link>
             </v-row>
           </v-card>
         </v-card>
@@ -78,6 +82,8 @@ import { mapState } from 'vuex';
 
 export default {
   data: () => ({
+    isNone: false,
+    imgPath: require('@/assets/SaleListSmall/nofavorite.png'),
     cards: [
       {
         title: '아리따움',
@@ -205,6 +211,13 @@ export default {
         this.cards[index].show = this.following[this.cards[index].storeName];
       }
     },
+    isNone: function() {
+      console.log(this.isNone);
+      this.count = 0;
+      if (this.count == 8) {
+        this.isNone = true;
+      }
+    },
   },
   methods: {
     // 테스트를 위한 팔로우 함수
@@ -239,6 +252,9 @@ export default {
         .catch((err) => {
           console.log('찜 목록이 삭제 되지 못했습니다.', err);
         });
+    },
+    counting(bool) {
+      this.isNone = bool;
     },
   },
 };
