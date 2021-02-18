@@ -43,7 +43,7 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    components: { default: Login, header: Toolbar },
+    components: { default: Login, header: Toolbar, footer: Footer  },
     props: {
       header: { colorOnScroll: 100 },
     }
@@ -51,7 +51,7 @@ const routes = [
   {
     path: '/signup',
     name: 'Signup',
-    components: { default: Signup, header: Toolbar },
+    components: { default: Signup, header: Toolbar, footer: Footer },
     props: {
       header: { colorOnScroll: 400 },
     }

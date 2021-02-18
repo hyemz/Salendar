@@ -10,8 +10,6 @@
           <v-divider class="mt-12 mb-9"></v-divider>
         </div>
         <v-card flat>
-          <!-- <v-btn @click="follow">팔로우</v-btn> -->
-          <!-- {{ $moment(this.saleData.Etude[0].sale_start_date).isAfter('2019-01-01') }} -->
           <v-card class="mx-auto mb-12" max-width="1000" flat>
             <v-col class="d-flex flex-column justify-center align-center mt-12"> </v-col>
             <v-row dense rows="12">
