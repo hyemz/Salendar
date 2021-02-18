@@ -23,7 +23,7 @@ public class Comment {
     private String createdDate;
     private String modifiedDate;
 
-    private String usrEmail;
+    private String usrNick;
 
     @ManyToOne
     @JoinColumn(name = "board_no")
