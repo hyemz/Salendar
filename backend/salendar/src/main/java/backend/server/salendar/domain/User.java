@@ -52,7 +52,7 @@ public class User implements UserDetails {
     @JoinTable(name = "user_following",
             joinColumns = @JoinColumn(name = "usr_no"),
             inverseJoinColumns = @JoinColumn(name = "store_no"))
-    private List<Store> usrFollowing = new ArrayList<>();
+    private List<Store> usrFollowing = new ArrayList<Store>();
 
     // 사용자가 좋아요 한 게시물
     @ManyToMany
@@ -60,7 +60,7 @@ public class User implements UserDetails {
     @JoinTable(name = "board_like",
             joinColumns = @JoinColumn(name = "usr_no"),
             inverseJoinColumns = @JoinColumn(name = "board_no"))
-    private List<Board> boardLike = new ArrayList<>();
+    private List<Board> boardLike = new ArrayList<Board>();
 
     // 프로필 이미지
     @JsonProperty("usrImg")
