@@ -1,17 +1,11 @@
 <template>
-
   <v-card class="overflow-hidden" flat>
     <v-app-bar 
-  
-    color='transparent'
+    :color="bg"
+    flat
+    fixed
     :scroll-threshold="colorOnScroll"
     >
-      <!-- <template v-slot:img="{ props }">
-        <v-img
-          v-bind="props"
-          gradient="to top right, rgba(100,115,201,.7), rgba(25,32,72,.7)"
-        ></v-img>
-      </template> -->
       <v-col >
         <v-toolbar-title 
           color="sub"
@@ -27,27 +21,27 @@
       <!-- <span id="title">야야야</span> -->
       <template>
         <v-tabs align-with-title hide-slider>
-          <v-tab to="/salelist" class="ml-1 text-decoration-none font-weight-medium"
+          <v-tab to="/salelist" class="ml-1 text-decoration-none font-weight-bold"
             >메인페이지</v-tab
           >
-          <v-tab to="/calendar" class="text-decoration-none font-weight-medium"
+          <v-tab to="/calendar" class="text-decoration-none font-weight-bold"
             >세일캘린더</v-tab
           >
-          <v-tab to="/board" class="text-decoration-none font-weight-medium"
+          <v-tab to="/board" class="text-decoration-none font-weight-bold"
             >게시판</v-tab
           >
-          <v-tab id="test" class="text-decoration-none font-weight-medium" to="/mypage/wishlist"
+          <v-tab id="test" class="text-decoration-none font-weight-bold" to="/mypage/wishlist"
             >찜목록</v-tab
           >
         </v-tabs>
       </template>
 
       <template v-if="!isLogin">
-        <v-btn text color="white" v-if="!isLogin">
-          <router-link :to="{ name: 'Login' }" class="text-decoration-none">로그인</router-link>
+        <v-btn color="blue-grey darken-4" rounded elevation="0" v-if="!isLogin" style="opacity:0.7" class="mm">
+          <router-link :to="{ name: 'Login' }" class="text-decoration-none white--text">로그인</router-link>
         </v-btn>
-        <v-btn text v-if="!isLogin">
-          <router-link :to="{ name: 'Signup' }" class="text-decoration-none">가입하기</router-link>
+        <v-btn color="main" rounded v-if="!isLogin" elevation="0" style="opacity:0.7">
+          <router-link :to="{ name: 'Signup' }" class="text-decoration-none white--text">가입하기</router-link>
         </v-btn>
       </template>
       <template v-if="isLogin">
@@ -92,10 +86,17 @@ import axios from 'axios'
 
 export default {
   name: 'main-header',
+
   props: {
     transparent: Boolean,
-    colorOnScroll: Number
+    colorOnScroll: Number,
   },
+  mounted() {
+    window.onscroll = () => {
+      this.changeColor();
+    };
+  },
+
   created() {
     this.token = localStorage.getItem('jwt');
     if(this.token) {
@@ -154,6 +155,7 @@ export default {
     token: localStorage.getItem('jwt'),
     items: [{ title: '마이페이지' }],
     nickname:'',
+    bg:'transparent',
   }),
   methods: {
     logout() {
@@ -161,6 +163,21 @@ export default {
       this.$store.dispatch('login', false);
       this.$store.dispatch('updateFollowing', false)
     },
+    changeColor() {
+      if (
+        document.body.scrollTop > 100 ||
+        document.documentElement.scrollTop > 100
+      ) {
+        this.bg = 'white';
+      } else {
+        this.bg = 'transparent';
+      }
+    },
   },
 };
 </script>
+<style scoped>
+.mm {
+  margin-right: 12px;
+}
+</style>
