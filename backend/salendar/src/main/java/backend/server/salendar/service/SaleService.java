@@ -9,6 +9,7 @@ import lombok.SneakyThrows;
 
 import javax.transaction.Transactional;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -37,6 +38,7 @@ public class SaleService {
         Object obj = cls.newInstance();
 
         Stream<Store> stores = storeRepository.findAll().stream();
+        Pattern pattern = Pattern.compile("(?m)^(\\[(.*?)\\])");
 
         stores.forEach(store -> {
             try {
@@ -48,6 +50,15 @@ public class SaleService {
                         .forEach(sale -> {
                             saleRepository.findBySaleTitle(sale.getSaleTitle()).orElseGet(() -> {
                                 sale.setStore(store);
+                                if (pattern.matcher(sale.getSaleTitle()).find()) {
+                                    System.out.println(pattern.matcher(sale.getSaleTitle()).group());
+                                    String newTitle = pattern.matcher(sale.getSaleTitle()).group();
+                                    sale.setSaleTitle(newTitle);
+                                }
+                                if (pattern.matcher(sale.getSaleDsc()).find()) {
+                                    String newDsc = pattern.matcher(sale.getSaleDsc()).group();
+                                    sale.setSaleDsc(newDsc);
+                                }
                                 if (sale.getSaleBigImg().strip().length() < 5) {
                                     sale.setSaleBigImg(sale.getSaleThumbnail());
                                 }
