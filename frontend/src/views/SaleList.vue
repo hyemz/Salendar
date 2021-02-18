@@ -245,7 +245,7 @@ export default {
     },
     getSale() {
       // 세일정보 가져오기
-      const baseURL = 'http://i4a3014.p.ssafy.io';
+      const baseURL = 'http://i4a301.p.ssafy.io';
       axios
         .create({
           baseURL,
