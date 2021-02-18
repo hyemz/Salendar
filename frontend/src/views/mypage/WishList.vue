@@ -64,9 +64,9 @@
                 </v-col>
                 <!-- <v-col v-if="!card.show" v-on="counting(true)"></v-col> -->
               </div>
-              <!-- <router-link to="/calendar"
+              <router-link to="/calendar"
                 ><v-img v-if="this.isNone" :src="imgPath" max-width="1000px"></v-img
-              ></router-link> -->
+              ></router-link>
             </v-row>
           </v-card>
         </v-card>
@@ -82,7 +82,7 @@ import { mapState } from 'vuex';
 
 export default {
   data: () => ({
-    isNone: false,
+    isNone: true,
     imgPath: require('@/assets/SaleListSmall/nofavorite.png'),
     cards: [
       {
@@ -155,12 +155,15 @@ export default {
     ...mapState(['following']),
   },
   created: function() {
+    Object.values(this.following).map((v) => {
+      if (v) this.isNone = false;
+    });
     // 데이터 요청
     // 팔로우 매장 정보 가져오기
     axiosDefault
       .get(`/api/sale/storelist`)
       .then((res) => {
-        console.log(res);
+        console.log('test', res);
       })
       .catch((err) => {
         console.log('매장 정보를 불러오지 못했어요.', err);
@@ -197,6 +200,7 @@ export default {
       })
       .catch((err) => {
         console.log(err);
+        this.isNone = true;
       });
 
     // 데이터 처리
@@ -207,15 +211,12 @@ export default {
   },
   watch: {
     following: function() {
+      this.isNone = true;
+      Object.values(this.following).map((v) => {
+        if (v) this.isNone = false;
+      });
       for (let index = 0; index < this.cards.length; index++) {
         this.cards[index].show = this.following[this.cards[index].storeName];
-      }
-    },
-    isNone: function() {
-      console.log(this.isNone);
-      this.count = 0;
-      if (this.count == 8) {
-        this.isNone = true;
       }
     },
   },
