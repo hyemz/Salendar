@@ -63,7 +63,7 @@
           <v-spacer></v-spacer>
           <br /><br /><br /><br />
           <v-hover v-slot="{ hover }">
-            <router-link to="/signup" class="font-weight-bold text-decoration-none"
+            <router-link to="/salelist" class="font-weight-bold text-decoration-none"
               ><v-btn
                 v-if="!hover"
                 x-large
