@@ -163,7 +163,7 @@ export default {
         // 내용에 sortable: false를 추가하면 제목을 클릭 시 sort 되는 것을 제거
         { width: '60', text: '분류', value: 'boardType', align: 'start', sortable: false },
         { text: '제목', value: 'boardTitle', align: 'start', sortable: false },
-        { width: '150', text: '작성자', value: 'usrEmail', align: 'start', sortable: false },
+        { width: '150', text: '작성자', value: 'usrNick', align: 'start', sortable: false },
         { width: '120', text: '등록일', value: 'createdDate', align: 'center', sortable: false },
         { width: '90', text: '조회수', value: 'hit', align: 'center', sortable: false },
       ],
@@ -257,12 +257,6 @@ export default {
               this.contents.push(res.data[i]);
               console.log(this.contents);
             }
-            res.data[i].boardType = '리뷰';
-            count += 1;
-            res.data[i].modifiedDate = count;
-
-            this.contents.push(res.data[i]);
-            console.log(this.contents);
           }
         })
         .catch((err) => {
