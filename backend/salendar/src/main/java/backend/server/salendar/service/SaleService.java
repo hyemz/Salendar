@@ -9,7 +9,6 @@ import lombok.SneakyThrows;
 
 import javax.transaction.Transactional;
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -37,8 +36,7 @@ public class SaleService {
         Class cls = Class.forName("backend.server.salendar.util.Crawler");
         Object obj = cls.newInstance();
 
-        Stream<Store> stores = storeRepository.findAll().stream();
-        Pattern pattern = Pattern.compile("(?m)^(\\[(.*?)\\])");
+        Stream<Store> stores = storeRepository.findAll().stream();\
 
         stores.forEach(store -> {
             try {
@@ -46,18 +44,10 @@ public class SaleService {
                 Method method = cls.getDeclaredMethod("crawl" + store.getStoreName(), noParam);
                 List<Sale> sales = (List<Sale>) method.invoke(obj, null);
                 System.out.println("Store: " + store.getStoreName() + ", size: " + sales.size());
-                sales.stream()
+                sales
                         .forEach(sale -> {
                             saleRepository.findBySaleTitle(sale.getSaleTitle()).orElseGet(() -> {
                                 sale.setStore(store);
-                                if (pattern.matcher(sale.getSaleTitle()).find()) {
-                                    String newTitle = pattern.matcher(sale.getSaleTitle()).group();
-                                    sale.setSaleTitle(newTitle);
-                                }
-                                if (pattern.matcher(sale.getSaleDsc()).find()) {
-                                    String newDsc = pattern.matcher(sale.getSaleDsc()).group();
-                                    sale.setSaleDsc(newDsc);
-                                }
                                 if (sale.getSaleBigImg().strip().length() < 5) {
                                     sale.setSaleBigImg(sale.getSaleThumbnail());
                                 }
