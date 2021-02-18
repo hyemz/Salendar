@@ -22,7 +22,6 @@ import java.util.Optional;
 
 @Api(tags = {"4. Comment"})
 @RestController
-@CrossOrigin("http://localhost:8081")
 @RequestMapping("/api/boardList")
 @Controller
 public class CommentController {

@@ -27,7 +27,6 @@ import java.util.Map;
 @Api(tags = {"2. Sale"})
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin("http://localhost:8081")
 @RequestMapping("/api/sale")
 public class SaleController {
     @Autowired

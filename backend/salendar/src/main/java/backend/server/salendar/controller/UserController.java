@@ -162,8 +162,7 @@ public class UserController {
     //    게시글 좋아요
     @ApiOperation(value = "게시글 좋아요 ", notes = "token, board")
     @PostMapping(value = "/token/like/{boardNo}")
-    public ResponseEntity<String> likePost(@PathVariable("boardNo") String no, HttpServletRequest request) throws
-            URISyntaxException {
+    public ResponseEntity<String> likePost(@PathVariable("boardNo") String no, HttpServletRequest request){
         try {
             Long boardNo = Long.parseLong(no);
             userService.likePost(JwtTokenProvider.resolveToken(request), boardNo);
@@ -176,8 +175,7 @@ public class UserController {
     //    게시글 좋아요 취소
     @ApiOperation(value = "게시글 좋아요 취소", notes = "token, board")
     @PostMapping(value = "/token/unlike/{boardNo}")
-    public ResponseEntity<String> unlikePost(@PathVariable("boardNo") String no, HttpServletRequest request) throws
-            URISyntaxException {
+    public ResponseEntity<String> unlikePost(@PathVariable("boardNo") String no, HttpServletRequest request){
         try {
             Long boardNo = Long.parseLong(no);
             userService.unlikePost(JwtTokenProvider.resolveToken(request), boardNo);
