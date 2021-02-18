@@ -55,11 +55,7 @@ public class Crawler {
     public static List<Sale> crawlOliveyoung() {
         List<Sale> result = new ArrayList<>();
         String eventUrl = "https://www.oliveyoung.co.kr/store/main/getEventList.do";
-
-        if (eventUrl.indexOf("https://") >= 0) {
-            Crawler.setSSL();
-        }
-
+        Crawler.setSSL();
         Document doc = Jsoup.parse(crawl(eventUrl));
 
         Elements eventLists = doc.select("#Container > div > div.event_tab_cont > ul.event_thumb_list > li");
@@ -98,10 +94,7 @@ public class Crawler {
     public static List<Sale> crawlAritaum() {
         List<Sale> result = new ArrayList<>();
         String eventUrl = "https://www.aritaum.com/event/ev/event_ev_event_list.do";
-
-        if (eventUrl.indexOf("https://") >= 0) {
-            Crawler.setSSL();
-        }
+        Crawler.setSSL();
         Document doc = Jsoup.parse(crawl(eventUrl));
 
         Elements eventLists = doc.select("#container > div > div.side_content > div > div > ul > li");
@@ -139,11 +132,7 @@ public class Crawler {
     public static List<Sale> crawlMissha() {
         List<Sale> result = new ArrayList<>();
         String eventUrl = "https://www.mynunc.com/marketing/event/main";
-
-        if (eventUrl.indexOf("https://") >= 0) {
-            Crawler.setSSL();
-        }
-
+        Crawler.setSSL();
         Document doc = Jsoup.parse(crawl(eventUrl));
 
         Elements eventLists = doc.select("#event-list > li");
@@ -181,10 +170,7 @@ public class Crawler {
     public static List<Sale> crawlEtude() {
         List<Sale> result = new ArrayList<>();
         String eventUrl = "https://www.etude.com/kr/ko/display/event?displayMenuId=event";
-        if (eventUrl.indexOf("https://") >= 0) {
-            Crawler.setSSL();
-        }
-
+        Crawler.setSSL();
         Document doc = Jsoup.parse(crawl(eventUrl));
 
         Elements eventLists = doc.select("#ap_container > div.ap_contents.event_main.event_progress > div > div.tab_cont.space > ul > li");
@@ -222,11 +208,7 @@ public class Crawler {
     public static List<Sale> crawlLalavla() {
         List<Sale> result = new ArrayList<>();
         String eventUrl = "http://lalavla.gsretail.com/lalavla/ko/customer-engagement/event/current-events";
-
-        if (eventUrl.indexOf("https://") >= 0) {
-            Crawler.setSSL();
-        }
-
+        Crawler.setSSL();
         Document doc = Jsoup.parse(crawl(eventUrl));
 
         Elements eventLists = doc.select("#contents > div.cnt > div > div > div > table > tbody > tr");
@@ -262,11 +244,7 @@ public class Crawler {
     public static List<Sale> crawlThefaceshop() {
         List<Sale> result = new ArrayList<>();
         String eventUrl = "https://www.naturecollection.com/mall/event/event.jsp";
-
-        if (eventUrl.indexOf("https://") >= 0) {
-            Crawler.setSSL();
-        }
-
+        Crawler.setSSL();
         Document doc = Jsoup.parse(crawl(eventUrl));
 
         Elements eventLists = doc.select("body > div.RootDiv > div.MallDiv > section > div > div.ComEventList_wrap > ul > li");
@@ -304,11 +282,7 @@ public class Crawler {
     public static List<Sale> crawlTonymoly() {
         List<Sale> result = new ArrayList<>();
         String eventUrl = "https://tonystreet.com/event/event_event_list.do";
-
-        if (eventUrl.indexOf("https://") >= 0) {
-            Crawler.setSSL();
-        }
-
+        Crawler.setSSL();
         Document doc = Jsoup.parse(crawl(eventUrl));
 
         Elements eventLists = doc.select("body > div.wrapper > div.container > div > section > div > div > ul > li");
@@ -346,12 +320,11 @@ public class Crawler {
     public static List<Sale> crawlInnisfree() {
         List<Sale> result = new ArrayList<>();
         String eventUrl = "https://www.innisfree.com/kr/ko/Event.do";
-
-        if (eventUrl.indexOf("https://") >= 0) {
-            Crawler.setSSL();
-        }
-
+        System.out.println(1);
+        Crawler.setSSL();
+        System.out.println(2);
         Document doc = Jsoup.parse(crawl(eventUrl));
+        System.out.println(3);
         System.out.println(doc.text());
         Elements eventLists = doc.select("#eventList > li");
 
@@ -371,9 +344,7 @@ public class Crawler {
             Elements eventDate = e.select("a > span.descWrap > span");
             int index = eventDate.text().indexOf("~");
             String eventStart = eventDate.text().substring(0, index - 1);
-            System.out.println(eventDate.text());
             if ((int) eventDate.text().substring(index + 2, index + 3).charAt(0) == 54620 || (int) eventDate.text().substring(index + 2, index + 3).charAt(0) == 51652) {
-                System.out.println("넘겨");
                 continue;
             }
             String eventEnd = eventDate.text().substring(index + 2, index + 12);
@@ -418,29 +389,20 @@ public class Crawler {
         }
 
         List<Pattern> patterns2 = Arrays.asList(Pattern.compile("(?m)\\d*%"), Pattern.compile("(?m)\\d*.\\d*%"));
-        Pattern perPattern = Pattern.compile("[^%]");
         for (Pattern pattern : patterns2) {
             double per = (double) 0;
             Matcher matcher = pattern.matcher(sale.getSaleTitle());
             while (matcher.find()) {
                 String temp = matcher.group();
-                Matcher perMatcher = perPattern.matcher(temp);
-                System.out.println(temp);
-                System.out.println(perMatcher.find());
-                System.out.println(perMatcher.group());
-                if (perMatcher.find() && Double.parseDouble(perMatcher.group()) > per) {
-                    per = Double.parseDouble(perMatcher.group());
+                if (Double.parseDouble(temp.substring(0, 2)) > per) {
+                    per = Double.parseDouble(temp.substring(0, 2));
                 }
             }
             Matcher matcher2 = pattern.matcher(sale.getSaleDsc());
             while (matcher2.find()) {
                 String temp = matcher2.group();
-                 Matcher perMatcher = perPattern.matcher(temp);
-                System.out.println(temp);
-                System.out.println(perMatcher.find());
-                System.out.println(perMatcher.group());
-                if (perMatcher.find() && Double.parseDouble(perMatcher.group()) > per) {
-                    per = Double.parseDouble(perMatcher.group());
+                if (Double.parseDouble(temp.substring(0, 2)) > per) {
+                    per = Double.parseDouble(temp.substring(0, 2));
                 }
             }
             if (per > 90) {
