@@ -416,20 +416,23 @@ public class Crawler {
         }
 
         List<Pattern> patterns2 = Arrays.asList(Pattern.compile("(?m)\\d*%"), Pattern.compile("(?m)\\d*.\\d*%"));
+        Pattern perPattern = Pattern.compile("[^%]");
         for (Pattern pattern : patterns2) {
             double per = (double) 0;
             Matcher matcher = pattern.matcher(sale.getSaleTitle());
             while (matcher.find()) {
                 String temp = matcher.group();
-                if (Double.parseDouble(temp.substring(0, temp.length() - 2)) > per) {
-                    per = Double.parseDouble(matcher.group());
+                Matcher perMatcher = perPattern.matcher(temp);
+                if (perMatcher.find() && Double.parseDouble(perMatcher.group()) > per) {
+                    per = Double.parseDouble(perMatcher.group());
                 }
             }
             Matcher matcher2 = pattern.matcher(sale.getSaleDsc());
             while (matcher2.find()) {
-                String temp = matcher.group();
-                if (Double.parseDouble(temp.substring(0, temp.length() - 2)) < per) {
-                    per = Double.parseDouble(matcher2.group());
+                String temp = matcher2.group();
+                 Matcher perMatcher = perPattern.matcher(temp);
+                if (perMatcher.find() && Double.parseDouble(perMatcher.group()) > per) {
+                    per = Double.parseDouble(perMatcher.group());
                 }
             }
             if (per > 90) {
