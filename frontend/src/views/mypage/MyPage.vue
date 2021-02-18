@@ -10,21 +10,28 @@
           offset-y="20"
           icon="mdi-plus-thick"
         > -->
-          <v-hover v-slot="{ hover }">
-            <v-avatar v-if="!hover" class="mx-auto profile" size="150">
-              <v-img src="https://cdn.pixabay.com/photo/2020/07/12/07/47/bee-5396362_1280.jpg"></v-img>
-            </v-avatar>
-            <v-avatar v-else-if="hover" class="mx-auto d-flex justify-center align-center profile" size="150" style="position:relative">
-                <v-img src="https://cdn.pixabay.com/photo/2020/07/12/07/47/bee-5396362_1280.jpg" style="opacity:0.4"></v-img>
-                <v-file-input
-                  class="mt-0 pt-0 d-flex justify-center align-center"
-                  hide-input="true"
-                  prepend-icon="mdi-plus"
-                  color="white"
-                  style="position:absolute"
-                ></v-file-input>
-            </v-avatar>
-          </v-hover>
+        <v-hover v-slot="{ hover }">
+          <v-avatar v-if="!hover" class="mx-auto profile" size="150">
+            <v-img :src="myImg"></v-img>
+          </v-avatar>
+          <v-avatar
+            v-else-if="hover"
+            class="mx-auto d-flex justify-center align-center profile"
+            size="150"
+            style="position:relative"
+          >
+            <v-img :src="myImg" style="opacity:0.4"></v-img>
+            <v-file-input
+              class="mt-0 pt-0 d-flex justify-center align-center"
+              :hide-input="true"
+              accept="image/*"
+              prepend-icon="mdi-plus"
+              color="white"
+              v-model="file"
+              style="position:absolute"
+            ></v-file-input>
+          </v-avatar>
+        </v-hover>
         <!-- </v-badge> -->
       </div>
 
@@ -51,7 +58,10 @@
             v-model="nickname"
             @keypress.enter="login"
           ></v-text-field>
-          <div style="width:500px" class="d-flex justify-space-between align-center">
+          <div
+            style="width:500px"
+            class="d-flex justify-space-between align-center"
+          >
             <v-text-field
               v-if="!changePwd"
               class="mr-4"
@@ -110,22 +120,24 @@
 </template>
 
 <script>
-import PV from 'password-validator';
-import axios from 'axios';
+import PV from "password-validator";
+import axios from "axios";
 
 export default {
-  name: 'mypage',
+  name: "mypage",
   data() {
     return {
       changePwd: false,
       canChangePwd: false,
-      myEmail: '',
-      nickname: '',
-      fakenickname: '',
-      accessPwd: '',
-      password: '',
-      newPwd: '',
-      newPwdConfirm: '',
+      myEmail: "",
+      myImg:
+        "https://cdn.pixabay.com/photo/2020/07/12/07/47/bee-5396362_1280.jpg",
+      nickname: "",
+      fakenickname: "",
+      accessPwd: "",
+      password: "",
+      newPwd: "",
+      newPwdConfirm: "",
       alarm: false,
       passwordSchema: new PV(),
       error: {
@@ -135,6 +147,7 @@ export default {
       show: false,
       isSubmit: false,
       component: this,
+      file: "",
     };
   },
   created() {
@@ -150,25 +163,25 @@ export default {
       .letters();
 
     // 프로필 가져오기
-      const headers = {
-            "x-auth-token": localStorage.getItem("jwt"),
-        };
-      const baseURL = "http://localhost:8080";
-      axios
+    const headers = {
+      "x-auth-token": localStorage.getItem("jwt"),
+    };
+    const baseURL = "http://localhost:8080";
+    axios
       .create({
-          baseURL,
-          headers,
+        baseURL,
+        headers,
       })
-      .get('/api/user/token/mypage')
+      .get("/api/user/token/mypage")
       .then((res) => {
         console.log(res);
         this.myEmail = res.data.usrEmail;
         this.nickname = res.data.usrNick;
         this.fakenickname = res.data.usrNick;
-        this.alarm = res.data.usrAlarm
+        this.alarm = res.data.usrAlarm;
       })
       .catch((err) => {
-        console.log('정보를 불러오는 것을 실패했습니다.', err);
+        console.log("정보를 불러오는 것을 실패했습니다.", err);
       });
   },
   watch: {
@@ -177,7 +190,7 @@ export default {
       this.checkForm();
     },
     canChangePwd: function() {
-      this.checkForm()
+      this.checkForm();
     },
     newPwd: function() {
       this.checkForm();
@@ -187,6 +200,32 @@ export default {
     },
     changePwd: function() {
       this.checkForm();
+    },
+    file: function() {
+      // this.file.type = 'multipart/form-data'
+      this.myImg = URL.createObjectURL(this.file);
+      const headers = {
+        "x-auth-token": localStorage.getItem("jwt"),
+        "Content-Type": "multipart/form-data",
+      };
+      const baseURL = "http://localhost:8080";
+      var fd = new FormData();
+      fd.append("usrImg", this.file);
+      console.log(fd);
+      console.log("여기");
+
+      axios
+        .create({
+          baseURL,
+          headers,
+        })
+        .put("/api/user/token/profileImg", fd)
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
   methods: {
@@ -198,84 +237,86 @@ export default {
           usrNick: this.nickname,
           usrPwd: this.newPwdConfirm,
           usrAlarm: this.alarm,
+          // usrImgUrl: imgUrl,
         };
       } else {
         userForm = {
           usrNick: this.nickname,
           usrPwd: this.password,
           usrAlarm: this.alarm,
+          // usrImgUrl: imgUrl
         };
       }
       // 유저 정보 변경하기
       const headers = {
-            "x-auth-token": localStorage.getItem("jwt"),
-        };
+        "x-auth-token": localStorage.getItem("jwt"),
+      };
       const baseURL = "http://localhost:8080";
       axios
         .create({
-            baseURL,
-            headers,
+          baseURL,
+          headers,
         })
-        .put('/api/user/token/update', userForm)
+        .put("/api/user/token/update", userForm)
         .then((res) => {
-          alert('유저 정보가 변경되었습니다.');
-          console.log('유저 정보가 변경되었습니다.', res);
-          this.$router.push('/salelist');
+          alert("유저 정보가 변경되었습니다.");
+          console.log("유저 정보가 변경되었습니다.", res);
+          this.$router.push("/salelist");
         })
         .catch((err) => {
-          console.log('유저 정보 변경이 실패했습니다.', err);
+          console.log("유저 정보 변경이 실패했습니다.", err);
         });
     },
     checkPwd() {
       // 비밀번호 백엔드와 일치하는지
       const headers = {
-            "x-auth-token": localStorage.getItem("jwt"),
-        };
+        "x-auth-token": localStorage.getItem("jwt"),
+      };
       const baseURL = "http://localhost:8080";
-        axios
+      axios
         .create({
-            baseURL,
-            headers,
+          baseURL,
+          headers,
         })
-        .post('/api/user/token/pwdConfirm', this.password)
+        .post("/api/user/token/pwdConfirm", this.password)
         .then((res) => {
           this.accessPwd = res.data;
-          if (this.password.length > 0 && this.accessPwd == 'OK') {
+          if (this.password.length > 0 && this.accessPwd == "OK") {
             this.canChangePwd = true;
           } else this.canChangePwd = false;
         })
         .catch((err) => {
-          console.log('비밀번호 일치여부 확인 불가', err);
+          console.log("비밀번호 일치여부 확인 불가", err);
         });
     },
     checkForm() {
       // if (this.password.length >= 0 && this.accessPwd == 'OK') this.canChangePwd = true;
       // else this.canChangePwd = false;
 
-      if (this.newPwd.length >= 0 && !this.passwordSchema.validate(this.newPwd) )
-        this.error.password = '영문,숫자 포함 8 자리이상이어야 합니다.';
+      if (this.newPwd.length >= 0 && !this.passwordSchema.validate(this.newPwd))
+        this.error.password = "영문,숫자 포함 8 자리이상이어야 합니다.";
       else this.error.password = false;
 
       if (this.password == this.newPwd) {
-        this.error.password = "기존 비밀번호는 사용하실 수 없습니다"
+        this.error.password = "기존 비밀번호는 사용하실 수 없습니다";
       }
 
       if (this.newPwdConfirm.length >= 0 && this.newPwd !== this.newPwdConfirm)
-        this.error.passwordConfirm = '패스워드와 일치하지 않습니다.';
+        this.error.passwordConfirm = "패스워드와 일치하지 않습니다.";
       else this.error.passwordConfirm = false;
 
       let isSubmit = true;
       if (!this.changePwd) {
-        if ( this.canChangePwd && this.nickname ) {
+        if (this.canChangePwd && this.nickname) {
           isSubmit = true;
         } else {
-          isSubmit =false
+          isSubmit = false;
         }
       } else {
         Object.values(this.error).map((v) => {
           if (v || !this.nickname) {
-            isSubmit = false
-          } 
+            isSubmit = false;
+          }
         });
       }
       this.isSubmit = isSubmit;
@@ -285,16 +326,15 @@ export default {
 </script>
 
 <style>
-.v-application--is-ltr .v-input__prepend-outer{
+.v-application--is-ltr .v-input__prepend-outer {
   margin-right: 0px;
-  color:white;
-  width:100px
+  color: white;
+  width: 100px;
 }
 
 .mdi-plus::before {
-    color: white;
-    font-size: 80px;
-    opacity: 0.9;
+  color: white;
+  font-size: 80px;
+  opacity: 0.9;
 }
-
 </style>
