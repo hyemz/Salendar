@@ -76,14 +76,7 @@ public class UserController {
         }
         return new ResponseEntity<>(response, status);
     }
-
-    // 모든 회원 조회
-    @ApiOperation(value = "회원 가입", notes = "회원가입")
-    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.findAll();
-        return new ResponseEntity<>(users, HttpStatus.OK);
-    }
+    
 
     // 토큰으로 회원조회
     @ApiOperation(value = "token으로 회원 정보 조회")
