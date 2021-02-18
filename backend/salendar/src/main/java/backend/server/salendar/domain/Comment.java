@@ -61,12 +61,12 @@ public class Comment {
         this.modifiedDate = modifiedDate;
     }
 
-    public String getUsrEmail() {
-        return usrEmail;
+    public String getUsrNick() {
+        return usrNick;
     }
 
-    public void setUsrEmail(String usrEmail) {
-        this.usrEmail = usrEmail;
+    public void setUsrNick(String usrNick) {
+        this.usrNick = usrNick;
     }
 
     public Board getBoard() {
@@ -83,7 +83,7 @@ public class Comment {
         if(o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment)  o;
         return Objects.equals(commentNo, comment.commentNo) &&
-                Objects.equals(usrEmail, comment.usrEmail) &&
+                Objects.equals(usrNick, comment.usrNick) &&
                 Objects.equals(commentContents, comment.commentContents) &&
                 Objects.equals(createdDate, comment.createdDate) &&
                 Objects.equals(modifiedDate, comment.modifiedDate);
