@@ -165,7 +165,7 @@ export default {
         usrAlarm: this.alarm,
       };
       axios
-        .post('http://i4a301.p.ssafy.io/api/user/join', ResisterForm)
+        .post('http://i4a301.p.ssafy.io:8080/api/user/join', ResisterForm)
         .then((res) => {
           console.log(res);
           this.$router.push('/login');

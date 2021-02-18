@@ -166,7 +166,7 @@ export default {
     const headers = {
       'x-auth-token': localStorage.getItem('jwt'),
     };
-    const baseURL = 'http://i4a301.p.ssafy.io';
+    const baseURL = 'http://i4a301.p.ssafy.io:8080';
     axios
       .create({
         baseURL,
@@ -226,7 +226,7 @@ export default {
       const headers = {
         'x-auth-token': localStorage.getItem('jwt'),
       };
-      const baseURL = 'http://i4a301.p.ssafy.io';
+      const baseURL = 'http://i4a301.p.ssafy.io:8080';
       axios
         .create({
           baseURL,

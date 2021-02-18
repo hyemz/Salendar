@@ -188,7 +188,7 @@ import axios from 'axios'
           const headers = {
             "x-auth-token": localStorage.getItem('jwt'),
           };
-          const baseURL = "http://i4a301.p.ssafy.io";
+          const baseURL = "http://i4a301.p.ssafy.io:8080";
           axios
           .create({
               baseURL,
@@ -218,7 +218,7 @@ import axios from 'axios'
       },
       getnotifications () {
         axios
-          .get("http://i4a301.p.ssafy.io/api/boardList/")
+          .get("http://i4a301.p.ssafy.io:8080/api/boardList/")
           .then((res) => {
             // console.log(res.data[1].boardType)
             for (var i = 0; i < res.data.length; i++) {
@@ -238,7 +238,7 @@ import axios from 'axios'
       },
       getboards () {
         axios
-          .get("http://i4a301.p.ssafy.io/api/boardList/")
+          .get("http://i4a301.p.ssafy.io:8080/api/boardList/")
           .then((res) => {
             var count = 0
             for (var i = 0; i < res.data.length; i++) {

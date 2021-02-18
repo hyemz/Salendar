@@ -166,7 +166,7 @@ export default {
     const headers = {
       "x-auth-token": localStorage.getItem("jwt"),
     };
-    const baseURL = "http://i4a301.p.ssafy.io";
+    const baseURL = "http://i4a301.p.ssafy.io:8080";
     axios
       .create({
         baseURL,
@@ -208,7 +208,7 @@ export default {
         "x-auth-token": localStorage.getItem("jwt"),
         "Content-Type": "multipart/form-data",
       };
-      const baseURL = "http://i4a301.p.ssafy.io";
+      const baseURL = "http://i4a301.p.ssafy.io:8080";
       var fd = new FormData();
       fd.append("usrImg", this.file);
       console.log(fd);
@@ -251,7 +251,7 @@ export default {
       const headers = {
         "x-auth-token": localStorage.getItem("jwt"),
       };
-      const baseURL = "http://i4a301.p.ssafy.io";
+      const baseURL = "http://i4a301.p.ssafy.io:8080";
       axios
         .create({
           baseURL,
@@ -272,7 +272,7 @@ export default {
       const headers = {
         "x-auth-token": localStorage.getItem("jwt"),
       };
-      const baseURL = "http://i4a301.p.ssafy.io";
+      const baseURL = "http://i4a301.p.ssafy.io:8080";
       axios
         .create({
           baseURL,
