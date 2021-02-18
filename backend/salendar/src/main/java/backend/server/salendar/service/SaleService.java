@@ -38,7 +38,8 @@ public class SaleService {
         Object obj = cls.newInstance();
 
         Stream<Store> stores = storeRepository.findAll().stream();
-        Pattern pattern = Pattern.compile("(?m)[^(\\[(.*?)\\])]");
+        Pattern pattern = Pattern.compile("(?m)\\[(.*?)\\]");
+        Pattern braket = Pattern.compile("\\[ || \\]");
 
         stores.forEach(store -> {
             try {
@@ -51,13 +52,22 @@ public class SaleService {
                             saleRepository.findBySaleTitle(sale.getSaleTitle()).orElseGet(() -> {
                                 sale.setStore(store);
                                 if (pattern.matcher(sale.getSaleTitle()).find()) {
-                                    System.out.println(pattern.matcher(sale.getSaleTitle()).group());
-                                    String newTitle = pattern.matcher(sale.getSaleTitle()).group();
-                                    sale.setSaleTitle(newTitle);
+                                    sale.setSaleTitle("");
+                                    String[] arr = sale.getSaleTitle().split("(?<=\\])|(?=\\[)");
+                                    Arrays.stream(arr).forEach(word -> {
+                                        if (!braket.matcher(word).find()) {
+                                            sale.setSaleTitle(sale.getSaleTitle() + " " + word);
+                                        }
+                                    });
                                 }
                                 if (pattern.matcher(sale.getSaleDsc()).find()) {
-                                    String newDsc = pattern.matcher(sale.getSaleDsc()).group();
-                                    sale.setSaleDsc(newDsc);
+                                    sale.setSaleDsc("");
+                                    String[] arr = sale.getSaleDsc().split("(?<=\\])|(?=\\[)");
+                                    Arrays.stream(arr).forEach(word -> {
+                                        if (!braket.matcher(word).find()) {
+                                            sale.setSaleDsc(sale.getSaleDsc() + " " + word);
+                                        }
+                                    });
                                 }
                                 if (sale.getSaleBigImg().strip().length() < 5) {
                                     sale.setSaleBigImg(sale.getSaleThumbnail());
