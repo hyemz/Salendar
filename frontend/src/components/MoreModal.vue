@@ -126,7 +126,7 @@ export default {
       const d1 = this.$moment(this.focus.end).format('YYYY-MM-DD');
       this.dday = this.$moment(d1).diff(this.$moment(), 'days');
       if (this.dday <= 0) {
-      } else if (this.$moment(d1.setDate(this.focus.end.getDate() - 1)) == this.$moment()) {
+      } else if (this.$moment(d1) == this.$moment()) {
         this.dday = '-day';
       } else {
         this.dday = '-' + Math.abs(this.dday);
