@@ -35,9 +35,14 @@
                       </v-list-item-title>
 
                       <v-list-item-subtitle>
-                        {{ $moment(this.focus.start).format('YYYY-MM-DD') }} ~
                         {{
-                          $moment(this.focus.end.setDate(this.focus.end.getDate() - 1)).format(
+                          $moment(this.focus.start.setDate(this.focus.end.getDate() - 1)).format(
+                            'YYYY-MM-DD'
+                          )
+                        }}
+                        ~
+                        {{
+                          $moment(this.focus.end.setDate(this.focus.end.getDate() - 2)).format(
                             'YYYY-MM-DD'
                           )
                         }}
