@@ -222,7 +222,7 @@ export default {
                 this.nowSales.push(el);
               }
               if (
-                0 < this.$moment(el.sale_end_date).diff(today, 'days') &&
+                0 <= this.$moment(el.sale_end_date).diff(today, 'days') &&
                 this.$moment(el.sale_end_date).diff(today, 'days') <= 3
               ) {
                 console.log(this.$moment(el.sale_end_date).diff(today, 'days'));
