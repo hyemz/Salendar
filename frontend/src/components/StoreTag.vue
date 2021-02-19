@@ -111,15 +111,16 @@ export default {
       if (!this.isLogin) {
         alert('로그인이 필요한 서비스입니다.');
         this.$router.push('/login');
-      }
-      if (store.followed) {
-        alert(store.title + ' 매장을 언팔로우 했습니다');
-        store.followed = false;
-        this.unFollow(store.storeName);
       } else {
-        alert(store.title + ' 매장을 팔로우 했습니다');
-        store.followed = true;
-        this.Follow(store.storeName);
+        if (store.followed) {
+          alert(store.title + ' 매장을 언팔로우 했습니다');
+          store.followed = false;
+          this.unFollow(store.storeName);
+        } else {
+          alert(store.title + ' 매장을 팔로우 했습니다');
+          store.followed = true;
+          this.Follow(store.storeName);
+        }
       }
     },
     Follow(storeName) {
