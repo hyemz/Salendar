@@ -35,7 +35,12 @@
                       </v-list-item-title>
 
                       <v-list-item-subtitle>
-                        {{ $moment(this.focus.start).format('YYYY-MM-DD') }} ~
+                        {{
+                          $moment(this.focus.start.setDate(this.focus.start.getDate())).format(
+                            'YYYY-MM-DD'
+                          )
+                        }}
+                        ~
                         {{
                           $moment(this.focus.end.setDate(this.focus.end.getDate() - 1)).format(
                             'YYYY-MM-DD'
@@ -120,9 +125,9 @@ export default {
       console.log(this.focus);
       const d1 = this.$moment(this.focus.end).format('YYYY-MM-DD');
       this.dday = this.$moment(d1).diff(this.$moment(), 'days');
-      if (this.dday <= 0) {
+      if (this.dday < 0) {
         this.dday = '+' + (Math.abs(this.dday) + 1);
-      } else if (this.$moment(d1) == this.$moment()) {
+      } else if (this.dday == 0) {
         this.dday = '-day';
       } else {
         this.dday = '-' + Math.abs(this.dday);

@@ -239,16 +239,12 @@ export default {
           var count = 0;
           for (var i = 0; i < res.data.length; i++) {
             if (res.data[i].boardType === '세일 제보 게시판') {
-              if (res.data[i].createdDate.slice(undefined, 10) == this.getToday()) {
-                res.data[i].createdDate = res.data[i].createdDate.slice(10);
-              } else {
-                res.data[i].createdDate =
-                  res.data[i].createdDate.slice(2, 4) +
-                  '/' +
-                  res.data[i].createdDate.slice(5, 7) +
-                  '/' +
-                  res.data[i].createdDate.slice(8, 10);
-              }
+              res.data[i].createdDate =
+                res.data[i].createdDate.slice(2, 4) +
+                '/' +
+                res.data[i].createdDate.slice(5, 7) +
+                '/' +
+                res.data[i].createdDate.slice(8, 10);
               res.data[i].boardType = '제보';
               count += 1;
               res.data[i].modifiedDate = count;

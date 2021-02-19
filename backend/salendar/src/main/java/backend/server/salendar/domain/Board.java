@@ -43,8 +43,9 @@ public class Board {
     @JsonProperty("boardType")
     private String boardType;
 
-    @JsonProperty("imgUrl")
-    private String imgUrl;
+    @JsonProperty("boardImg")
+    @Lob
+    private byte[] boardImg;
 
     @JsonProperty("hit")
     private Long hit;
@@ -70,7 +71,6 @@ public class Board {
                 Objects.equals(createdDate, board.createdDate) &&
                 Objects.equals(modifiedDate, board.modifiedDate) &&
                 Objects.equals(boardType, board.boardType) &&
-                Objects.equals(imgUrl, board.imgUrl) &&
                 Objects.equals(hit, board.hit) &&
                 Objects.equals(likeCnt, board.likeCnt);
 //        &&

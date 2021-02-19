@@ -11,8 +11,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
@@ -46,25 +48,25 @@ public class BoardController {
 
     //  게시물 상세보기
     @GetMapping("/{boardNo}")
-    public Board getBoard(@PathVariable("boardNo") String no){
+    public Board getBoard(@PathVariable("boardNo") String no) {
 
         try {
             Long boardNo = Long.parseLong(no);
             Optional<Board> board = boardRepository.findById((boardNo));
-            board.get().setHit(board.get().getHit()+1);
+            board.get().setHit(board.get().getHit() + 1);
 
             return boardRepository.save(board.get());
 
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
 
     }
 
     //  게시물 생성
-    @PutMapping(value = "/token/createboard", produces="application/json")
+    @PutMapping(value = "/token/createboard", produces = "application/json")
     public Board createBoard(@RequestBody Board board,
-                             HttpServletRequest request){
+                             HttpServletRequest request) {
 
         User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
         board.setUsrEmail(user.getUsrEmail());
@@ -85,7 +87,7 @@ public class BoardController {
     @PostMapping("/token/{boardNo}")
     public Board updateBoard(@PathVariable("boardNo") String no,
                              @RequestBody Board newBoard,
-                             HttpServletRequest request){
+                             HttpServletRequest request) {
 
         try {
             //  수정하려는 사람이 글 작성자와 일치하는지 확인
@@ -95,7 +97,7 @@ public class BoardController {
             String boardWriter = board.get().getUsrEmail();
 
             //  일치하지 않을경우 예외처리
-            if(!boardWriter.equals(user.getUsrEmail())){
+            if (!boardWriter.equals(user.getUsrEmail())) {
                 throw new Exception();
             }
 
@@ -103,7 +105,7 @@ public class BoardController {
             board.get().setBoardTitle(newBoard.getBoardTitle());
             board.get().setBoardContents(newBoard.getBoardContents());
             board.get().setBoardType(newBoard.getBoardType());
-            board.get().setImgUrl(newBoard.getImgUrl());
+            board.get().setBoardImg(newBoard.getBoardImg());
 
             //  수정 시각 업데이트
             Date date = new Date();
@@ -114,7 +116,7 @@ public class BoardController {
             boardRepository.save(board.get());
             return board.get();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
@@ -122,7 +124,7 @@ public class BoardController {
     //  게시물 삭제
     @DeleteMapping("/token/{boardNo}")
     public String deleteBoard(@PathVariable("boardNo") Long no,
-                              HttpServletRequest request){
+                              HttpServletRequest request) {
 
         try {
             User user = userService.findByToken(JwtTokenProvider.resolveToken(request));
@@ -130,8 +132,8 @@ public class BoardController {
             Board board = boardRepository.findById(no).get();
             String boardWriter = board.getUsrEmail();
 
-            if(!boardWriter.equals(user.getUsrEmail())){
-                 throw new Exception();
+            if (!boardWriter.equals(user.getUsrEmail())) {
+                throw new Exception();
             }
 
             List<Comment> comments = commentRepository.findCommentsByBoard(board);
@@ -149,7 +151,7 @@ public class BoardController {
 
             return "Delete Success";
 
-        }catch (Exception e){
+        } catch (Exception e) {
             return "Delete Fail";
         }
     }

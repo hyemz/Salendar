@@ -222,7 +222,7 @@ export default {
                 this.nowSales.push(el);
               }
               if (
-                0 < this.$moment(el.sale_end_date).diff(today, 'days') &&
+                0 <= this.$moment(el.sale_end_date).diff(today, 'days') &&
                 this.$moment(el.sale_end_date).diff(today, 'days') <= 3
               ) {
                 console.log(this.$moment(el.sale_end_date).diff(today, 'days'));
@@ -256,8 +256,8 @@ export default {
       let start = new Date(sale.sale_start_date);
       let end = new Date(sale.sale_end_date);
       this.focus = {
-        start: new Date(start.setDate(start.getDate() + 1)),
-        end: new Date(end.setDate(end.getDate() + 2)),
+        start: new Date(start.setDate(start.getDate())),
+        end: new Date(end.setDate(end.getDate() + 1)),
         _def: {
           extendedProps: {
             bigImg: sale.sale_big_img,
