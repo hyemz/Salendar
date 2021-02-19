@@ -34,7 +34,6 @@
             ></v-file-input>
           </v-avatar>
         </v-hover>
-        <!-- </v-badge> -->
       </div>
 
       <v-list-item three-line>
@@ -226,6 +225,7 @@ export default {
     changePwd: function() {
       this.checkForm();
     },
+
     file: function() {
       // this.file.type = 'multipart/form-data'
       this.myImg = URL.createObjectURL(this.file);
@@ -284,6 +284,7 @@ export default {
         .then((res) => {
           alert('유저 정보가 변경되었습니다.');
           console.log('유저 정보가 변경되었습니다.', res);
+          this.$store.dispatch('updateNickname', true);
           this.$router.push('/salelist');
         })
         .catch((err) => {

@@ -7,7 +7,7 @@
       width="70%"
       class="d-flex flex-column justify-center align-center mt-12 sm-8"
     >
-      <div class="text-center mt-2 mb-5 sm-4">
+      <div class="text-center mt-2 mb-5 sm-9" style="width:1000px">
         <span v-for="store in stores" :key="store.title">
           <v-chip
             id="desc"
@@ -46,12 +46,12 @@ export default {
           storeName: 'Lalavla',
           followed: false,
         },
-        {
-          title: '이니스프리',
-          avatar: require('@/assets/Logo/Innisfree.png'),
-          storeName: 'Innisfree',
-          followed: false,
-        },
+        // {
+        //   title: '이니스프리',
+        //   avatar: require('@/assets/Logo/Innisfree.png'),
+        //   storeName: 'Innisfree',
+        //   followed: false,
+        // },
         {
           title: '더페이스샵',
           avatar: require('@/assets/Logo/Thefaceshop.png'),
@@ -86,7 +86,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['following']),
+    ...mapState(['following', 'isLogin']),
   },
   watch: {
     selected: function() {
@@ -108,14 +108,19 @@ export default {
   },
   methods: {
     follow(store) {
-      if (store.followed) {
-        alert(store.title + ' 매장을 언팔로우 했습니다');
-        store.followed = false;
-        this.unFollow(store.storeName);
+      if (!this.isLogin) {
+        alert('로그인이 필요한 서비스입니다.');
+        this.$router.push('/login');
       } else {
-        alert(store.title + ' 매장을 팔로우 했습니다');
-        store.followed = true;
-        this.Follow(store.storeName);
+        if (store.followed) {
+          alert(store.title + ' 매장을 언팔로우 했습니다');
+          store.followed = false;
+          this.unFollow(store.storeName);
+        } else {
+          alert(store.title + ' 매장을 팔로우 했습니다');
+          store.followed = true;
+          this.Follow(store.storeName);
+        }
       }
     },
     Follow(storeName) {

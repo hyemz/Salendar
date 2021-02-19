@@ -8,7 +8,8 @@ import axios from 'axios'
 export default new Vuex.Store({
     state: {
         isLogin: false,
-        following:[],
+        following: [],
+        nick: '',
     },
     getters: {
 
@@ -22,7 +23,7 @@ export default new Vuex.Store({
                 const headers = {
                     "x-auth-token": localStorage.getItem("jwt"),
                 };
-                const baseURL = "http://i4a301.p.ssafy.io:8080";
+                const baseURL = 'http://i4a301.p.ssafy.io:8080';
                 axios
                 .create({
                     baseURL,
@@ -40,14 +41,41 @@ export default new Vuex.Store({
                 console.log('following state')
                 state.following = []
             }
-        }
+        }, 
+        UPDATENICKNAME(state, trigger) {
+            if (trigger) {
+                const headers = {
+                    "x-auth-token": localStorage.getItem("jwt"),
+                };
+                const baseURL = 'http://i4a301.p.ssafy.io:8080';
+                axios
+                .create({
+                    baseURL,
+                    headers,
+                })
+                .get("/api/user/token/mypage")
+                .then((res) => {
+                    console.log("nickname", res)
+                    state.nick = res.data.usrNick
+                })
+                .catch((err) => {
+                    console.log('닉네임 업데이트 실패입니다.', err);
+                });
+            } else {
+                console.log('following state')
+                state.nick = ''
+            }
+            }
     },
     actions: {
-        login(context, trigger) {
-            context.commit('LOGIN', trigger);
-        },
-        updateFollowing(context, trigger) {
-            context.commit('UPDATEFOLLOWING', trigger)
-        }
-    }
+    login(context, trigger) {
+        context.commit('LOGIN', trigger);
+    },
+    updateFollowing(context, trigger) {
+        context.commit('UPDATEFOLLOWING', trigger);
+    },
+    updateNickname(context, trigger) {
+        context.commit('UPDATENICKNAME', trigger);
+    },
+}
 })
