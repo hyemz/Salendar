@@ -123,7 +123,7 @@ export default {
     dialog: function() {
       this.data = this.focus._def.extendedProps;
       console.log(this.focus);
-      const d1 = this.$moment(this.focus.end).format('YYYY-MM-DD');
+      const d1 = this.$moment(this.focus.end.getDate() - 1).format('YYYY-MM-DD');
       this.dday = this.$moment(d1).diff(this.$moment(), 'days');
       if (this.dday <= 0) {
         this.dday = '+' + (Math.abs(this.dday) + 1);
