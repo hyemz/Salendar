@@ -180,17 +180,6 @@
             background-color="white"
             ></v-textarea>
 
-          <v-card-text>
-            <h2 style="color: grey">파일첨부</h2>
-          </v-card-text>
-
-          <v-file-input
-            truncate-length="15"
-            accept="image/*"
-            class="pl-5 pr-5 mb-4"
-            v-model="file"
-            ></v-file-input>
-
           <v-row justify="end">
             <v-btn 
               class="mr-1 ml-4 mb-6 text-color"

@@ -16,7 +16,7 @@
             class="mt-12 mb-9"
           >
             <v-btn 
-              v-if="items.usrEmail == myEmail"
+              v-if="items.usrNick == myNick"
               class="mr-1 ml-4"
               elevation="0"
               @click="deletepost"
@@ -24,7 +24,7 @@
               outlined
               >삭제하기</v-btn>
             <v-btn 
-              v-if="items.usrEmail == myEmail"
+              v-if="items.usrNick == myNick"
               class="mr-1 ml-4"
               elevation="0"
               @click="update"
@@ -56,8 +56,8 @@
               <v-col cols="12" sm="1"></v-col>
               <v-col cols="12" sm="4">
                 <div style="font-size:16px">작성자: {{items.usrNick}}</div>
-                <div style="font-size:16px">작성시간: {{items.createdDate}}</div>
-                <div style="font-size:16px">수정시간: {{items.modifiedDate}}</div>
+                <div style="font-size:16px">작성일: {{items.createdDate}}</div>
+                <div style="font-size:16px">수정일: {{items.modifiedDate}}</div>
                 <div style="font-size:16px">조회수: {{items.hit}}</div>
               </v-col>
             </v-row>
@@ -114,17 +114,17 @@
                 flat
               >
                 <v-row justify="between" class="mt-3">
-                  <p style="font-size:18px" class="mt-2 mb-2 ml-2">{{ comment.usrEmail }}</p>
+                  <p style="font-size:18px" class="mt-2 mb-2 ml-2">{{ comment.usrNick }}</p>
                   <v-spacer></v-spacer>
                   <div
                     v-if="comment.modifiedDate==comment.createdDate"
                     class="mr-2 mt-2">
-                    {{ comment.createdDate }}
+                    {{ comment.createdDate.slice(0,10) }}
                   </div>
                   <div
                     v-else
                     class="mr-2 mt-2">
-                    (수정됨) {{ comment.modifiedDate }}
+                    (수정됨) {{ comment.modifiedDate.slice(0,10) }}
                   </div>
 
                 </v-row>
@@ -134,7 +134,7 @@
                   <div class="mt-4 ml-2" style="font-size:17px">{{ comment.commentContents }}</div>
                   <v-spacer></v-spacer>
                   <v-btn 
-                    v-if="comment.usrEmail == myEmail"
+                    v-if="comment.usrNick == myNick"
                     class="mt-2"
                     justify="end"
                     color="red"
@@ -142,7 +142,7 @@
                     text
                     >삭제</v-btn>
                   <v-dialog
-                    v-if="comment.usrEmail == myEmail"
+                    v-if="comment.usrNick == myNick"
                     v-model="dialog"
                     persistent
                     max-width="600px"
@@ -211,17 +211,17 @@
                 flat
               >
                 <v-row justify="between" class="mt-3">
-                  <p style="font-size:18px" class="mt-2 mb-2 ml-2">{{ comment.usrEmail }}</p>
+                  <p style="font-size:18px" class="mt-2 mb-2 ml-2">{{ comment.usrNick }}</p>
                   <v-spacer></v-spacer>
                   <div
                     v-if="comment.modifiedDate==comment.createdDate"
                     class="mr-2 mt-2">
-                    {{ comment.createdDate }}
+                    {{ comment.createdDate.slice(0,10) }}
                   </div>
                   <div
                     v-else
                     class="mr-2 mt-2">
-                    (수정됨) {{ comment.modifiedDate }}
+                    (수정됨) {{ comment.modifiedDate.slice(0,10) }}
                   </div>
 
                 </v-row>
@@ -231,7 +231,7 @@
                   <div class="mt-4 ml-2" style="font-size:17px">{{ comment.commentContents }}</div>
                   <v-spacer></v-spacer>
                   <v-btn 
-                    v-if="comment.usrEmail == myEmail"
+                    v-if="comment.usrNick == myNick"
                     class="mt-2"
                     justify="end"
                     color="red"
@@ -239,7 +239,7 @@
                     text
                     >삭제</v-btn>
                   <v-dialog
-                    v-if="comment.usrEmail == myEmail"
+                    v-if="comment.usrNick == myNick"
                     v-model="dialog"
                     persistent
                     max-width="600px"
@@ -319,7 +319,7 @@ export default {
   data () {
     return {
       dialog: false,
-      myEmail: '',
+      myNick: '',
       items: [],
       comment: '',
       comments: [],
@@ -356,7 +356,7 @@ export default {
       .get('api/user/token/mypage')
       .then((res) => {
         console.log(res);
-        this.myEmail = res.data.usrEmail;
+        this.myNick = res.data.usrNick;
       })
       .catch((err) => {
         console.log(err);
@@ -384,6 +384,19 @@ export default {
         .then((res) => {
           this.items = res.data
           console.log(res.data)
+            res.data.createdDate =
+              res.data.createdDate.slice(2, 4) +
+              '/' +
+              res.data.createdDate.slice(5, 7) + 
+              '/' +
+              res.data.createdDate.slice(8, 10);
+            res.data.modifiedDate =
+              res.data.modifiedDate.slice(2, 4) +
+              '/' +
+              res.data.modifiedDate.slice(5, 7) + 
+              '/' +
+              res.data.modifiedDate.slice(8, 10);
+            // console.log(this.contents, i)
         })
         .catch((err) => {
           console.log(err);
@@ -404,7 +417,23 @@ export default {
         .get(`api/boardList/${this.$route.params.boardNo}/comment`)
         .then((res) => {
           this.comments = res.data
-          console.log(res);
+          console.log(res.data);
+          for (var i = 0; i < res.data[i].length; i++) {
+            res.data[i].createdDate =
+              res.data[i].createdDate.slice(2, 4) +
+              '/' +
+              res.data[i].createdDate.slice(5, 7) + 
+              '/' +
+              res.data[i].createdDate.slice(8, 10);
+            res.data[i].modifiedDate =
+              res.data[i].modifiedDate.slice(2, 4) +
+              '/' +
+              res.data[i].modifiedDate.slice(5, 7) + 
+              '/' +
+              res.data[i].modifiedDate.slice(8, 10);
+            this.comments.push(res.data[i]);
+            // console.log(this.contents, i)
+          }
         })
     },
     // 전체 게시판 페이지로 돌아가기
@@ -513,58 +542,6 @@ export default {
         });
         alert("댓글이 삭제되었습니다.")
     },
-    // liked (items) {
-    //   console.log(items)
-    //   if (items.boardNo) {
-    //     alert( items.boardTitle + "게시글의 좋아요를 취소했습니다.")
-    //     items.followed = false
-    //     this.unLike(items.boardNo)
-    //     this.liked = false
-    //   } else {
-    //     alert( item.title + "게시글의 좋아요를 눌렀습니다.")
-    //     item.followed = true
-    //     this.Like(items.boardNo)
-    //   }
-    // },
-    // Like() {
-    //   const headers = {
-    //     "x-auth-token": localStorage.getItem("jwt"),
-    //   };
-    //   const baseURL = "http://i4a301.p.ssafy.io:8080";
-    //   axios
-    //   .create({
-    //     baseURL,
-    //     headers,
-    //   })
-    //   .post(`/api/user/token/like/${this.$route.params.boardNo}`)
-    //   .then((res) => {
-    //     console.log(res);
-    //     this.$store.dispatch('updateLike', true)
-    //   })
-    //   .catch((err) => {
-    //     console.log("좋아요에 실패하였습니다.", err);
-    //   });
-    // },
-    // unLike() {
-    //   const headers = {
-    //     "x-auth-token": localStorage.getItem("jwt"),
-    //   };
-    //   const baseURL = "http://i4a301.p.ssafy.io:8080";
-    //   axios
-    //   .create({
-    //     baseURL,
-    //     headers,
-    //   })
-    //   .post(`/api/user/token/unlike/${this.$route.params.boardNo}`)
-    //   .then((res) => {
-    //     console.log(res);
-    //     this.$store.dispatch('updateLike', true)
-    //   })
-    //   .catch((err) => {
-    //     console.log("좋아요 해제에 실패하였습니다.", err)
-    //   });
-    // }
-
     }
   }
 </script>
