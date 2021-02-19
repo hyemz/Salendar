@@ -30,14 +30,14 @@ export default new Vuex.Store({
                 })
                 .get("/api/user/token/followings")
                 .then((res) => {
-                    console.log("히야앗", res)
+                    console.log("following list", res)
                     state.following = res.data
                 })
                 .catch((err) => {
                     console.log('찜 목록을 불러오지 못했습니다.', err);
                 });
             } else {
-                console.log('fhrmdkdnt')
+                console.log('following state')
                 state.following = []
             }
         }
