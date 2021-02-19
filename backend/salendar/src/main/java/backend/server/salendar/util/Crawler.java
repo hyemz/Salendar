@@ -180,7 +180,7 @@ public class Crawler {
             Sale curSale = new Sale();
             curSale.setSaleTitle(e.select("a > div.evt_txt_area > strong").text());
             curSale.setSaleDsc(e.select("a > div.evt_txt_area > strong").text());
-            curSale.setSaleThumbnail(e.select("a > div.evt_img_area > img").attr("alt"));
+            curSale.setSaleThumbnail(e.select("a > div.evt_img_area > img").attr("src"));
             String temp = e.select("a").attr("onclick");
             curSale.setSaleLink("https://www.etude.com/kr/ko/display/event_detail?planDisplaySn=" + temp.substring(temp.indexOf("planDisplaySn") + 15, temp.indexOf("planDisplayTitle") - 2));
             Elements eventDate = e.select("a > div.evt_txt_area > span");
