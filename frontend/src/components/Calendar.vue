@@ -121,8 +121,8 @@ export default {
 
               this.calendarOptions.events.push({
                 title: this.stores[store].name + ' ' + ' ' + el.sale_title,
-                start: new Date(start.setDate(start.getDate() + 1)),
-                end: new Date(end.setDate(end.getDate() + 2)),
+                start: new Date(start.setDate(start.getDate())),
+                end: new Date(end.setDate(end.getDate() + 1)),
                 bigImg: el.sale_big_img,
                 thumbnail: el.sale_thumbnail,
                 saleLink: el.sale_link,
