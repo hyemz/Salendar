@@ -15,7 +15,7 @@
     <div class="container">
       <v-row data-aos="fade-right" data-aos-duration="3000" data-aos-delay="300">
         <v-spacer></v-spacer>
-        <v-col class="d-flex flex-column justify-center text-center" cols="4">
+        <v-col class="d-flex flex-column justify-center text-center" cols="5">
           <p><strong>바쁜 일상</strong> 속</p>
           <p>사야 할 것이</p>
           <p>너무 많은 우리</p>
@@ -31,7 +31,7 @@
         <v-col class="text-center" cols="4">
           <img src="../assets/Intro/Cyber Monday-rafiki.svg" style="" alt="" />
         </v-col>
-        <v-col class="d-flex flex-column justify-center text-center" cols="4">
+        <v-col class="d-flex flex-column justify-center text-center" cols="6">
           <p>나에게 <strong>딱 맞는 세일</strong>은</p>
           <p>지나쳐버리기 쉽상이죠</p>
         </v-col>
@@ -40,7 +40,7 @@
       <br /><br /><br /><br /><br /><br /><br /><br /><br />
       <v-row data-aos="fade-right" data-aos-duration="3000" data-aos-delay="300">
         <v-spacer></v-spacer>
-        <v-col class="d-flex flex-column justify-center text-center" cols="4">
+        <v-col class="d-flex flex-column justify-center text-center" cols="5">
           <p>한 눈에 보기 쉽게</p>
           <p><strong>달력</strong>에 표시해주면</p>
           <p>참 좋을텐데</p>
@@ -53,7 +53,7 @@
       <br /><br /><br /><br /><br /><br /><br /><br /><br />
       <v-row data-aos="fade-up" data-aos-duration="3000" data-aos-delay="300">
         <v-spacer></v-spacer>
-        <v-col class="d-flex flex-column justify-center align-center text-center" cols="6">
+        <v-col class="d-flex flex-column justify-center align-center text-center" cols="8">
           <p>원하는 세일정보를 한눈에</p>
           <p>다가오는 세일에 가슴이 두근두근</p>
           <p><strong>설레이는 세일 캘린더</strong></p>
