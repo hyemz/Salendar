@@ -25,7 +25,7 @@
         </ul>
       </nav>
       <div class="copyright grey--text">
-        &copy; {{ year }}, Salendar, Coded by 고영길 김지영 윤헤민 최정휴 현성섭.
+        &copy; {{ year }}, Salendar, Coded by 고영길 김지영 윤혜민 최정휴 현성섭.
       </div>
     </div>
   </v-footer>
