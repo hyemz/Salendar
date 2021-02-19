@@ -47,11 +47,6 @@
       </template>
       <template v-if="isLogin">
         <v-btn text color="white" disabled id="w" v-if="isLogin">{{ nickname }}님 환영합니다 💙</v-btn>
-        <!-- <v-btn text color="white" @click.native="logout" v-if="isLogin">
-          <router-link :to="{ name: 'Login' }" color="red" class="text-decoration-none"
-            >로그아웃</router-link
-          >
-        </v-btn> -->
       </template>
       <template v-if="isLogin">
          <v-tooltip bottom>
@@ -68,7 +63,6 @@
               <v-icon>mdi-chevron-down</v-icon>
             </v-btn>
           </template>
-
           <v-list>
             <v-list-item>
               <v-list-item-title><router-link to =/mypage class="text-decoration-none main--text">마이페이지</router-link></v-list-item-title>
@@ -108,7 +102,7 @@ export default {
       const headers = {
           "x-auth-token": localStorage.getItem("jwt"),
       };
-      const baseURL = 'http://i4a301.p.ssafy.io:8080';
+        const baseURL = 'http://i4a301.p.ssafy.io:8080';
       axios
       .create({
           baseURL,
@@ -128,7 +122,7 @@ export default {
     console.log(this.token);
   },
   computed: {
-    ...mapState(['isLogin']),
+    ...mapState(['isLogin', 'nick']),
   },
   watch: {
     isLogin: function() {
@@ -137,7 +131,7 @@ export default {
       const headers = {
           "x-auth-token": localStorage.getItem("jwt"),
       };
-      const baseURL = 'http://i4a301.p.ssafy.io:8080';
+       const baseURL = 'http://i4a301.p.ssafy.io:8080';
       axios
       .create({
           baseURL,
@@ -154,6 +148,9 @@ export default {
         this.$store.dispatch('login', false);
       })
     }
+    },
+    nick: function() {
+      this.nickname = this.nick;
     }
   },
   data: () => ({
