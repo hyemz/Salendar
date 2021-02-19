@@ -68,6 +68,7 @@
 
           <v-card
             class="pl-7 pr-7"
+            height="500px"
             flat
           >
             <br>
@@ -77,20 +78,8 @@
 
           <hr>
           <div class="pl-7 pr-7 grey lighten-4">
-            <br>
-            <v-card
-              max-height="400"
-              max-width="400"
-              class="mb-2"
-              flat
-            >
-              <v-img
-                src="@/assets/productSample/product_image_sample.png"
-                contain
-              >
-              </v-img>
-            </v-card>
-            <br>
+          <br>
+          <br>
           </div>
 
           <hr>
